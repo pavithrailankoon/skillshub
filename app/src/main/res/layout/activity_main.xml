@@ -31,28 +31,16 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <CheckedTextView
-        android:id="@+id/checkedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CheckedTextView"
-        tools:layout_editor_absoluteX="88dp"
-        tools:layout_editor_absoluteY="141dp" />
-
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CheckBox"
-        tools:layout_editor_absoluteX="125dp"
-        tools:layout_editor_absoluteY="177dp" />
-
     <Switch
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Switch"
-        tools:layout_editor_absoluteX="118dp"
-        tools:layout_editor_absoluteY="264dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.399" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
