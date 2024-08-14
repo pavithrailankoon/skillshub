@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "95274543334",
-    "project_id": "skillshubdb",
-    "storage_bucket": "skillshubdb.appspot.com"
+    "project_number": "488944984285",
+    "firebase_url": "https://skillhubdb-default-rtdb.firebaseio.com",
+    "project_id": "skillhubdb",
+    "storage_bucket": "skillhubdb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:95274543334:android:c28c7e1ab95bef2f37b327",
+        "mobilesdk_app_id": "1:488944984285:android:11c5255fe2049671d5bb34",
         "android_client_info": {
           "package_name": "com.example.skillshub"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBPsk9sk1OXezHz86noys9h_BgYdPi0HIY"
+          "current_key": "AIzaSyAA9jXC95JVDmvkSu7MfFVy3qLzpc5UWxw"
         }
       ],
       "services": {
