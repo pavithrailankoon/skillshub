@@ -12,11 +12,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
 
     private EditText emailEditText;
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
@@ -47,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
                 String password = passwordEditText.getText().toString();
 
                 if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Please enter both email and password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Please enter both email and password", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, Home.class);
+                    Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, Home.class);
                     startActivity(intent);
                 }
             }
@@ -58,16 +55,16 @@ public class MainActivity extends AppCompatActivity {
         forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Forgot Password clicked", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Home.class);
+                Toast.makeText(LoginActivity.this, "Forgot Password clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, Home.class);
                 startActivity(intent);
             }
         });
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Sign Up clicked", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, Home.class);
+                Toast.makeText(LoginActivity.this, "Sign Up clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, Home.class);
                 startActivity(intent);
             }
         });
