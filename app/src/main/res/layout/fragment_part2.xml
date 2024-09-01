@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_green"
+    tools:context=".signupform.Part2Fragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/signup_topic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/signup_topic"
+            android:textColor="@color/yellow"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/signup_email"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:ems="10"
+            android:textColor="@color/white"
+            android:inputType="textEmailAddress"
+            android:textColorHint="@color/white"
+            android:hint="Email"
+            android:backgroundTint="@color/white"/>
+
+        <EditText
+            android:id="@+id/signup_nic"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:ems="10"
+            android:textColor="@color/white"
+            android:inputType="text"
+            android:textColorHint="@color/white"
+            android:hint="NIC"
+            android:backgroundTint="@color/white"/>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Address" />
+
+        <EditText
+            android:id="@+id/editTextTextPostalAddress"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:textColorHint="@color/white"
+            android:hint="Address line 1"
+            android:backgroundTint="@color/white"/>
+
+        <EditText
+            android:id="@+id/editTextTextPostalAddressd"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:textColorHint="@color/white"
+            android:hint="Address line 2"
+            android:backgroundTint="@color/white"/>
+
+        <EditText
+            android:id="@+id/editTextTextPostalAddr"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:textColorHint="@color/white"
+            android:hint="City"
+            android:backgroundTint="@color/white"/>
+
+        <EditText
+            android:id="@+id/editTexstalAddr"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:textColorHint="@color/white"
+            android:hint="District"
+            android:backgroundTint="@color/white"/>
+
+        <EditText
+            android:id="@+id/editTexstlAddr"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:inputType="number"
+            android:textColorHint="@color/white"
+            android:hint="Postal Code"
+            android:backgroundTint="@color/white"/>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -3,7 +3,9 @@
     <style name="Base.Theme.Skillshub" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowIsTranslucent">true</item>
     </style>
+
 
     <style name="Theme.Skillshub" parent="Base.Theme.Skillshub" />
 </resources>
