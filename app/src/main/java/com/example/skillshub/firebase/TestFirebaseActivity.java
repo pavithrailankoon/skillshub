@@ -28,7 +28,7 @@ public class TestFirebaseActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
         firestore = FirebaseFirestore.getInstance();
 
