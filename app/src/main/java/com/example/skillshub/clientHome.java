@@ -1,6 +1,7 @@
 package com.example.skillshub;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.View;
@@ -16,13 +17,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class clientHome extends AppCompatActivity {
 
     ImageButton filterButton;
     Button button;
-
+    private CircleImageView profileImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +32,24 @@ public class clientHome extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_client_home);
 
-
-
-
-
-
-        //Filter Button Code
-
-
+        profileImageButton = (CircleImageView) findViewById(R.id.avatar);
         filterButton = (ImageButton) findViewById(R.id.filter_button);
+
         filterButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
                 Toast.makeText(clientHome.this,"Filter button Work",Toast.LENGTH_SHORT).show();;
 
+            }
+        });
+
+        profileImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(clientHome.this, "Client profile", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(clientHome.this, ClientProfileActivity.class);
+                startActivity(intent);
             }
         });
 
