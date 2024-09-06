@@ -11,9 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -43,52 +42,80 @@
             android:layout_height="1dp"
             android:background="@color/white" />
 
-        <LinearLayout
+        <TableLayout
             android:layout_width="297dp"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/signup_verify_nicfront"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_centerVertical="true"
-                android:layout_weight="1"
-                android:text="@string/signup_verify_nic_front"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/signup_verify_nicfront"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="@string/signup_verify_nic_front"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-            <ImageButton
-                android:id="@+id/signup_verify_nicfront_upload"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:src="@drawable/baseline_cloud_upload_24" />
-        </LinearLayout>
+                <ImageButton
+                    android:id="@+id/signup_verify_nicfront_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_cloud_upload_24" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/signup_clear_nicfront_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/baseline_cancel_24"/>
 
-            <TextView
-                android:id="@+id/signup_verify_nicback"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:textSize="20sp"
-                android:layout_centerVertical="true"
-                android:textColor="@color/white"
-                android:text="@string/signup_verify_nic_back" />
+            </TableRow>
 
-            <ImageButton
-                android:id="@+id/signup_verify_nicback_upload"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:src="@drawable/baseline_cloud_upload_24" />
-        </LinearLayout>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/signup_verify_nicback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:text="@string/signup_verify_nic_back" />
+
+                <ImageButton
+                    android:id="@+id/signup_verify_nicback_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/baseline_cloud_upload_24" />
+
+                <ImageView
+                    android:id="@+id/signup_clear_nicback_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/baseline_cancel_24"/>
+
+            </TableRow>
+
+
+        </TableLayout>
+
 
         <TextView
             android:id="@+id/signup_br"
@@ -114,7 +141,7 @@
             <TextView
                 android:id="@+id/signup_verify_br"
                 android:layout_width="wrap_content"
-                android:layout_height="87dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
@@ -123,12 +150,37 @@
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
-            <ImageButton
-                android:id="@+id/signup_verify_br_upload"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:src="@drawable/baseline_cloud_upload_24" />
+            <TableLayout
+                android:layout_width="297dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <ImageButton
+                        android:id="@+id/signup_verify_br_upload"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/baseline_cloud_upload_24" />
+
+                    <ImageView
+                        android:id="@+id/signup_clear_br_upload"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/baseline_cancel_24"/>
+                </TableRow>
+
+            </TableLayout>
+
+
         </LinearLayout>
 
             <TextView
@@ -147,32 +199,54 @@
                 android:layout_height="1dp"
                 android:background="@color/white" />
 
-            <Spinner
-                android:id="@+id/signup_category"
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+            <TableRow
+                android:id="@+id/signup_category_row"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:minWidth="150dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                android:entries="@array/spinner_category"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
-                android:textColor="@color/white"
-                android:spinnerMode="dropdown"/>
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/signup_main_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="Select main category"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/spinner_border"
+                    android:drawableRight="@drawable/baseline_arrow_drop_down_24"
+                    android:gravity="center_vertical" />
 
-            <Spinner
-                android:id="@+id/signup_subcategory"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:minWidth="150dp"
-                android:layout_marginBottom="8dp"
-                android:entries="@array/spinner_category"
-                android:background="@drawable/spinner_border"
-                android:padding="12dp"
+                <TextView
+                    android:id="@+id/signup_sub_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="Select sub category"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/spinner_border"
+                    android:drawableRight="@drawable/baseline_arrow_drop_down_24"
+                    android:gravity="center_vertical" />
 
-                android:textColor="@color/white"
-                android:spinnerMode="dropdown"/>
-
+                <ImageView
+                    android:id="@+id/signup_clear_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/baseline_cancel_24"/>
+            </TableRow>
+        </TableLayout>
+        <TextView
+            android:id="@+id/signup_add_newcategory"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Add New Category"
+            android:textColor="@color/yellow"
+            android:gravity="center"
+            android:textStyle="bold"/>
         </LinearLayout>
 
 </RelativeLayout>
