@@ -3,17 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/background_green">
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
@@ -34,14 +36,13 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-
             android:layout_marginEnd="16dp"
             app:srcCompat="@drawable/logo"
-            android:layout_alignParentLeft="true"
+
             android:layout_centerVertical="true"/>
 
 
@@ -66,24 +67,48 @@
             android:background="@color/background_green"
             app:srcCompat="@drawable/filter"
 
-            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true">
 
         </ImageButton>
+
+        <Button
+            android:id="@+id/becomeWorkerButton"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/filter_button"
+            android:text="Become A Worker"
+            android:tooltipText="You register as Worker"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/background_green"
+
+            android:textAllCaps="false"
+            android:textSize="12dp" />
+
 
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="186dp">
 
         <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/mainCategory_listView">
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+
+            android:scrollbars="vertical"
+            tools:layout_editor_absoluteX="-16dp"
+            tools:layout_editor_absoluteY="64dp"
+            tools:listitem="@layout/custom_list_item_layout">
+
+
         </ListView>
+
 
     </LinearLayout>
 

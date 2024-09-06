@@ -1,8 +1,13 @@
 package com.example.skillshub;
 
+import android.app.Activity;
 import android.os.Bundle;
 
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 import androidx.activity.EdgeToEdge;
@@ -15,7 +20,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class clientHome extends AppCompatActivity {
 
-
+    ImageButton filterButton;
+    Button button;
 
 
     @Override
@@ -23,18 +29,48 @@ public class clientHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_client_home);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainCategory_listView), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+
+
+
+
+
+        //Filter Button Code
+
+
+        filterButton = (ImageButton) findViewById(R.id.filter_button);
+        filterButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(clientHome.this,"Filter button Work",Toast.LENGTH_SHORT).show();;
+
+            }
         });
 
-        ListView listView = findViewById(R.id.mainCategory_listView);
+        //Become A worker Button Code
 
-        String[] mainCategory = {"Technicians","Drivers","IT","Profesionals"};
-        int[] mainCategoryIcon = {R.drawable.technicians,R.drawable.drivers,R.drawable.baseline_category_24,R.drawable.star};
+        button = (Button) findViewById(R.id.becomeWorkerButton);
+        button.setOnClickListener(new View.OnClickListener(){
 
-        listAdapter adapter = new listAdapter(this,mainCategory,mainCategoryIcon);
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(clientHome.this,"Become A Worker Button work",Toast.LENGTH_SHORT).show();;
+
+            }
+        });
+
+
+        // List View code for choose main category
+
+        ListView listView = findViewById(R.id.listView);
+
+        String[] mainCategoryName = {"Technicians","Vehicles","IT","Event","Drivers","Profesionals"};
+
+        int[] mainCategoryImage = {R.drawable.technicians,R.drawable.drivers,R.drawable.drivers,R.drawable.technicians,R.drawable.technicians,R.drawable.drivers};
+
+
+        listAdapter adapter = new listAdapter(this,mainCategoryName,mainCategoryImage);
         listView.setAdapter(adapter);
 
     }
