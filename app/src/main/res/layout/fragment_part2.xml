@@ -35,7 +35,7 @@
             android:textColor="@color/white"
             android:inputType="textEmailAddress"
             android:textColorHint="@color/white"
-            android:hint="Email"
+            android:hint="Email *"
             android:backgroundTint="@color/white"/>
 
         <EditText
@@ -49,7 +49,7 @@
             android:textColor="@color/white"
             android:inputType="text"
             android:textColorHint="@color/white"
-            android:hint="NIC"
+            android:hint="NIC *"
             android:backgroundTint="@color/white"/>
 
         <TextView
@@ -103,7 +103,7 @@
             android:ems="10"
             android:inputType="textPostalAddress"
             android:textColorHint="@color/white"
-            android:hint="City"
+            android:hint="City *"
             android:backgroundTint="@color/white"/>
 
         <EditText
@@ -117,22 +117,9 @@
             android:ems="10"
             android:inputType="textPostalAddress"
             android:textColorHint="@color/white"
-            android:hint="District"
+            android:hint="District *"
             android:backgroundTint="@color/white"/>
 
-        <EditText
-            android:id="@+id/editTexstlAddr"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:ems="10"
-            android:inputType="number"
-            android:textColorHint="@color/white"
-            android:hint="Postal Code"
-            android:backgroundTint="@color/white"/>
 
     </LinearLayout>
 </RelativeLayout>

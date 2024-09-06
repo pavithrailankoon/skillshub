@@ -4,8 +4,8 @@
     <!-- Strings of activity_signup -->
     <string name="signup_topic">Create A New Account</string>
     <string name="signup_verify_email">Verify email</string>
-    <string name="signup_verify_email_desc">Check your inbox and click verification link.</string>
-    <string name="_descsignup_profileimg">Profile Photo</string>
+    <string name="signup_verify_email_desc"><br>Great!</br> After clicking CREATE, check your inbox for a verification link and click it to complete your signup.</string>
+    <string name="signup_profileimg_desc">Profile Photo</string>
     <string name="signup_verify_nic">NIC Verification</string>
     <string name="signup_verify_nic_front">NIC front image</string>
     <string name="signup_verify_nic_back">NIC back image </string>
