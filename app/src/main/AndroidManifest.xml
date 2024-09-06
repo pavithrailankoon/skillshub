@@ -28,19 +28,25 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
         </activity>
+            android:name=".ClientProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Home"
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".firebase.TestFirebaseActivity"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            android:name=".clientHome"
             android:exported="true">
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="your.package.name.fileprovider"
