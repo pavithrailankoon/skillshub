@@ -65,7 +65,7 @@
             android:text="Address" />
 
         <EditText
-            android:id="@+id/editTextTextPostalAddress"
+            android:id="@+id/signup_addressline1"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="30dp"
@@ -79,7 +79,7 @@
             android:backgroundTint="@color/white"/>
 
         <EditText
-            android:id="@+id/editTextTextPostalAddressd"
+            android:id="@+id/signup_addressline2"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="30dp"
@@ -92,8 +92,22 @@
             android:hint="Address line 2"
             android:backgroundTint="@color/white"/>
 
-        <EditText
-            android:id="@+id/editTextTextPostalAddr"
+        <AutoCompleteTextView
+            android:id="@+id/signup_district"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:textColorHint="@color/white"
+            android:hint="District *"
+            android:backgroundTint="@color/white"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/signup_city"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginStart="30dp"
@@ -106,19 +120,7 @@
             android:hint="City *"
             android:backgroundTint="@color/white"/>
 
-        <EditText
-            android:id="@+id/editTexstalAddr"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:ems="10"
-            android:inputType="textPostalAddress"
-            android:textColorHint="@color/white"
-            android:hint="District *"
-            android:backgroundTint="@color/white"/>
+
 
 
     </LinearLayout>
