@@ -50,7 +50,8 @@ dependencies {
     implementation libs.firebase.auth
     implementation libs.firebase.database
     implementation libs.firebase.firestore
-    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation("com.google.firebase:firebase-storage")
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation libs.annotation
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
