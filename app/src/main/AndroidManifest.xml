@@ -28,6 +28,7 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
         </activity>
+        <activity
             android:name=".ClientProfileActivity"
             android:exported="false" />
         <activity
@@ -40,7 +41,7 @@
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
         <activity
-            android:name=".firebase.TestFirebaseActivity"
+            android:name=".firebaseModel.TestFirebaseActivity"
             android:exported="false" />
         <activity
             android:name=".clientHome"
