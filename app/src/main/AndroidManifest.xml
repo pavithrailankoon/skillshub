@@ -21,9 +21,19 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
+<<<<<<< HEAD
             android:name=".clientHome"
             android:exported="false" />
         <activity
+=======
+            android:name=".ChooseUserActivity"
+            android:exported="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+        </activity>
+>>>>>>> 54f3284fba6096cc896e6ee2c7204e84c9da8b16
             android:name=".ClientProfileActivity"
             android:exported="false" />
         <activity
@@ -31,9 +41,6 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegistrationActivity"
             android:exported="false" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
@@ -44,11 +51,6 @@
         <activity
             android:name=".clientHome2"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider
