@@ -22,8 +22,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class clientHome extends AppCompatActivity {
 
-    ImageButton filterButton;
-    Button button;
+   private ImageButton filterButton;
+   private Button button;
     private CircleImageView profileImageButton;
 
     @Override
@@ -32,17 +32,26 @@ public class clientHome extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_client_home);
 
-        profileImageButton = (CircleImageView) findViewById(R.id.avatar);
+
+        //filter Button Code
+
         filterButton = (ImageButton) findViewById(R.id.filter_button);
 
         filterButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
-            public void onClick(View view) {
-                Toast.makeText(clientHome.this,"Filter button Work",Toast.LENGTH_SHORT).show();;
-
+            public void onClick(View v) {
+                Toast.makeText(clientHome.this, "Filter", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(clientHome.this, FilterActivity.class);
+                startActivity(intent);
             }
+
         });
+
+
+        // client profile button code
+
+        profileImageButton = (CircleImageView) findViewById(R.id.avatar);
 
         profileImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +61,7 @@ public class clientHome extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 
         //Become A worker Button Code
 
@@ -68,7 +78,7 @@ public class clientHome extends AppCompatActivity {
 
         // List View code for choose main category
 
-        ListView listView = findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView1);
 
         String[] mainCategoryName = {"Technicians","Vehicles","IT","Event","Drivers","Profesionals"};
 
