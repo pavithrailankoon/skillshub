@@ -64,9 +64,10 @@
                     android:entries="@array/spinner_category"
                     android:background="@drawable/spinner_border"
                     android:padding="12dp"
-                    android:backgroundTint="@color/yellow"
                     android:textColor="@color/white"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"/>
 
                 <Spinner
                     android:id="@+id/spinner_sub_category"
@@ -77,9 +78,10 @@
                     android:entries="@array/spinner_sub_category"
                     android:background="@drawable/spinner_border"
                     android:padding="12dp"
-                    android:backgroundTint="@color/yellow"
                     android:textColor="@color/white"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"/>
 
                 <Spinner
                     android:id="@+id/spinner_district"
@@ -90,9 +92,11 @@
                     android:entries="@array/spinner_district"
                     android:background="@drawable/spinner_border"
                     android:padding="12dp"
-                    android:backgroundTint="@color/yellow"
-                    android:textColor="@color/white"
-                    android:spinnerMode="dropdown"/>
+
+                    android:textColor="@color/background_green"
+                    android:spinnerMode="dropdown"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"/>
 
                 <Spinner
                     android:id="@+id/spinner_city"
@@ -102,9 +106,11 @@
                     android:entries="@array/spinner_city"
                     android:background="@drawable/spinner_border"
                     android:padding="12dp"
-                    android:backgroundTint="@color/yellow"
-                    android:textColor="@color/white"
-                    android:spinnerMode="dropdown"/>
+
+                    android:textColor="@color/background_green"
+                    android:spinnerMode="dropdown"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"/>
 
 
             </LinearLayout>
@@ -120,16 +126,22 @@
                 <Button
                     android:id="@+id/filter_button"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:text="Filter" />
+                    android:text="Filter"
+                    android:background="@drawable/custom_button"
+                    android:textColor="@color/background_green"
+                    android:textAllCaps="false"/>
 
                 <Button
                     android:id="@+id/filter_clear_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTintMode="src_in"
-                    android:text="Clear" />
+                    android:text="Clear"
+                    android:background="@drawable/custom_button"
+                    android:textColor="@color/background_green"
+                    android:textAllCaps="false"/>
             </LinearLayout>
 
         </LinearLayout>
