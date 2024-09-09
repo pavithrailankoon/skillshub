@@ -1,4 +1,62 @@
 <resources>
-    <string name="app_name">Skillshub</string>
     <string name="logo_desc">Skillshub</string>
+    <string name="app_name">SkillHub</string>
+
+    <!-- Strings of activity_signup -->
+    <string name="signup_topic">Create A New Account</string>
+    <string name="signup_verify_email">Verify email</string>
+    <string name="signup_verify_email_desc"><br>Great!</br> After clicking CREATE, check your inbox for a verification link and click it to complete your signup.</string>
+    <string name="signup_profileimg_desc">Profile Photo</string>
+    <string name="signup_verify_nic">NIC Verification</string>
+    <string name="signup_verify_nic_front">NIC front image</string>
+    <string name="signup_verify_nic_back">NIC back image </string>
+    <string name="signup_verify_br">Business Registration Verification</string>
+    <string name="signup_verify_br_desc">Upload your business registration certificate picture (If you have)</string>
+    <string name="signup_select_category">Select what you can</string>
+
+    <!-- Strings of activity_filter -->
+    <string name="filter_topic">Who are you looking for?</string>
+    <string name="filter_category">Category</string>
+    <string name="filter_subcategory">Sub Category</string>
+    <string name="filter_location">Location</string>
+    <string-array name="spinner_category">
+        <item>Technician</item>
+        <item>Vehicle</item>
+        <item>Construction</item>
+        <item>Events</item>
+    </string-array>
+    <string-array name="spinner_sub_category">
+        <item>AC repair</item>
+        <item>CCTV</item>
+        <item>TV/Radio electronic repair</item>
+        <item>Electricity</item>
+    </string-array>
+    <string-array name="spinner_district">
+        <item>Matara</item>
+        <item>Galle</item>
+        <item>Colombo</item>
+        <item>Kandy</item>
+    </string-array>
+    <string-array name="spinner_city">
+        <item>Welladama</item>
+        <item>Maddawatta</item>
+        <item>Devundara</item>
+        <item>Matara Town</item>
+    </string-array>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open_nav">"Open Navigation Drawer"</string>
+    <string name="close_nav">"Close Navigation Drawer"</string>
+
 </resources>
+
