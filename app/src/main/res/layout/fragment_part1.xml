@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_green"
+    tools:context=".signupform.Part1Fragment">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/signup_topic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/signup_topic"
+                android:textColor="@color/yellow"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:text="Profile Photo" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/signup_upload_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/avatar"
+                app:civ_border_color="@color/yellow"
+                app:civ_border_width="7dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="30dp">
+
+                <Button
+                    android:id="@+id/signup_take_profile_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TAKE PHOTO" />
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="48dp" />
+
+                <Button
+                    android:id="@+id/signup_upload_profile_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/yellow_button_background"
+                    android:text="UPLOAD PHOTO" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/signup_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textColor="@color/white"
+                android:inputType="textPersonName"
+                android:textColorHint="@color/white"
+                android:hint="First Name"
+                android:backgroundTint="@color/white"/>
+
+            <EditText
+                android:id="@+id/signup_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:ems="10"
+                android:textColor="@color/white"
+                android:inputType="textPersonName"
+                android:textColorHint="@color/white"
+                android:hint="Last Name"
+                android:backgroundTint="@color/white"/>
+
+            <EditText
+                android:id="@+id/signup_mobileno"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textColorHint="@color/white"
+                android:hint="Mobile No"
+                android:inputType="phone"
+                android:textColor="@color/white"
+                android:ems="10"
+                android:backgroundTint="@color/white"/>
+
+            <EditText
+                android:id="@+id/signup_password_add"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textColorHint="@color/white"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:ems="10"
+                android:backgroundTint="@color/white"/>
+
+            <EditText
+                android:id="@+id/signup_password_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:textColorHint="@color/white"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:textColor="@color/white"
+                android:ems="10"
+                android:backgroundTint="@color/white"/>
+
+
+        </LinearLayout>
+
+</RelativeLayout>
