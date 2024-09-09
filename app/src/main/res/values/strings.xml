@@ -1,4 +1,5 @@
 <resources>
+    <string name="logo_desc">Skillshub</string>
     <string name="app_name">SkillHub</string>
 
     <!-- Strings of activity_signup -->
@@ -58,3 +59,4 @@
     <string name="close_nav">"Close Navigation Drawer"</string>
 
 </resources>
+
