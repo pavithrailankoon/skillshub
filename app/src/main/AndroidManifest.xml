@@ -21,12 +21,16 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="true" />
+        <activity
             android:name=".ChooseUserActivity"
             android:exported="true">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ClientProfileActivity"
@@ -41,12 +45,8 @@
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
         <activity
-            android:name=".firebaseModel.TestFirebaseActivity"
-            android:exported="false" />
-        <activity
             android:name=".clientHome"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
