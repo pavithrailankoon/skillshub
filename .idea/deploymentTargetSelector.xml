@@ -13,10 +13,13 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationControlActivity">
+      <SelectionState runConfigName="ChooseUserActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ChooseUserActivity">
+      <SelectionState runConfigName="ForgotPasswordActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Introduction">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

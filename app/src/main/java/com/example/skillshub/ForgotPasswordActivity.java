@@ -8,17 +8,12 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.skillshub.firebaseModel.FirebaseConnection;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,12 +24,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText editEmail;
     ProgressDialog progressDialog;
 
-    private FirebaseAuth auth;
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();;
     String strEmail;
-
-    public ForgotPasswordActivity() {
-        this.auth = FirebaseConnection.getAuthInstance();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
