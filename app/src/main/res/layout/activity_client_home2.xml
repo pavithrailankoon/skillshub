@@ -53,8 +53,16 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="91dp"
+        android:layout_marginTop="93dp"
         android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="30dp"
+            app:srcCompat="@drawable/back" />
 
         <ImageButton
             android:id="@+id/filter_button"
@@ -84,16 +92,23 @@
             android:textColor="@color/background_green"
             android:textSize="12dp" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="163dp">
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="186dp">
+        android:layout_marginTop="200dp">
 
         <ListView
-            android:id="@+id/listView1"
+            android:id="@+id/listView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
@@ -108,6 +123,38 @@
         </ListView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginTop="163dp">
+
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Technicians"
+            android:layout_marginStart="30dp"
+             />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Electricians"
+            android:layout_marginStart="180dp"
+            />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24"
+            android:layout_marginStart="130dp"
+            />
+
+
+    </RelativeLayout>
 
 </RelativeLayout>
