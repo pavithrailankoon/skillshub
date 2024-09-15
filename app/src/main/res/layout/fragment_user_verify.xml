@@ -200,16 +200,19 @@
                 android:background="@color/white" />
 
         <TableLayout
+            android:id="@+id/skilltable"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
+
             <TableRow
                 android:id="@+id/signup_category_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/signup_main_category"
                     android:layout_width="match_parent"
@@ -224,7 +227,7 @@
                     android:id="@+id/signup_sub_category"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:hint="Select sub category"
+                    android:hint="Select sub categories"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/spinner_border"
                     android:drawableRight="@drawable/baseline_arrow_drop_down_24"
@@ -249,12 +252,5 @@
             android:textStyle="bold"/>
         </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone" />
 
 </RelativeLayout>

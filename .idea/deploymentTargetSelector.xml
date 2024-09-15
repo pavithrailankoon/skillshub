@@ -13,11 +13,15 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+      <SelectionState runConfigName="ChooseUserActivity">
       <SelectionState runConfigName="welcomeScreen">
       <SelectionState runConfigName="RegistrationControlActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ChooseUserActivity">
+      <SelectionState runConfigName="ForgotPasswordActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Introduction">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="clientHome2">
