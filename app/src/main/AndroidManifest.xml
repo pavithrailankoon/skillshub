@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools">
+
 
     <application
         android:allowBackup="true"
@@ -57,7 +62,8 @@ xmlns:tools="http://schemas.android.com/tools">
             android:exported="false" />
         <activity
             android:name=".clientHome"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="DuplicateActivity">
         </activity>
         <activity
             android:name=".firebaseModel.TestFirebaseActivity"
