@@ -68,7 +68,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:src="@drawable/baseline_cloud_upload_24" />
+                    android:src="@drawable/baseline_cloud_upload_24"
+                    android:background="@color/dark_grey"/>
 
                 <ImageView
                     android:id="@+id/signup_clear_nicfront_upload"
@@ -100,7 +101,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:src="@drawable/baseline_cloud_upload_24" />
+                    android:src="@drawable/baseline_cloud_upload_24"
+                    android:background="@color/dark_grey"/>
 
                 <ImageView
                     android:id="@+id/signup_clear_nicback_upload"
@@ -166,7 +168,8 @@
                         android:layout_height="48dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:src="@drawable/baseline_cloud_upload_24" />
+                        android:src="@drawable/baseline_cloud_upload_24"
+                        android:background="@color/dark_grey"/>
 
                     <ImageView
                         android:id="@+id/signup_clear_br_upload"

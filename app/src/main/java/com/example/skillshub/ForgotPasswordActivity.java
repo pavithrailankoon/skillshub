@@ -24,7 +24,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText editEmail;
     ProgressDialog progressDialog;
 
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();;
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
     String strEmail;
 
     @Override

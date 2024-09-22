@@ -23,7 +23,7 @@ public class Introduction extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Create an Intent to start NextActivity
-                Intent intent = new Intent(Introduction.this, NextActivity.class);
+                Intent intent = new Intent(Introduction.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

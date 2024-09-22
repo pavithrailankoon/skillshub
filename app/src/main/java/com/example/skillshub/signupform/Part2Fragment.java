@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +30,10 @@ import java.util.List;
 public class Part2Fragment extends Fragment {
 
     View view;
-    private TextView email;
-    private TextView nic;
-    private TextView addressLine1;
-    private TextView addressLine2;
+    private EditText email;
+    private EditText nic;
+    private EditText addressLine1;
+    private EditText addressLine2;
     private AutoCompleteTextView city;
     private AutoCompleteTextView district;
     private ReadData readData;
@@ -38,21 +41,18 @@ public class Part2Fragment extends Fragment {
 
     private ArrayAdapter<String> districtAdapter;
     private ArrayAdapter<String> cityAdapter;
-    private List<String> availableDistricts;
-    private List<String> availableCities;
 
     private FirebaseAuth auth;
+
+    public interface EmailCheckCallback {
+        void onEmailCheckCompleted(boolean emailExists);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_part2, container, false);
-        email = view.findViewById(R.id.signup_email);
-        nic = view.findViewById(R.id.signup_nic);
-        addressLine1 = view.findViewById(R.id.signup_addressline1);
-        addressLine2 = view.findViewById(R.id.signup_addressline2);
-        city = view.findViewById(R.id.signup_city);
-        district = view.findViewById(R.id.signup_district);
+        initializeViews();
 
         auth = FirebaseAuth.getInstance();
 
@@ -64,11 +64,22 @@ public class Part2Fragment extends Fragment {
         return view;
     }
 
+    private void initializeViews(){
+        email = view.findViewById(R.id.signup_email);
+        nic = view.findViewById(R.id.signup_nic);
+        addressLine1 = view.findViewById(R.id.signup_addressline1);
+        addressLine2 = view.findViewById(R.id.signup_addressline2);
+        city = view.findViewById(R.id.signup_city);
+        district = view.findViewById(R.id.signup_district);
+
+        // Add TextWatchers to listen for text changes
+        email.addTextChangedListener(new Part2Fragment.GenericTextWatcher(email));
+        nic.addTextChangedListener(new Part2Fragment.GenericTextWatcher(nic));
+        city.addTextChangedListener(new Part2Fragment.GenericTextWatcher(city));
+        district.addTextChangedListener(new Part2Fragment.GenericTextWatcher(district));
+    }
 
     private void validateDistrictCity(){
-        availableDistricts = new ArrayList<>();
-        availableCities = new ArrayList<>();
-
         // Initialize adapters
         districtAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         district.setAdapter(districtAdapter);
@@ -78,17 +89,6 @@ public class Part2Fragment extends Fragment {
 
         city.setEnabled(false);
 
-//        // Set threshold for suggestions
-//        district.setThreshold(1);
-//        city.setThreshold(1);
-//
-//        // Disable manual text entry by setting input type
-//        district.setInputType(0);
-//        city.setInputType(0);
-
-        progressDialog.setTitle("Please Wait..");
-        progressDialog.setMessage("updating available districts...");
-        progressDialog.show();
         loadDistricts();
 
         setupDistrictSelectionListener();
@@ -100,9 +100,7 @@ public class Part2Fragment extends Fragment {
             districtAdapter.clear();
             districtAdapter.addAll(districts);
             districtAdapter.notifyDataSetChanged();
-            progressDialog.cancel();
         }, e -> Log.e("MainActivity", "Failed to load districts", e));
-        progressDialog.cancel();
     }
 
     private void setupDistrictSelectionListener() {
@@ -122,16 +120,11 @@ public class Part2Fragment extends Fragment {
     }
 
     private void loadCities(String district) {
-        progressDialog.setTitle("Please Wait..");
-        progressDialog.setMessage("updating available cities...");
-        progressDialog.show();
         readData.getCities(district, cities -> {
             cityAdapter.clear();
             cityAdapter.addAll(cities);
             cityAdapter.notifyDataSetChanged();
-            progressDialog.cancel();
         }, e -> Log.e("MainActivity", "Failed to load cities", e));
-        progressDialog.cancel();
     }
 
 
@@ -167,7 +160,7 @@ public class Part2Fragment extends Fragment {
         // Validate email
 
         String strEmail = email.getText().toString().trim();
-        if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches() || checkEmailExists(strEmail)) {
+        if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
                 if(strEmail.isEmpty()){ email.setError("Email is required"); }
                 if(!Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()){ email.setError("Invalid email address"); }
                 //if(checkEmailExists(strEmail)){ email.setError("Email address is already in use"); }
@@ -205,19 +198,55 @@ public class Part2Fragment extends Fragment {
     }
 
     // Method to check if the email exists in Firebase Auth
-    private boolean checkEmailExists(String strEmail) {
+    private void checkEmailExists(String strEmail, EmailCheckCallback callback) {
         auth.fetchSignInMethodsForEmail(strEmail).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 boolean emailExists = !task.getResult().getSignInMethods().isEmpty();
                 if (emailExists) {
                     email.setError("Email already in use");
                 }
+                callback.onEmailCheckCompleted(emailExists);
             } else {
                 if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                     email.setError("Invalid email");
                 }
+                callback.onEmailCheckCompleted(false);
             }
         });
-        return false;
+    }
+
+    private class GenericTextWatcher implements TextWatcher {
+
+        private EditText editText;
+
+        public GenericTextWatcher(EditText editText) {
+            this.editText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            email.setError(null);
+            email.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if (editText == email) {
+                String strEmail = email.getText().toString().trim();
+
+                checkEmailExists(strEmail, emailExists -> {
+                    if (!emailExists) {
+                        validateInput();
+                    }
+                });
+            } else {
+                validateInput();
+            }
+        }
     }
 }
