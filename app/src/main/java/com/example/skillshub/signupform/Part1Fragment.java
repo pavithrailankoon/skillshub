@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +79,6 @@ public class Part1Fragment extends Fragment {
             }
         });
         buttonUploadPhoto.setOnClickListener(v -> openGallery());
-        //checkPermissions();
 
         return view;
 
@@ -92,6 +93,13 @@ public class Part1Fragment extends Fragment {
         imageViewProfilePhoto = view.findViewById(R.id.signup_upload_avatar);
         buttonTakePhoto = view.findViewById(R.id.signup_take_profile_photo);
         buttonUploadPhoto = view.findViewById(R.id.signup_upload_profile_photo);
+
+        // Add TextWatchers to listen for text changes
+        firstName.addTextChangedListener(new GenericTextWatcher(firstName));
+        lastName.addTextChangedListener(new GenericTextWatcher(lastName));
+        phoneNumber.addTextChangedListener(new GenericTextWatcher(phoneNumber));
+        password.addTextChangedListener(new GenericTextWatcher(password));
+        passwordConfirm.addTextChangedListener(new GenericTextWatcher(passwordConfirm));
 
         // Set default image URI
         DEFAULT_IMAGE_URI = Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.drawable.avatar);
@@ -159,6 +167,7 @@ public class Part1Fragment extends Fragment {
     }
 
 
+
     // Validation method
     public boolean validateInput() {
         boolean isValid = true;
@@ -176,7 +185,8 @@ public class Part1Fragment extends Fragment {
         }
 
         // Validate phone
-        if (getPhoneNumber().isEmpty() || getPhoneNumber().length()<10) {
+        String strPhone = phoneNumber.getText().toString().trim();
+        if (getPhoneNumber().isEmpty() || strPhone.length() != 10) {
             phoneNumber.setError("Valid phone number is required");
             isValid = false;
         }
@@ -214,4 +224,33 @@ public class Part1Fragment extends Fragment {
         }
     }
 
+    private class GenericTextWatcher implements TextWatcher {
+
+        private EditText editText;
+
+        public GenericTextWatcher(EditText editText) {
+            this.editText = editText;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            password.setError(null);
+            password.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            if (editText == password) {
+                if (charSequence.length() < 6) {
+                    password.setError("Password too short");
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            validateInput();
+        }
+    }
+
 }
+

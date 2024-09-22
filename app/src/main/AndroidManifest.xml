@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.CAMERA" />
+<!--    <uses-permission android:name="android.permission.CAMERA" />-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools">
+
 
     <application
         android:allowBackup="true"
@@ -23,9 +24,6 @@ xmlns:tools="http://schemas.android.com/tools">
             android:exported="false" />      
         <activity          
             android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".signupform.MainActivity"
             android:exported="false" />
         <activity
             android:name=".welcomeScreen"
@@ -54,13 +52,6 @@ xmlns:tools="http://schemas.android.com/tools">
             android:exported="false" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
-            android:exported="false" />
-        <activity
-            android:name=".clientHome"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".firebaseModel.TestFirebaseActivity"
             android:exported="false" />
         <activity
             android:name=".clientHome2"
