@@ -158,7 +158,6 @@ public class Part2Fragment extends Fragment {
         boolean isValid = true;
 
         // Validate email
-
         String strEmail = email.getText().toString().trim();
         if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
                 if(strEmail.isEmpty()){ email.setError("Email is required"); }

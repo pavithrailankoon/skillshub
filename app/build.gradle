@@ -43,6 +43,7 @@ android {
 dependencies {
     def fragment_version = "1.8.2"
     implementation "androidx.fragment:fragment:$fragment_version"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
