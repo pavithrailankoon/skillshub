@@ -32,8 +32,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,10 +56,6 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
     private String registrationType;
     private String profileUrl;
-    private String frontNicUrl;
-    private String backNicUrl;
-    private String brUrl;
-    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +68,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         storageRef = storage.getReference();
 
         signupNextButton = findViewById(R.id.signup_next_btn);
-//        signupBackButton = findViewById(R.id.signup_back_btn);
+        //signupBackButton = findViewById(R.id.signup_back_btn);
         signupRedirectToLogin = findViewById(R.id.signup_redirect_login);
         exitSignupForm = findViewById(R.id.signup_back_btn);
 
@@ -100,13 +94,9 @@ public class RegistrationControlActivity extends AppCompatActivity {
             }
         });
 
-//        signupBackButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (getActivity() != null) {
-//                    getActivity().onBackPressed();  // Call the activity's back handling
-//                }
-//            }
+
+//        signupBackButton.setOnClickListener(v -> {
+//            handleFragmentBackNavigation();
 //        });
 
         signupRedirectToLogin.setOnClickListener(v -> {
@@ -190,6 +180,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
             loadFragment(fragments[currentFragmentIndex]);
         } else {
             showExitConfirmationDialog();
+            finish(); // Close activity if it's the first fragment
         }
     }
 
@@ -269,7 +260,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         location.put("city", city);
 
         // Store data in Firestore with document ID as uid
-        uid = user.getUid();
+        String uid = user.getUid();
 
         // Create a reference to the folder in Firebase Storage
         StorageReference userFolderRef = storageRef.child(uid);
@@ -320,97 +311,12 @@ public class RegistrationControlActivity extends AppCompatActivity {
         Uri nicBackUri = ((WorkerVerifyFragment) fragments[2]).getNicBack();
         Uri brUri = ((WorkerVerifyFragment) fragments[2]).getBr();
 
-        // Create a reference to the folder in Firebase Storage
-        StorageReference userFolderRef = storageRef.child(uid);
-
-        // Create file name for the image
-        String nicFrontfileName = "nic_front_image";
-        String nicBackfileName = "nic_back_image";
-        String brfileName = "br_certification_image";
-
-        // Create a reference to the image file in the user's folder
-        StorageReference frontNicRef = userFolderRef.child(nicFrontfileName);
-        StorageReference backNicRef = userFolderRef.child(nicBackfileName);
-        StorageReference brRef = userFolderRef.child(brfileName);
-
-        // Upload the file to Firebase Storage
-        frontNicRef.putFile(nicFrontUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // Image uploaded successfully
-                    Toast.makeText(this, "NIC front image uploaded successfully", Toast.LENGTH_SHORT).show();
-
-                    // Get the download URL of the uploaded image
-                    frontNicRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        frontNicUrl = uri.toString();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors
-                    Toast.makeText(this, "Failed to upload profile image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-        backNicRef.putFile(nicBackUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // Image uploaded successfully
-                    Toast.makeText(this, "NIC back image uploaded successfully", Toast.LENGTH_SHORT).show();
-
-                    // Get the download URL of the uploaded image
-                    backNicRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        backNicUrl = uri.toString();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors
-                    Toast.makeText(this, "Failed to upload profile image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-        brRef.putFile(brUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    // Image uploaded successfully
-                    Toast.makeText(this, "NIC back image uploaded successfully", Toast.LENGTH_SHORT).show();
-
-                    // Get the download URL of the uploaded image
-                    brRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        brUrl = uri.toString();
-                    });
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors
-                    Toast.makeText(this, "Failed to upload profile image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-        // Define the map structure for BRVerification
-        Map<String, Object> brVerification = new HashMap<>();
-        brVerification.put("BRimageURL", brUrl);
-        brVerification.put("isBrVerified", false);
-
-        // Define the map structure for NICVerification
-        Map<String, Object> nicVerification = new HashMap<>();
-        nicVerification.put("NicBackImageURL", backNicUrl);
-        nicVerification.put("NicFrontImageURL", frontNicUrl);
-        nicVerification.put("isNicVerified", false);
-
-        // Create the worker information map
-        Map<String, Object> workerInfo = new HashMap<>();
-        workerInfo.put("BRVerification", brVerification);
-        workerInfo.put("NICVerification", nicVerification);
-
-        DocumentReference userDocument = db.collection("users").document(uid);
-        CollectionReference workersInfoCollction = userDocument.collection("workerInformation");
-
-        // Add a new document to sub collecion
-        workersInfoCollction.add(workerInfo)
-                .addOnSuccessListener(documentReference -> {
-                    //String workerId = documentReference.getId();
-                    Toast.makeText(this, "Worker profile created", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error creating worker profile", Toast.LENGTH_SHORT).show();
-                });
+        Map<String, Object> workerData = new HashMap<>();
     }
 
     public void checkEmailVerification(FirebaseUser user) {
-        Handler handler = new Handler();  // Create a handler to execute the check
+        Handler handler = new Handler();
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -419,27 +325,28 @@ public class RegistrationControlActivity extends AppCompatActivity {
                         if (user.isEmailVerified()) {
                             Toast.makeText(RegistrationControlActivity.this, "User is verified", Toast.LENGTH_SHORT).show();
 
-                            // Stop further checks by removing the callbacks immediately after verification
-                            handler.removeCallbacks(this);
+                            // Stop further checks
+                            handler.removeCallbacks(this); // Remove callbacks immediately after verification
 
                             // Redirect based on registration type
                             if (registrationType.equals("client")) {
                                 // Save client details and redirect to client home
                                 saveUserDataToFirestore(user);
+                                Intent intent = new Intent(RegistrationControlActivity.this, clientHome.class);
+                                startActivity(intent);
+                                Toast.makeText(RegistrationControlActivity.this, "You are logged in as a client", Toast.LENGTH_SHORT).show();
                             } else if (registrationType.equals("worker")) {
-                                saveUserDataToFirestore(user);
-                                saveWorkerDataToFirestore(user);
+                                // Save worker details and redirect to worker profile
+                                // Handle redirection for worker
                             }
 
-                            Toast.makeText(RegistrationControlActivity.this, "Account created", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegistrationControlActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();  // Finish the current activity to prevent going back
+                            finish(); // Finish the current activity
+
                         } else {
                             Toast.makeText(RegistrationControlActivity.this, "Email not verified yet, retrying...", Toast.LENGTH_SHORT).show();
 
                             // Retry after a delay if email is not verified
-                            handler.postDelayed(this, 3000);  // Retry after 3 seconds
+                            handler.postDelayed(this, 3000); // Retry after 3 seconds
                         }
                     } else {
                         Toast.makeText(RegistrationControlActivity.this, "Failed to reload user. Please try again", Toast.LENGTH_SHORT).show();
@@ -451,7 +358,6 @@ public class RegistrationControlActivity extends AppCompatActivity {
         // Start the handler to check every 3 seconds
         handler.postDelayed(runnable, 3000);
     }
-
 
 
 

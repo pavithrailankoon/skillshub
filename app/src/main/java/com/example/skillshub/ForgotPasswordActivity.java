@@ -8,7 +8,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ForgotPasswordActivity extends AppCompatActivity {
 
     private Button resetPwdButton, resetBackButton;
-    private ImageView resetBackButtonTop;
     private EditText editEmail;
     ProgressDialog progressDialog;
 
@@ -39,7 +37,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.resetpwd_email);
         resetPwdButton = findViewById(R.id.resetpwd);
         resetBackButton = findViewById(R.id.resetpwd_back);
-        resetBackButtonTop = findViewById(R.id.signup_back_btn);
 
         resetPwdButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,13 +51,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
 
         resetBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        resetBackButtonTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();

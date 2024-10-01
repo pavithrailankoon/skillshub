@@ -1,25 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Skillshub" parent="Theme.AppCompat.NoActionBar">
-    </style>
-
-    <style name="Theme.Skillshub" parent="Base.Theme.Skillshub">
+        <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowIsTranslucent">true</item>
-
-        <!-- Keep the status bar visible -->
-        <item name="android:windowFullscreen">false</item>
-
-        <!-- Ensure that the content is resized properly below the status bar -->
-        <item name="android:fitsSystemWindows">true</item>
-
-        <!-- Ensure the content is not drawn in the cutout area -->
-<!--        <item name="android:windowLayoutInDisplayCutoutMode">never</item>-->
     </style>
+
+
+    <style name="Theme.Skillshub" parent="Base.Theme.Skillshub"
+        />
     
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>
     </style>
+
 
 </resources>

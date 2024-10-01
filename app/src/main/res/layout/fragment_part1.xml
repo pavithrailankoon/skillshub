@@ -132,94 +132,13 @@
                 android:layout_height="48dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
                 android:textColorHint="@color/white"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:ems="10"
                 android:backgroundTint="@color/white"/>
-
-<!--            <EditText-->
-<!--                android:id="@+id/signup_email"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:layout_marginStart="30dp"-->
-<!--                android:layout_marginEnd="30dp"-->
-<!--                android:ems="10"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:inputType="textEmailAddress"-->
-<!--                android:textColorHint="@color/white"-->
-<!--                android:hint="Email *"-->
-<!--                android:backgroundTint="@color/white"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textView2"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:layout_marginStart="30dp"-->
-<!--                android:layout_marginEnd="30dp"-->
-<!--                android:textSize="20sp"-->
-<!--                android:textStyle="bold"-->
-<!--                android:text="Address" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/signup_addressline1"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:layout_marginStart="30dp"-->
-<!--                android:layout_marginEnd="30dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="textPostalAddress"-->
-<!--                android:textColorHint="@color/white"-->
-<!--                android:hint="Address line 1"-->
-<!--                android:backgroundTint="@color/white"/>-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/signup_addressline2"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:layout_marginStart="30dp"-->
-<!--                android:layout_marginEnd="30dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="textPostalAddress"-->
-<!--                android:textColorHint="@color/white"-->
-<!--                android:hint="Address line 2"-->
-<!--                android:backgroundTint="@color/white"/>-->
-
-<!--            <AutoCompleteTextView-->
-<!--                android:id="@+id/signup_district"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:layout_marginStart="30dp"-->
-<!--                android:layout_marginEnd="30dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="textPostalAddress"-->
-<!--                android:textColorHint="@color/white"-->
-<!--                android:hint="District *"-->
-<!--                android:backgroundTint="@color/white"/>-->
-
-<!--            <AutoCompleteTextView-->
-<!--                android:id="@+id/signup_city"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:layout_marginStart="30dp"-->
-<!--                android:layout_marginEnd="30dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="textPostalAddress"-->
-<!--                android:textColorHint="@color/white"-->
-<!--                android:hint="City *"-->
-<!--                android:backgroundTint="@color/white"/>-->
 
 
         </LinearLayout>

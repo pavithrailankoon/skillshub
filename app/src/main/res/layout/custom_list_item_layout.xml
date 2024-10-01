@@ -23,6 +23,7 @@
             android:layout_height="70dp"
             android:id="@+id/listImage"
             android:src="@drawable/technicians"
+
             android:layout_margin="25dp">
         </com.google.android.material.imageview.ShapeableImageView>
 

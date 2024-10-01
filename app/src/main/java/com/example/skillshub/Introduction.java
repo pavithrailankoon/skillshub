@@ -13,7 +13,7 @@ public class Introduction extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_introduction);  // Ensure this matches your layout file name
+        setContentView(R.layout.activity_main);  // Ensure this matches your layout file name
 
         // Initialize the button
         continueButton = findViewById(R.id.continueButton);
