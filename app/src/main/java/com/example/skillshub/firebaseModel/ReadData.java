@@ -4,15 +4,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ReadData {
 
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Method to fetch all districts from Firestore
     public void getDistricts(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
@@ -66,5 +69,40 @@ public class ReadData {
                     }
                 })
                 .addOnFailureListener(onFailure);
+    }
+
+    // Method to retrieve job categories
+    public void getSkillsList(final FirestoreCallback callback) {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Set<String> uniqueCategories = new HashSet<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Check if the job_categories subcollection exists
+                            document.getReference().collection("workerProfiles")
+                                    .get()
+                                    .addOnCompleteListener(categoryTask -> {
+                                        if (categoryTask.isSuccessful()) {
+                                            // Check if the result is not empty
+                                            if (!categoryTask.getResult().isEmpty()) {
+                                                for (QueryDocumentSnapshot categoryDoc : categoryTask.getResult()) {
+                                                    String category = categoryDoc.getString("category_name");
+                                                    if (category != null) {
+                                                        uniqueCategories.add(category); // Add to Set to ensure uniqueness
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        // After iterating over all users, trigger callback with the unique categories
+                                        callback.onSuccess(new ArrayList<>(uniqueCategories));
+                                    });
+                        }
+                    }
+                });
+    }
+
+    public interface FirestoreCallback {
+        void onSuccess(List<String> uniqueCategories);
     }
 }
