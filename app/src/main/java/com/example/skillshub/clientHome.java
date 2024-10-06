@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -17,14 +18,24 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.skillshub.firebaseModel.ReadData;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class clientHome extends AppCompatActivity {
 
-   private ImageButton filterButton;
-   private Button button;
+    private ImageButton filterButton;
+    private Button button;
     private CircleImageView profileImageButton;
+    private ListView mainSkillsListView;
+
+    private ReadData readData;
+    private ArrayAdapter adapter;
+    private List<String> skillList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +43,18 @@ public class clientHome extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_client_home);
 
+        readData = new ReadData();
+
+        mainSkillsListView = findViewById(R.id.listView1);
+        skillList = new ArrayList<>();
+
+        loadSkillList();
+
+        // Initialize the adapter
+        adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, skillList);
+        mainSkillsListView.setAdapter(adapter);
 
         //filter Button Code
-
         filterButton = (ImageButton) findViewById(R.id.filter_button);
 
         filterButton.setOnClickListener(new View.OnClickListener(){
@@ -90,7 +110,12 @@ public class clientHome extends AppCompatActivity {
 
     }
 
-
-
-
+    // Retrieve job categories from Firestore
+    private void loadSkillList() {
+        readData.getSkillsList(mainSkillsListView -> {
+            skillList.clear();
+            skillList.addAll(mainSkillsListView);
+            adapter.notifyDataSetChanged(); // Update the ListView from firestore workerInformation sub-collection
+        });
+    }
 }

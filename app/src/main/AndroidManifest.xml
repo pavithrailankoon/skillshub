@@ -6,7 +6,7 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
+<!--    <uses-permission android:name="android.permission.CAMERA" />-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,12 +26,6 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />      
-        <activity          
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".signupform.MainActivity"
-            android:exported="false" />
         <activity
             android:name=".welcomeScreen"
             android:exported="true">
@@ -65,9 +59,7 @@
             android:exported="true"
             tools:ignore="DuplicateActivity">
         </activity>
-        <activity
-            android:name=".firebaseModel.TestFirebaseActivity"
-            android:exported="false" />
+
         <activity
             android:name=".clientHome2"
             android:exported="false" />

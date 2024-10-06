@@ -4,15 +4,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ReadData {
 
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     // Method to fetch all districts from Firestore
     public void getDistricts(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
@@ -41,29 +44,65 @@ public class ReadData {
                 .addOnFailureListener(onFailure);
     }
 
-    // Method to fetch all categories available from Firestore
-//    public void getCategories(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-//        db = FirebaseConnection.getFirestoreInstance();
-//        db.collection("skills").get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    Map<String, List<String>> skillMap = new HashMap<>();
-//                    List<String> subSkills = new ArrayList<>();
-//                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-//                        String mainCategory = document.getString("mainCategory");
-//                        List<String> subCategories = (List<String>) document.get("subCategories");
-//
-//                        if (mainCategory != null && subCategories != null) {
-//                            skillMap.put(mainCategory, subCategories);
-//                            subSkills.add(mainCategory);
-//                        }
-//                    }
-//                    if (skillMap != null) {
-//                        onSuccess.onSuccess(skillMap);
-//                    } else {
-//                        onFailure.onFailure(new Exception("No categories found for the skills"));
-//                    }
-//                    callback.onSuccess(skillMap, mainSkills);
-//                })
-//                .addOnFailureListener(onFailure);
-//    }
+    // Method to fetch available main skill category from Firestore
+    public void getMainSkills(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        db.collection("skills").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<String> mainSkill = new ArrayList<>();
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        mainSkill.add(document.getId()); // Each document ID represents a main skill
+                    }
+                    onSuccess.onSuccess(mainSkill);
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    //Method to fetch available sub skill categories from Firestore
+    public void getSubSkills(String district, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        db.collection("skills").document(district).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    List<String> subSkills = (List<String>) documentSnapshot.get("subSkills"); // sub skills field is an array
+                    if (subSkills != null) {
+                        onSuccess.onSuccess(subSkills);
+                    } else {
+                        onFailure.onFailure(new Exception("No sub skills found for the main skill"));
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    // Method to retrieve job categories
+    public void getSkillsList(final FirestoreCallback callback) {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Set<String> uniqueCategories = new HashSet<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Check if the job_categories subcollection exists
+                            document.getReference().collection("workerProfiles")
+                                    .get()
+                                    .addOnCompleteListener(categoryTask -> {
+                                        if (categoryTask.isSuccessful()) {
+                                            // Check if the result is not empty
+                                            if (!categoryTask.getResult().isEmpty()) {
+                                                for (QueryDocumentSnapshot categoryDoc : categoryTask.getResult()) {
+                                                    String category = categoryDoc.getString("category_name");
+                                                    if (category != null) {
+                                                        uniqueCategories.add(category); // Add to Set to ensure uniqueness
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        // After iterating over all users, trigger callback with the unique categories
+                                        callback.onSuccess(new ArrayList<>(uniqueCategories));
+                                    });
+                        }
+                    }
+                });
+    }
+
+    public interface FirestoreCallback {
+        void onSuccess(List<String> uniqueCategories);
+    }
 }
