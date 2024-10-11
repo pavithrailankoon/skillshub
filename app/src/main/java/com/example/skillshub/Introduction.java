@@ -1,5 +1,6 @@
 package com.example.skillshub;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,15 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Introduction extends AppCompatActivity {
 
-    private Button continueButton;
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduction);  // Ensure this matches your layout file name
 
         // Initialize the button
-        continueButton = findViewById(R.id.continueButton);
+        Button continueButton = findViewById(R.id.continueButton);
 
         // Set an OnClickListener to the button
         continueButton.setOnClickListener(new View.OnClickListener() {

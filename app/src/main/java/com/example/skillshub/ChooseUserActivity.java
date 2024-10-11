@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -17,11 +18,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.skillshub.signupform.RegistrationControlActivity;
 
-public class ChooseUserActivity extends AppCompatActivity {
+public class
+ChooseUserActivity extends AppCompatActivity {
 
     View view;
     Button signupAsCilent;
     Button signupAsWorker;
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,16 @@ public class ChooseUserActivity extends AppCompatActivity {
 
         signupAsCilent = findViewById(R.id.signup_as_client);
         signupAsWorker = findViewById(R.id.signup_as_worker);
+        backButton = findViewById(R.id.back_button);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ChooseUserActivity.this, "You are going back", Toast.LENGTH_SHORT).show();
+                Intent intent =new Intent(ChooseUserActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
 
         signupAsCilent.setOnClickListener(new View.OnClickListener() {
             @Override
