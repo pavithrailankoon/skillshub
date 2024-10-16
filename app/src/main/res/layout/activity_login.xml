@@ -74,29 +74,18 @@
 
         </EditText>
 
-        <CheckBox
-            android:id="@+id/remember_me"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:buttonTint="@color/white"
-            android:text="RememberMe"
-            android:textColor="#FFFFFF"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.075"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
-
         <TextView
             android:id="@+id/forgot_password"
             android:layout_width="123dp"
             android:layout_height="18dp"
+            android:layout_marginTop="32dp"
             android:text="Forgot Password?"
             android:textAlignment="textEnd"
             android:textColor="@color/yellow"
-            app:layout_constraintBottom_toBottomOf="@+id/remember_me"
-            app:layout_constraintStart_toEndOf="@+id/remember_me"
-            app:layout_constraintTop_toTopOf="@+id/remember_me" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.034"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/password" />
 
         <Button
             android:id="@+id/login_button"
@@ -109,10 +98,9 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.466"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/remember_me"
-            app:layout_constraintVertical_bias="0.352" />
+            app:layout_constraintTop_toBottomOf="@+id/forgot_password"
+            app:layout_constraintVertical_bias="0.244" />
 
         <TextView
             android:id="@+id/text2"
@@ -123,10 +111,10 @@
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.376"
+            app:layout_constraintHorizontal_bias="0.371"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_button"
-            app:layout_constraintVertical_bias="0.201" />
+            app:layout_constraintVertical_bias="0.134" />
 
         <TextView
             android:id="@+id/text3"

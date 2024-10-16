@@ -14,15 +14,15 @@
 
         <ImageView
             android:id="@+id/androidLogo"
-            android:layout_width="28dp"
-            android:layout_height="43dp"
-            android:src="@drawable/star"
+            android:layout_width="50dp"
+            android:layout_height="62dp"
+            android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintBottom_toBottomOf="@+id/poweredBy"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.095"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/poweredBy"
             app:layout_constraintTop_toTopOf="@+id/poweredBy"
-            app:layout_constraintVertical_bias="0.583" />
+            app:layout_constraintVertical_bias="0.511" />
 
         <TextView
             android:id="@+id/poweredBy"
@@ -74,6 +74,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/logo" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>
