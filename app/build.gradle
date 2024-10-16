@@ -23,6 +23,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures{
+        viewBinding true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -38,6 +43,7 @@ android {
 dependencies {
     def fragment_version = "1.8.2"
     implementation "androidx.fragment:fragment:$fragment_version"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -45,7 +51,8 @@ dependencies {
     implementation libs.firebase.auth
     implementation libs.firebase.database
     implementation libs.firebase.firestore
-    implementation platform('com.google.firebase:firebase-bom:33.1.2')
+    implementation("com.google.firebase:firebase-storage")
+    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
     implementation libs.annotation
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
@@ -53,5 +60,6 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-
+    implementation 'com.android.support:support-compat:26.1.0'
+    implementation 'androidx.core:core:1.13.0'
 }

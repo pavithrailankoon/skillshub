@@ -1,10 +1,11 @@
 <resources>
+    <string name="logo_desc">Skillshub</string>
     <string name="app_name">SkillHub</string>
 
     <!-- Strings of activity_signup -->
     <string name="signup_topic">Create A New Account</string>
     <string name="signup_verify_email">Verify email</string>
-    <string name="signup_verify_email_desc">Check your inbox and click verification link.</string>
+    <string name="signup_verify_email_desc"><br>Great!</br> After clicking CREATE, check your inbox for a verification link and click it to complete your signup.</string>
     <string name="signup_profileimg_desc">Profile Photo</string>
     <string name="signup_verify_nic">NIC Verification</string>
     <string name="signup_verify_nic_front">NIC front image</string>
@@ -54,6 +55,8 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="open_nav">"Open Navigation Drawer"</string>
+    <string name="close_nav">"Close Navigation Drawer"</string>
 
 </resources>
+

@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:id="@+id/nested_scroll_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -32,7 +32,7 @@
         <!-- FilterActivity code -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.core.widget.NestedScrollView
@@ -58,13 +58,13 @@
                 <Button
                     android:id="@+id/signup_back_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:layout_centerVertical="true"
+                    android:textColor="@color/black"
                     android:layout_weight="1"
                     android:background="@drawable/yellow_button_background"
-                    android:gravity="start"
                     android:text="BACK" />
 
                 <View
@@ -74,18 +74,45 @@
                 <Button
                     android:id="@+id/signup_next_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_weight="1"
                     android:textStyle="bold"
                     android:textSize="18sp"
+                    android:textColor="@color/black"
                     android:background="@drawable/yellow_button_background"
-                    android:gravity="end"
                     android:text="NEXT" />
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:layout_marginRight="10dp"
+                    android:text="Have an account?" />
+
+                <TextView
+                    android:id="@+id/signup_redirect_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="@color/yellow"
+                    android:text="Login" />
+            </LinearLayout>
+
+
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
