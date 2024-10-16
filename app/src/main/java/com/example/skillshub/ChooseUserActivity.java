@@ -60,14 +60,6 @@ ChooseUserActivity extends AppCompatActivity {
                 Toast.makeText(ChooseUserActivity.this, "You are registering as a worker", Toast.LENGTH_SHORT).show();
             }
         });
-
-        // Handle system back button press
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                exit(view);
-            }
-        });
     }
 
     private void startRegistrationActivity(String registrationType) {
@@ -76,31 +68,6 @@ ChooseUserActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void exit(View view){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Confirm Exit!");
-        alertDialogBuilder.setIcon(R.mipmap.ic_launcher_square);
-        alertDialogBuilder.setMessage("Are you sure,You want to exit");
-        alertDialogBuilder.setCancelable(false);
 
-        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                // Exit the app
-                finishAffinity();
-            }
-        });
-
-        alertDialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
 
 }
