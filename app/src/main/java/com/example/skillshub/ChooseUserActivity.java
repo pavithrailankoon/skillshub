@@ -52,7 +52,7 @@ public class ChooseUserActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                exit(view);
+                //exit(view);
             }
         });
     }

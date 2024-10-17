@@ -25,12 +25,22 @@
         android:gravity="center_vertical"
         android:layout_marginBottom="100dp">
         <TextView
+            android:id="@+id/signup_topic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="Choose your role"
+            android:textColor="@color/yellow"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+        <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register As"
-            android:textColor="@color/yellow"
-            android:textSize="35sp"
+            android:text="Are you registering as a"
+            android:textColor="@color/white"
+            android:textSize="17sp"
             android:layout_marginBottom="25dp"
             android:layout_gravity="center"
             android:textStyle="bold" />
@@ -48,8 +58,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OR"
-            android:textColor="@color/yellow"
+            android:text="OR a"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_gravity="center"
