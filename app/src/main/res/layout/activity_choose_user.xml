@@ -11,7 +11,31 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="100dp">
+        <TextView
+            android:id="@+id/signup_topic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:text="Choose your role"
+            android:textColor="@color/yellow"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Are you registering as a"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:layout_marginBottom="25dp"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
+
 
         <Button
             android:id="@+id/signup_as_worker"
@@ -29,6 +53,10 @@
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OR a"
+            android:textColor="@color/white"
             android:id="@+id/textView14"
             android:layout_width="26dp"
             android:layout_height="33dp"

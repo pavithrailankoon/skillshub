@@ -60,6 +60,14 @@ ChooseUserActivity extends AppCompatActivity {
                 Toast.makeText(ChooseUserActivity.this, "You are registering as a worker", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Handle system back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                //exit(view);
+            }
+        });
     }
 
     private void startRegistrationActivity(String registrationType) {

@@ -1,10 +1,17 @@
 package com.example.skillshub.firebaseModel;
 
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,35 +51,57 @@ public class ReadData {
                 .addOnFailureListener(onFailure);
     }
 
-    // Method to fetch available main skill category from Firestore
-    public void getMainSkills(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-        db.collection("skills").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<String> mainSkill = new ArrayList<>();
-                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        mainSkill.add(document.getId()); // Each document ID represents a main skill
+    // Method to fetch all skills from Firestore
+    public void getMainSkill(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        db.collection("skills")
+                .addSnapshotListener((queryDocumentSnapshots, error) -> {
+                    if (error != null) {
+                        // Call onFailure in case of an error
+                        onFailure.onFailure(error);
+                        return;
                     }
-                    onSuccess.onSuccess(mainSkill);
-                })
-                .addOnFailureListener(onFailure);
+
+                    if (queryDocumentSnapshots != null) {
+                        List<String> mainSkills = new ArrayList<>();
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
+                            mainSkills.add(document.getId()); // Each document ID represents a skill
+                        }
+                        // Call onSuccess with the updated list
+                        onSuccess.onSuccess(mainSkills);
+                    }
+                });
     }
 
-    //Method to fetch available sub skill categories from Firestore
-    public void getSubSkills(String district, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-        db.collection("skills").document(district).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    List<String> subSkills = (List<String>) documentSnapshot.get("subSkills"); // sub skills field is an array
-                    if (subSkills != null) {
-                        onSuccess.onSuccess(subSkills);
-                    } else {
-                        onFailure.onFailure(new Exception("No sub skills found for the main skill"));
+
+    // Method to fetch sub skills for a given skills from Firestore
+    public void getSubSkill(String mainSkills, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        db.collection("skills").document(mainSkills)
+                .addSnapshotListener((documentSnapshot, error) -> {
+                    if (error != null) {
+                        // Handle error scenario
+                        onFailure.onFailure(error);
+                        return;
                     }
-                })
-                .addOnFailureListener(onFailure);
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        // Retrieve subSkills array
+                        List<String> subSkills = (List<String>) documentSnapshot.get("subCategories");
+
+                        if (subSkills != null) {
+                            onSuccess.onSuccess(subSkills);  // Pass the list of subSkills to the success listener
+                        } else {
+                            onFailure.onFailure(new Exception("No sub skills found for the main skill"));
+                        }
+                    } else {
+                        // Document does not exist or is null
+                        onFailure.onFailure(new Exception("Document does not exist"));
+                    }
+                });
     }
+
 
     // Method to retrieve job categories
-    public void getSkillsList(final FirestoreCallback callback) {
+    public void getSkillsList(final FirestoreSkillsCallback callback) {
         db.collection("users")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -102,7 +131,36 @@ public class ReadData {
                 });
     }
 
-    public interface FirestoreCallback {
+    public interface FirestoreSkillsCallback {
         void onSuccess(List<String> uniqueCategories);
+    }
+
+    // Method to check if a NIC already exists in the users collection
+    public void checkNicExists(String collection, String field, String value, final FirestoreNicCallback callback) {
+        db.collection(collection)
+                .whereEqualTo(field, value)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            // Handle the error
+                            callback.onFailure(error);
+                            return;
+                        }
+                        if (value != null && !value.isEmpty()) {
+                            // NIC already exists
+                            callback.onCallback(true);  // NIC found
+                        } else {
+                            // NIC is unique
+                            callback.onCallback(false);  // NIC not found
+                        }
+                    }
+                });
+    }
+
+    // Firestore callback interface
+    public interface FirestoreNicCallback {
+        void onCallback(boolean exists);
+        void onFailure(Exception e);
     }
 }
