@@ -8,18 +8,15 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skillshub.firebaseModel.AuthManager;
-import com.example.skillshub.signupform.AuthenticateActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -27,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
-    View view;
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
@@ -36,12 +32,10 @@ public class LoginActivity extends AppCompatActivity {
     private AuthManager authManager;
     FirebaseAuth auth;
 
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
@@ -55,80 +49,52 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
+                String email = emailEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
 
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please enter both email and password", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
-                    loginUserAuth();
-                if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    if(!password.isEmpty()){
-                        auth.signInWithEmailAndPassword(email, password)
-                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                    @Override
-                                    public void onSuccess(AuthResult authResult) {
-                                        Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(LoginActivity.this, clientHome.class));
-                                        finish();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(LoginActivity.this, "Invalid User.Please Signup", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }else {
-                        passwordEditText.setError("Password cannot be empty");
-                    }
-
-                } else if (email.isEmpty()) {
-                    emailEditText.setError("Email cannot be empty");
-                }else {
-                    emailEditText.setError("Please enter a valid email");
+                if (validateInput(email, password)) {
+                    loginUserAuth(email, password);
                 }
             }
         });
+
         forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Forgot Password clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });
+
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Sign Up clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, ChooseUserActivity.class);
                 startActivity(intent);
             }
         });
+
         // Handle system back button press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                exit(view);
+                exit();
             }
         });
     }
 
-    // Add exit dialogAlert to completely exit
-    public void exit(View view){
+    // Add exit dialog to completely exit
+    public void exit() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Confirm Exit!");
         alertDialogBuilder.setIcon(R.mipmap.ic_launcher_square);
-        alertDialogBuilder.setMessage("Are you sure,You want to exit");
+        alertDialogBuilder.setMessage("Are you sure you want to exit?");
         alertDialogBuilder.setCancelable(false);
 
         alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                // Exit the app
-                finishAffinity();
+                finishAffinity();  // Close all activities
             }
         });
 
@@ -143,10 +109,9 @@ public class LoginActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void loginUserAuth(){
-        String strEmail = emailEditText.getText().toString().trim();
-        String strPwd = passwordEditText.getText().toString().trim();
-        authManager.loginUser(LoginActivity.this, strEmail, strPwd,
+    // Method to log in the user with authentication
+    private void loginUserAuth(String email, String password) {
+        authManager.loginUser(LoginActivity.this, email, password,
                 new Runnable() {
                     @Override
                     public void run() {
@@ -160,38 +125,39 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        // Handle wrong email case (already shown via Toast)
+                        // Handle wrong email case
+                        emailEditText.setError("Invalid email address");
                     }
                 },
                 new Runnable() {
                     @Override
                     public void run() {
-                        // Handle wrong password case (already shown via Toast)
+                        // Handle wrong password case
+                        passwordEditText.setError("Incorrect password");
                     }
                 },
                 new Runnable() {
                     @Override
                     public void run() {
                         // Handle general failure case
+                        Toast.makeText(LoginActivity.this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    public boolean validateInput() {
+    // Validate email and password inputs
+    private boolean validateInput(String email, String password) {
         boolean isValid = true;
 
-        String strEmail = emailEditText.getText().toString().trim();
-        String strPwd = passwordEditText.getText().toString().trim();
-
         // Email validation
-        if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
-            emailEditText.setError(strEmail.isEmpty() ? "Email is required" : "Invalid email address");
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError(email.isEmpty() ? "Email is required" : "Invalid email address");
             isValid = false;
         }
 
         // Password validation
-        if (strPwd.isEmpty() || strPwd.length() < 6) {
-            passwordEditText.setError(strPwd.isEmpty() ? "Password is required" : "Password must be at least 6 characters");
+        if (password.isEmpty() || password.length() < 6) {
+            passwordEditText.setError(password.isEmpty() ? "Password is required" : "Password must be at least 6 characters");
             isValid = false;
         }
 
