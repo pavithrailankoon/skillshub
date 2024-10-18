@@ -2,6 +2,7 @@ package com.example.skillshub.firebaseModel;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class AuthManager {
     private FirebaseAuth auth;
     private Context context;
-    private static FirebaseUser user;
+    private FirebaseUser user;
 
     public AuthManager() {
         this.auth = FirebaseAuth.getInstance();
@@ -30,21 +31,34 @@ public class AuthManager {
         this.context = context;
     }
 
-    public FirebaseUser getCurrentUser() {
-        return user;
-    }
-
     // Method to check if the user's email is verified
-    public static boolean isEmailVerified() {
-        // Ensure the FirebaseUser is not null
-        if (user != null) {
-            // Return the result of whether the email is verified or not
-            return user.isEmailVerified();
+    public void isEmailVerifiedorNot(Runnable onVerified, Runnable onNotVerified) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            // Reload the user's data
+            currentUser.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // Check if the email is verified after reloading
+                        if (currentUser.isEmailVerified()) {
+                            onVerified.run(); // Trigger success callback
+                        } else {
+                            onNotVerified.run(); // Trigger failure callback
+                        }
+                    } else {
+                        // Handle failure of reloading (e.g., network issues)
+                        onNotVerified.run();
+                    }
+                }
+            });
+        } else {
+            // Handle case where user is null
+            onNotVerified.run();
         }
-        return false;
     }
 
-    public void loginUser(Context context, String email, String password, Runnable onSuccess, Runnable onWrongEmail, Runnable onWrongPassword, Runnable onFailure) {
+    public void loginUserActivity(Context context, String email, String password, Runnable onSuccess, Runnable onWrongEmail, Runnable onWrongPassword, Runnable onFailure) {
         FirebaseAuth auth = FirebaseAuth.getInstance(); // Get FirebaseAuth instance
 
         // Check if email and password are not empty
@@ -85,7 +99,7 @@ public class AuthManager {
 
 
 
-    public FirebaseUser createAuthAccount(Context context, String email, String password, Runnable onSuccess, Runnable onFailure) {
+    public void createAuthAccount(Context context, String email, String password, Runnable onSuccess, Runnable onFailure) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -100,8 +114,6 @@ public class AuthManager {
                         }
                     }
                 });
-        user = auth.getCurrentUser();
-        return user;
     }
 
     public void createAuthAccountWithPhone(Context context, String phoneNumber, Activity activity, PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks) {
@@ -115,27 +127,59 @@ public class AuthManager {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
+    // Method to log in the user
+    public void loginUser(Context context, String email, String password, Runnable onSuccess, Runnable onFailure) {
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Login successful, check for email verification
+                            FirebaseUser currentUser = auth.getCurrentUser();
+                            if (currentUser != null && !currentUser.isEmailVerified()) {
+                                // Email is not verified, send the verification link
+                                sendVerificationLink(context, onSuccess, onFailure);
+                            } else {
+                                // Email is already verified or there's no current user
+                                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show();
+                                onSuccess.run(); // Trigger success callback
+                            }
+                        } else {
+                            // Login failed
+                            Toast.makeText(context, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            onFailure.run(); // Trigger failure callback
+                        }
+                    }
+                });
+    }
 
-    public void sendVerificationLink(Context context, FirebaseUser user, Runnable onSuccess, Runnable onFailure) {
-        if (user != null) {
-            user.sendEmailVerification()
+    // Existing method to send email verification link
+    public void sendVerificationLink(Context context, Runnable onSuccess, Runnable onFailure) {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null && !currentUser.isEmailVerified()) {
+            currentUser.sendEmailVerification()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 // Verification email sent successfully
-                                Toast.makeText(context, "Verification link sent to: " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Verification link sent to: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
                                 onSuccess.run(); // Trigger success callback
                             } else {
                                 // Failed to send verification email
                                 Toast.makeText(context, "Failed to send verification link.", Toast.LENGTH_SHORT).show();
                                 onFailure.run(); // Trigger failure callback
+                                if (task.getException() != null) {
+                                    Toast.makeText(context, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     });
+        } else if (currentUser != null && currentUser.isEmailVerified()) {
+            Toast.makeText(context, "Email already verified", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "No logged-in user found or invalid email.", Toast.LENGTH_SHORT).show();
-            onFailure.run(); // Trigger failure callback if user is not logged in or email is invalid
+            Toast.makeText(context, "No logged-in user found.", Toast.LENGTH_SHORT).show();
+            onFailure.run(); // Trigger failure callback if no user
         }
     }
 

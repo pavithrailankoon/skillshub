@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Method to log in the user with authentication
     private void loginUserAuth(String email, String password) {
-        authManager.loginUser(LoginActivity.this, email, password,
+        authManager.loginUserActivity(LoginActivity.this, email, password,
                 new Runnable() {
                     @Override
                     public void run() {

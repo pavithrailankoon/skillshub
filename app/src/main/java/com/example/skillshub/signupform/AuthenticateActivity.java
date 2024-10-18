@@ -17,12 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skillshub.R;
 import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.utils.DialogUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 
 public class AuthenticateActivity extends AppCompatActivity {
 
@@ -109,14 +113,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Handle positive button click (e.g., delete item)
-                        if(checkEmailVerified()) {
-                            saveDataLocal("userEmail", strEmail);
-                            saveDataLocal("userPassword", strPwd);
-                            saveDataLocal("userNic", strNic);
-                            Toast.makeText(AuthenticateActivity.this, "Great! You are verified", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(AuthenticateActivity.this, ChooseUserActivity.class);
-//                            startActivity(intent);
-                        }
+                        checkEmailVerified();
                     }
                 },
                 "Send link",  // Neutral button text
@@ -128,14 +125,22 @@ public class AuthenticateActivity extends AppCompatActivity {
                                 authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
                                     @Override
                                     public void onEmailCheckComplete(boolean exists) {
-                                        if (!exists && !authManager.isEmailVerified()) {
+                                        if (!exists) {
                                             createAuthAccountNotVerified();
-                                        }
-                                        else if (exists && !authManager.isEmailVerified()) {
-                                            resendVerificationLink();
+                                        } else {
+                                            authManager.isEmailVerifiedorNot(
+                                                    new Runnable() {
+                                                        @Override
+                                                        public void run() {}
+                                                    },
+                                                    new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            sendVerificationLink();
+                                                        }
+                                                    });
                                         }
                                     }
-
                                     @Override
                                     public void onError(Exception exception) {
 
@@ -159,21 +164,25 @@ public class AuthenticateActivity extends AppCompatActivity {
         );
     }
 
-    private boolean checkEmailVerified(){
-        if (authManager.getCurrentUser() == null) {
-            Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        // Check if the email is verified
-        boolean verified = authManager.isEmailVerified();
-        if (verified) {
-            Toast.makeText(this, "Email is verified", Toast.LENGTH_SHORT).show();
-            return true;
-        } else {
-            Toast.makeText(this, "Please verify your email first", Toast.LENGTH_SHORT).show();
-            return false;
-        }
+    private void checkEmailVerified(){
+        authManager.isEmailVerifiedorNot(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        saveDataLocal("userEmail", strEmail);
+                        saveDataLocal("userPassword", strPwd);
+                        saveDataLocal("userNic", strNic);
+                        Toast.makeText(AuthenticateActivity.this, "Great! You are verified", Toast.LENGTH_SHORT).show();
+//                            Intent intent = new Intent(AuthenticateActivity.this, ChooseUserActivity.class);
+//                            startActivity(intent);
+                    }
+                },
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Please verify your email first", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void createAuthAccountNotVerified(){
@@ -190,7 +199,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         // Success action: Navigate to another screen or show success message
-                                        loginUserAuth();
+                                        loginUserAuth(strEmail, strPwd);
                                     }
                                 },
                                 new Runnable() {
@@ -214,39 +223,24 @@ public class AuthenticateActivity extends AppCompatActivity {
         }
     }
 
-    private void loginUserAuth(){
-        strEmail = email.getText().toString().trim();
-        strPwd = password.getText().toString().trim();
-        authManager.loginUser(AuthenticateActivity.this, strEmail, strPwd,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        // Success: Navigate to the main activity or client view
-                    }
+    private void loginUserAuth(String strEmail, String strPwd){
+        // Handle login and verification
+        authManager.loginUser(this, strEmail, strPwd,
+                // Success callback
+                () -> {
+                    // Do something on success, e.g., navigate to next activity
+                    showError("User logged");
                 },
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        // Handle wrong email case (already shown via Toast)
-                    }
-                },
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        // Handle wrong password case (already shown via Toast)
-                    }
-                },
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        // Handle general failure case
-                    }
-                });
+                // Failure callback
+                () -> {
+                    // Handle failure case, e.g., show an error dialog
+                    showError("login failed");
+                }
+        );
     }
 
     private void sendVerificationLink(){
             authManager.sendVerificationLink(this,
-                    authManager.getCurrentUser(),
                     new Runnable() {
                         @Override
                         public void run() {
@@ -259,22 +253,6 @@ public class AuthenticateActivity extends AppCompatActivity {
                             // Handle failure: e.g., show error message or retry option
                         }
                     });
-    }
-
-    private void resendVerificationLink(){
-        authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
-            @Override
-            public void onEmailCheckComplete(boolean exists) {
-                if (!exists && !authManager.isEmailVerified()) {
-                    sendVerificationLink();
-                }
-            }
-
-            @Override
-            public void onError(Exception exception) {
-
-            }
-        });
     }
 
     // Call the checkNicExists method
@@ -323,7 +301,7 @@ public class AuthenticateActivity extends AppCompatActivity {
         );
     }
 
-    private void saveDataLocal(String KEY, String name) {
+    private void saveDataLocal(String KEY, String value) {
         // Get SharedPreferences object
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
 
@@ -331,7 +309,7 @@ public class AuthenticateActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // Put data in SharedPreferences
-        editor.putString(KEY, name);
+        editor.putString(KEY, value);
 
         // Apply the changes
         editor.apply();

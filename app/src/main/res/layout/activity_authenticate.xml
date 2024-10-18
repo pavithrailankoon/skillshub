@@ -161,11 +161,33 @@
                 android:text="Next Step"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
-
-
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:text="Have an account?" />
+
+            <TextView
+                android:id="@+id/signup_redirect_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/yellow"
+                android:text="Login" />
+        </LinearLayout>
 
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
