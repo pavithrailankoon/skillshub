@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,7 +25,7 @@ ChooseUserActivity extends AppCompatActivity {
     View view;
     Button signupAsCilent;
     Button signupAsWorker;
-    ImageButton backButton;
+    ImageView chooseRoleBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +35,12 @@ ChooseUserActivity extends AppCompatActivity {
 
         signupAsCilent = findViewById(R.id.signup_as_client);
         signupAsWorker = findViewById(R.id.signup_as_worker);
-        backButton = findViewById(R.id.back_button);
+        chooseRoleBack = findViewById(R.id.signup_back_btn);
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        chooseRoleBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ChooseUserActivity.this, "You are going back", Toast.LENGTH_SHORT).show();
-                Intent intent =new Intent(ChooseUserActivity.this,LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -65,7 +64,7 @@ ChooseUserActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                //exit(view);
+                finish();
             }
         });
     }
@@ -75,7 +74,4 @@ ChooseUserActivity extends AppCompatActivity {
         intent.putExtra("REGISTRATION_TYPE", registrationType);
         startActivity(intent);
     }
-
-
-
 }
