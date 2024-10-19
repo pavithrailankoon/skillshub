@@ -46,7 +46,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
     private Button signupNextButton;
     private ImageView exitSignupForm;
-    private Button signupBackButton;
+//    private Button signupBackButton;
     private TextView signupRedirectToLogin;
     private int currentFragmentIndex = 0;
     private Fragment[] fragments;
@@ -103,15 +103,15 @@ public class RegistrationControlActivity extends AppCompatActivity {
 //        signupBackButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (getActivity() != null) {
-//                    getActivity().onBackPressed();  // Call the activity's back handling
-//                }
+//                // Trigger the same fragment navigation behavior as the system back button
+//                handleFragmentBackNavigation();
 //            }
 //        });
 
         signupRedirectToLogin.setOnClickListener(v -> {
             Intent intent = new Intent(RegistrationControlActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         });
 
         exitSignupForm.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +165,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
                     R.anim.slide_out_left   // exit
             );
             transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
             transaction.commit(); // Commit the transaction
         } catch (Exception e) {
             Log.e("FragmentTransaction", "Error during fragment transaction", e);

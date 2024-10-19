@@ -26,6 +26,7 @@ ChooseUserActivity extends AppCompatActivity {
     Button signupAsCilent;
     Button signupAsWorker;
     ImageView backButton;
+    ImageView chooseRoleBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +36,12 @@ ChooseUserActivity extends AppCompatActivity {
 
         signupAsCilent = findViewById(R.id.signup_as_client);
         signupAsWorker = findViewById(R.id.signup_as_worker);
-        backButton = findViewById(R.id.back_button);
+        chooseRoleBack = findViewById(R.id.signup_back_btn);
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        chooseRoleBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ChooseUserActivity.this, "You are going back", Toast.LENGTH_SHORT).show();
-                Intent intent =new Intent(ChooseUserActivity.this,LoginActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -61,6 +60,14 @@ ChooseUserActivity extends AppCompatActivity {
                 Toast.makeText(ChooseUserActivity.this, "You are registering as a worker", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Handle system back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
     }
 
     private void startRegistrationActivity(String registrationType) {
@@ -68,7 +75,4 @@ ChooseUserActivity extends AppCompatActivity {
         intent.putExtra("REGISTRATION_TYPE", registrationType);
         startActivity(intent);
     }
-
-
-
 }
