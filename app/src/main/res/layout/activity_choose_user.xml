@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0C4F4F"
+    android:background="@color/background_green"
     tools:context=".ChooseUserActivity">
 
 
@@ -60,8 +60,5 @@
             android:textColor="@color/yellow"
             android:textStyle="bold" />
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

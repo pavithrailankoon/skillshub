@@ -25,6 +25,7 @@ ChooseUserActivity extends AppCompatActivity {
     View view;
     Button signupAsCilent;
     Button signupAsWorker;
+    ImageView backButton;
     ImageView chooseRoleBack;
 
     @Override
