@@ -40,7 +40,7 @@
         <activity
             android:name=".Introduction"
             android:exported="false" />
-        <activity
+          <activity
             android:name=".welcomeScreen"
             android:exported="false" />
         <activity
