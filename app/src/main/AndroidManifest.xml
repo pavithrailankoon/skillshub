@@ -49,7 +49,7 @@
         </activity>
         <activity
             android:name=".ClientProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Home"
             android:exported="false" />
