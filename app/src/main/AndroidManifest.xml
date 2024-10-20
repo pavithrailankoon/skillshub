@@ -30,26 +30,26 @@
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".welcomeScreen"
+            android:name=".ClientProfileActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-       </activity>
+        </activity>
         <activity
             android:name=".Introduction"
             android:exported="false" />
-          <activity
-            android:name=".clientHome"
+        <activity
+            android:name=".welcomeScreen"
             android:exported="false" />
         <activity
             android:name=".ChooseUserActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".ClientProfileActivity"
-            android:exported="true" />
+            android:name=".clientHome"
+            android:exported="false" />
         <activity
             android:name=".Home"
             android:exported="false" />
@@ -59,11 +59,6 @@
         <activity
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
-        <activity
-            android:name=".clientHome"
-            android:exported="false"
-            tools:ignore="DuplicateActivity">
-        </activity>
         <activity
             android:name=".clientHome2"
             android:exported="false" />
