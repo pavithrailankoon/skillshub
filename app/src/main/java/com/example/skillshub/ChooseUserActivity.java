@@ -17,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.skillshub.signupform.AuthenticateActivity;
 import com.example.skillshub.signupform.RegistrationControlActivity;
 
 public class
@@ -40,7 +41,8 @@ ChooseUserActivity extends AppCompatActivity {
         chooseRoleBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(ChooseUserActivity.this, AuthenticateActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -64,7 +66,8 @@ ChooseUserActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                finish();
+                Intent intent = new Intent(ChooseUserActivity.this, AuthenticateActivity.class);
+                startActivity(intent);
             }
         });
     }

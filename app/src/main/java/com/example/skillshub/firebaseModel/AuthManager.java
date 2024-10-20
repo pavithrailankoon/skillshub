@@ -31,6 +31,10 @@ public class AuthManager {
         this.context = context;
     }
 
+    public FirebaseUser getCurrentLoginUser(){
+        return user;
+    }
+
     // Method to check if the user's email is verified
     public void isEmailVerifiedorNot(Runnable onVerified, Runnable onNotVerified) {
         FirebaseUser currentUser = auth.getCurrentUser();
@@ -75,21 +79,17 @@ public class AuthManager {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Login successful
-                            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show();
                             onSuccess.run(); // Call success callback
                         } else {
                             // Handle login failure by analyzing the exception
                             if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                                 // The email address is wrong or the account doesn't exist
-                                Toast.makeText(context, "The email address is incorrect or not registered", Toast.LENGTH_LONG).show();
                                 onWrongEmail.run(); // Call wrong email callback
                             } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The password is wrong
-                                Toast.makeText(context, "Incorrect password", Toast.LENGTH_LONG).show();
                                 onWrongPassword.run(); // Call wrong password callback
                             } else {
                                 // Handle general failure (e.g., network issue, etc.)
-                                Toast.makeText(context, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 onFailure.run(); // Call general failure callback
                             }
                         }
