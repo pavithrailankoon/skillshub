@@ -30,8 +30,6 @@ import java.util.List;
 public class Part2Fragment extends Fragment {
 
     View view;
-    private EditText email;
-    private EditText nic;
     private EditText addressLine1;
     private EditText addressLine2;
     private AutoCompleteTextView city;
@@ -43,10 +41,6 @@ public class Part2Fragment extends Fragment {
     private ArrayAdapter<String> cityAdapter;
 
     private FirebaseAuth auth;
-
-    public interface EmailCheckCallback {
-        void onEmailCheckCompleted(boolean emailExists);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,16 +59,12 @@ public class Part2Fragment extends Fragment {
     }
 
     private void initializeViews(){
-        email = view.findViewById(R.id.signup_email);
-        nic = view.findViewById(R.id.signup_nic);
         addressLine1 = view.findViewById(R.id.signup_addressline1);
         addressLine2 = view.findViewById(R.id.signup_addressline2);
         city = view.findViewById(R.id.signup_city);
         district = view.findViewById(R.id.signup_district);
 
         // Add TextWatchers to listen for text changes
-        email.addTextChangedListener(new Part2Fragment.GenericTextWatcher(email));
-        nic.addTextChangedListener(new Part2Fragment.GenericTextWatcher(nic));
         city.addTextChangedListener(new Part2Fragment.GenericTextWatcher(city));
         district.addTextChangedListener(new Part2Fragment.GenericTextWatcher(district));
     }
@@ -129,14 +119,6 @@ public class Part2Fragment extends Fragment {
 
 
     //Add getters to send values to RgistrationControlActivity
-    public String getEmail() {
-        return email.getText().toString();
-    }
-
-    public String getNic() {
-        return nic.getText().toString();
-    }
-
     public String getAddressLine1() {
         return addressLine1.getText().toString();
     }
@@ -157,31 +139,6 @@ public class Part2Fragment extends Fragment {
     public boolean validateInput() {
         boolean isValid = true;
 
-        // Validate email
-        String strEmail = email.getText().toString().trim();
-        if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
-                if(strEmail.isEmpty()){ email.setError("Email is required"); }
-                if(!Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()){ email.setError("Invalid email address"); }
-                //if(checkEmailExists(strEmail)){ email.setError("Email address is already in use"); }
-            isValid = false;
-        }
-
-       // Validate NIC number
-        String strNic = nic.getText().toString().trim();
-        if (strNic.isEmpty() || !(strNic.length() == 10 || strNic.length() == 12) || (strNic.length() == 10 && !strNic.matches(".*[VXvx]$"))) {
-            if (strNic.isEmpty()) {
-                nic.setError("NIC number is required");
-            } else if (!(strNic.length() == 10 || strNic.length() == 12)) {
-                nic.setError("NIC number does not contain valid character count");
-            } else if (strNic.length() == 10 && !strNic.matches(".*[VXvx]$")) {
-                nic.setError("Last character should changed with 'V' or 'X'");
-            } else if (strNic.length() == 9 ) {
-                nic.setError("Your NIC number should end with 'V' or 'X'");
-            }
-            isValid = false;
-        }
-
-
         // Validate districts
         if (getDistrict().isEmpty()) {
             district.setError("District is required");
@@ -196,24 +153,6 @@ public class Part2Fragment extends Fragment {
         return isValid;
     }
 
-    // Method to check if the email exists in Firebase Auth
-    private void checkEmailExists(String strEmail, EmailCheckCallback callback) {
-        auth.fetchSignInMethodsForEmail(strEmail).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                boolean emailExists = !task.getResult().getSignInMethods().isEmpty();
-                if (emailExists) {
-                    email.setError("Email already in use");
-                }
-                callback.onEmailCheckCompleted(emailExists);
-            } else {
-                if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                    email.setError("Invalid email");
-                }
-                callback.onEmailCheckCompleted(false);
-            }
-        });
-    }
-
     private class GenericTextWatcher implements TextWatcher {
 
         private EditText editText;
@@ -224,8 +163,6 @@ public class Part2Fragment extends Fragment {
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            email.setError(null);
-            email.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         @Override
@@ -235,17 +172,8 @@ public class Part2Fragment extends Fragment {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (editText == email) {
-                String strEmail = email.getText().toString().trim();
 
-                checkEmailExists(strEmail, emailExists -> {
-                    if (!emailExists) {
-                        validateInput();
-                    }
-                });
-            } else {
-                validateInput();
-            }
         }
+
     }
 }

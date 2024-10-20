@@ -163,4 +163,45 @@ public class ReadData {
         void onCallback(boolean exists);
         void onFailure(Exception e);
     }
+
+
+    public void fetchSkillsRealtime(OnFirestoreDataListener listener) {
+        db.collection("skills")
+                .addSnapshotListener((querySnapshot, e) -> {
+                    if (e != null) {
+                        listener.onFailure(e.getMessage());  // Firestore listener failure
+                        return;
+                    }
+
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<String> mainSkillsList = new ArrayList<>();
+                        Map<String, List<String>> subSkillsMap = new HashMap<>();
+
+                        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                            // Extract mainSkill (Document ID)
+                            String mainSkill = document.getId();
+                            mainSkillsList.add(mainSkill);  // Add to mainSkills list
+
+                            // Extract subSkills (Assume it's an array field in Firestore)
+                            List<String> subSkills = (List<String>) document.get("subSkills");
+                            if (subSkills != null) {
+                                subSkillsMap.put(mainSkill, subSkills);  // Map mainSkill -> subSkills
+                            } else {
+                                subSkillsMap.put(mainSkill, new ArrayList<>());  // Handle empty subSkills
+                            }
+                        }
+
+                        // Notify the listener that data has been retrieved successfully
+                        listener.onSuccess(mainSkillsList, subSkillsMap);
+                    } else {
+                        listener.onFailure("No skills found.");
+                    }
+                });
+    }
+
+    // Define a callback interface to handle success/failure
+    public interface OnFirestoreDataListener {
+        void onSuccess(List<String> mainSkillsList, Map<String, List<String>> subSkillsMap);
+        void onFailure(String errorMessage);
+    }
 }

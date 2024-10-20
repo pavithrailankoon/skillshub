@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skillshub.firebaseModel.AuthManager;
+import com.example.skillshub.signupform.AuthenticateActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -69,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, ChooseUserActivity.class);
+                Intent intent = new Intent(LoginActivity.this, AuthenticateActivity.class);
                 startActivity(intent);
             }
         });
