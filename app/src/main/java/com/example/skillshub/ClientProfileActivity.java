@@ -84,7 +84,13 @@ public class ClientProfileActivity extends ComponentActivity implements CustomDi
             }
         });
 
-
+        editPassowrd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),ChangePassword.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
