@@ -1,45 +1,65 @@
 package com.example.skillshub.firebaseModel;
 
-import android.net.Uri;
+import android.content.Context;
+import android.widget.Toast;
 
+import com.example.skillshub.signupform.RegistrationControlActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.Map;
 
 public class CreateData {
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String password;
-    private Uri profileUri;
-    private String email;
-    private String nic;
-    private String adderss1;
-    private String adderss2;
-    private String district;
-    private String city;
     private FirebaseFirestore db;
+    private FirebaseUser user;
+    private FirebaseAuth auth;
+    private String uid;
+    private Context context;
 
-    public CreateData(String email, String password){
-        this.email=email;
-        this.password=password;
+    public CreateData(){
+        this.db = FirebaseFirestore.getInstance();
+        this.auth = FirebaseAuth.getInstance();
+        this.user = auth.getCurrentUser();
+        this.uid = user.getUid();
+        this.context = context;
     }
 
-    public CreateData(String firstName, String lastName, String email, String phone,  Uri profileUri, String nic, String adderss1, String adderss2, String district, String city){
-        this.firstName=firstName;
-        this.lastName=lastName;
-        this.email=email;
-        this.phone=phone;
-        this.profileUri=profileUri;
-        this.nic=nic;
-        this.adderss1=adderss1;
-        this.adderss2=adderss2;
-        this.district=district;
-        this.city=city;
+    // Method to save user data to Firestore
+    public void saveUserDataToFirestore(String uid, Map<String, Object> userData, Runnable onSuccess, Runnable onFailure) {
+        db.collection("users").document(uid)
+                .set(userData, SetOptions.merge())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Trigger success callback
+                        onSuccess.run();
+                    } else {
+                        // Trigger failure callback
+                        onFailure.run();
+                    }
+                });
     }
 
+    // Method to add data to a sub-collection
+    public void addWorkerInformation(String userId, String subCollection, Map<String, Object> workerData, OnWorkerDataUploadListener listener) {
+        CollectionReference workersInfoCollection = db.collection("users").document(userId).collection(subCollection);
 
-
-    //Method to add user data to firestore
-    private void addUserData(){
-
+        // Auto-generate document ID and add data
+        workersInfoCollection.add(workerData)
+                .addOnSuccessListener(documentReference -> {
+                    listener.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    listener.onFailure(e.getMessage());
+                });
     }
+
+    // Optional interface for callback to handle success/failure
+    public interface OnWorkerDataUploadListener {
+        void onSuccess();
+        void onFailure(String errorMessage);
+    }
+
 }

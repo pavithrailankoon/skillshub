@@ -2,6 +2,7 @@ package com.example.skillshub.signupform;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -20,10 +21,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.skillshub.ChooseUserActivity;
+import com.example.skillshub.LoginActivity;
 import com.example.skillshub.R;
+import com.example.skillshub.clientHome;
 import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.utils.DialogUtils;
+import com.example.skillshub.utils.LocalDataManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,23 +36,27 @@ import com.google.firebase.auth.FirebaseUser;
 public class AuthenticateActivity extends AppCompatActivity {
 
     private EditText email;
-    private EditText password;
-    private EditText repassword;
     private EditText nic;
     private TextView generatedPwd;
     private TextView copyPwdButton;
+    private TextView signupRedirectToLogin;
     private Button authCheck;
     private Button authLeave;
 
     private String strEmail;
     private String strPwd;
-    private String strPwdConfirm;
     private String strNic;
+    private Context context;
     private AuthManager authManager;
     private DialogUtils dialogUtils;
     private ReadData readData;
+    private LocalDataManager localDataManager;
 
     public static final String SHARED_PREFS = "userPrefs";
+
+    public AuthenticateActivity(){
+        this.context = this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +64,21 @@ public class AuthenticateActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_authenticate);
 
+        localDataManager = new LocalDataManager();
         dialogUtils = new DialogUtils();
         authManager = new AuthManager();
         readData = new ReadData();
+
         email = findViewById(R.id.auth_email);
-        password = findViewById(R.id.auth_password);
-        repassword = findViewById(R.id.auth_password_confirm);
         nic = findViewById(R.id.auth_nic);
         generatedPwd = findViewById(R.id.generated_password);
         copyPwdButton = findViewById(R.id.copy_button);
         copyPwdButton.setPaintFlags(copyPwdButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         authCheck = findViewById(R.id.auth_check_button);
         authLeave = findViewById(R.id.auth_leave_button);
+        signupRedirectToLogin = findViewById(R.id.signup_redirect_login);
 
         email.addTextChangedListener(new GenericTextWatcher(email));
-        password.addTextChangedListener(new GenericTextWatcher(password));
-        repassword.addTextChangedListener(new GenericTextWatcher(repassword));
         nic.addTextChangedListener(new GenericTextWatcher(nic));
 
         authCheck.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +93,11 @@ public class AuthenticateActivity extends AppCompatActivity {
                 leaveUser();
             }
         });
+        signupRedirectToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(AuthenticateActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         // Copy button functionality
         copyPwdButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +107,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                 if (!password.isEmpty()) {
                     copyToClipboard(password);
                 } else {
-                    showError("Enter valid email and password first");
+                    showError("Enter valid email and nic first");
                 }
             }
         });
@@ -102,8 +115,8 @@ public class AuthenticateActivity extends AppCompatActivity {
 
     private void openDialogBox(){
         strEmail = email.getText().toString().trim();
-        strPwd = password.getText().toString().trim();
         strNic = nic.getText().toString().trim();
+
         dialogUtils.showAlertDialog(
                 this,  // context, typically 'this' in an Activity or 'getContext()' in a Fragment
                 "Verification Status",  // Title
@@ -126,7 +139,24 @@ public class AuthenticateActivity extends AppCompatActivity {
                                     @Override
                                     public void onEmailCheckComplete(boolean exists) {
                                         if (!exists) {
-                                            createAuthAccountNotVerified();
+                                            readData.checkNicExists("users", "nic", strNic, new ReadData.FirestoreNicCallback() {
+                                                @Override
+                                                public void onCallback(boolean exists) {
+                                                    if (exists) {
+                                                        // NIC already exists, show error or handle it
+                                                        showError("NIC already exists");
+                                                    } else {
+                                                        // NIC is unique, proceed with registration
+                                                        showError("NIC is unique, proceed with registration");
+                                                        createAuthAccountNotVerified();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    // Handle the error
+                                                }
+                                            });
                                         } else {
                                             authManager.isEmailVerifiedorNot(
                                                     new Runnable() {
@@ -169,12 +199,39 @@ public class AuthenticateActivity extends AppCompatActivity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        saveDataLocal("userEmail", strEmail);
-                        saveDataLocal("userPassword", strPwd);
-                        saveDataLocal("userNic", strNic);
-                        Toast.makeText(AuthenticateActivity.this, "Great! You are verified", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(AuthenticateActivity.this, ChooseUserActivity.class);
-//                            startActivity(intent);
+                        readData.checkNicExists("users", "nic", strNic, new ReadData.FirestoreNicCallback() {
+                            @Override
+                            public void onCallback(boolean exists) {
+                                if (exists) {
+                                    // NIC already exists, show error or handle it
+                                    authManager.loginUser(AuthenticateActivity.this, strEmail, strPwd,
+                                            // Success callback
+                                            () -> {
+                                                // Success: Navigate to the main activity or client view
+                                                LocalDataManager.saveDataLocal(context, "userEmail", strEmail);
+                                                LocalDataManager.saveDataLocal(context, "userPassword", strPwd);
+                                                LocalDataManager.saveDataLocal(context, "userNic", strNic);
+                                                Toast.makeText(AuthenticateActivity.this, "Great! You are verified", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(AuthenticateActivity.this, ChooseUserActivity.class);
+                                                startActivity(intent);
+                                            },
+                                            // Failure callback
+                                            () -> {
+                                                // Handle failure case, e.g., show an error dialog
+                                                showError("Suspicious user behavior");
+                                            }
+                                    );
+                                } else {
+                                    // NIC is unique, proceed with registration
+                                    showError("Suspicious user behavior");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                // Handle the error
+                            }
+                        });
                     }
                 },
                 new Runnable() {
@@ -187,9 +244,8 @@ public class AuthenticateActivity extends AppCompatActivity {
 
     private void createAuthAccountNotVerified(){
         strEmail = email.getText().toString().trim();
-        strPwd = password.getText().toString().trim();
 
-        if (!strEmail.isEmpty() && !strPwd.isEmpty()) {
+        if (!strEmail.isEmpty()) {
             authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
                 @Override
                 public void onEmailCheckComplete(boolean exists) {
@@ -257,6 +313,7 @@ public class AuthenticateActivity extends AppCompatActivity {
 
     // Call the checkNicExists method
     private void checkNicAvailable(){
+        strNic = nic.getText().toString().trim();
         readData.checkNicExists("users", "nic", strNic, new ReadData.FirestoreNicCallback() {
             @Override
             public void onCallback(boolean exists) {
@@ -301,48 +358,15 @@ public class AuthenticateActivity extends AppCompatActivity {
         );
     }
 
-    private void saveDataLocal(String KEY, String value) {
-        // Get SharedPreferences object
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-
-        // Get the SharedPreferences editor
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        // Put data in SharedPreferences
-        editor.putString(KEY, value);
-
-        // Apply the changes
-        editor.apply();
-    }
-
     public boolean validateInput() {
         boolean isValid = true;
 
         strEmail = email.getText().toString().trim();
-        strPwd = password.getText().toString().trim();
-        strPwdConfirm = repassword.getText().toString().trim();
         strNic = nic.getText().toString().trim();
 
         // Email validation
         if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
             email.setError(strEmail.isEmpty() ? "Email is required" : "Invalid email address");
-            isValid = false;
-        }
-
-        // Password validation
-        if (strPwd.isEmpty() || strPwd.length() < 6) {
-            password.setError(strPwd.isEmpty() ? "Password is required" : "Password must be at least 6 characters");
-            isValid = false;
-        }
-
-        // Password confirmation validation
-        if (strPwdConfirm.isEmpty()) {
-            repassword.setError(strPwdConfirm.isEmpty() ? "Re-entering password is required" : "Passwords do not match");
-            isValid = false;
-        }
-
-        if (!strPwd.equals(strPwdConfirm)) {
-            repassword.setError("Passwords do not match");
             isValid = false;
         }
 
@@ -380,36 +404,34 @@ public class AuthenticateActivity extends AppCompatActivity {
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             generatePassword();
             validateInput();
-            if (editText == password) {
-                if (charSequence.length() < 6) {
-                    password.setError("Password too short");
-                }
-            }
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (editText == email) {
-                String strEmail = email.getText().toString().trim();
-
-                authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
-                    @Override
-                    public void onEmailCheckComplete(boolean exists) {
-                        if (exists) {
-                            email.setError("Already used email");
-                            showError("Email is already registered. Please use a different one");
-                        } else {
-                            editText.setError(null);
-                            showError("Email is available");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception exception) {
-
-                    }
-                });
-            }
+            validateInput();
+//            if (editText == email) {
+//                String strEmail = email.getText().toString().trim();
+//
+//                authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
+//                    @Override
+//                    public void onEmailCheckComplete(boolean exists) {
+//                        if (exists) {
+//                            email.setError("Already used email");
+//                            showError("Email is already registered. Please use a different one");
+//                        } else {
+//                            editText.setError(null);
+//                            showError("Email is available");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception exception) {
+//
+//                    }
+//                });
+//            } else if (editText == nic){
+//                checkNicAvailable();
+//            }
         }
     }
 
@@ -433,8 +455,9 @@ public class AuthenticateActivity extends AppCompatActivity {
                 String nicPart = strNic.substring(0, 4);
 
                 // Combine for final password
-                String generatedPass = firstLetterCapitalized + "@" + nicPart;
-                generatedPwd.setText(generatedPass);
+                strPwd = firstLetterCapitalized + "@" + nicPart;
+
+                generatedPwd.setText(strPwd);
             } else {
                 // Clear the generated password if conditions are not met
                 generatedPwd.setText("");
@@ -451,7 +474,7 @@ public class AuthenticateActivity extends AppCompatActivity {
         ClipData clip = ClipData.newPlainText("Suggested Password", password);
         clipboard.setPrimaryClip(clip);
 
-        showError("Suggested password copied to clipboard");
+        showError("Generated password copied to clipboard");
     }
 
     private void showError(String message) {

@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:text="Suggested Password"
+            android:text="Your Generated Password"
             android:padding="10dp"
             android:textSize="18sp"
             android:textColor="@android:color/holo_blue_dark" />
@@ -80,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp">
 
@@ -104,39 +105,12 @@
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/auth_password"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/white"
-            android:ems="10"
-            android:hint="Choose strong password"
-            android:inputType="textPassword"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
-
-        <EditText
-            android:id="@+id/auth_password_confirm"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="30dp"
-            android:backgroundTint="@color/white"
-            android:ems="10"
-            android:hint="Re-enter password"
-            android:inputType="textPassword"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:layout_gravity="bottom">
 
             <Button
                 android:id="@+id/auth_leave_button"
