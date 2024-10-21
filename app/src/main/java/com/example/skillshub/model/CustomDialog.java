@@ -18,7 +18,7 @@ import com.example.skillshub.R;
 public class CustomDialog extends AppCompatDialogFragment {
 
     CustomDialogInterface customDialogInterface;
-    TextView name;
+    TextView name, phoneNumber,addressLine1,addressLine2;
 
     @NonNull
     @Override
@@ -39,13 +39,21 @@ public class CustomDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterfaece, int i) {
                         String newName = name.getText().toString();
-                        customDialogInterface.applyTexts(newName);
+                        String newPhoneNumber = phoneNumber.getText().toString();
+                        String newAddressLine1 = addressLine1.getText().toString();
+                        String newAddressLine2 = addressLine2.getText().toString();
+
+                        customDialogInterface.applyTexts(newName,newPhoneNumber,newAddressLine1,newAddressLine2);
+
                     }
                 });
 
 
 
         name = view.findViewById(R.id.name);
+        phoneNumber = view.findViewById(R.id.phoneNumber);
+        addressLine1 = view.findViewById(R.id.addressLine1);
+        addressLine2 = view.findViewById(R.id.addressLine2);
 
         return bilder.create();
 
@@ -58,6 +66,6 @@ public class CustomDialog extends AppCompatDialogFragment {
     }
 
     public interface CustomDialogInterface {
-        void applyTexts(String name);
+        void applyTexts(String name,String phoneNumber,String addressLine1,String addressLine2);
     }
 }

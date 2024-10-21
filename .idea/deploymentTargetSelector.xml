@@ -5,6 +5,8 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+<<<<<<< HEAD
+=======
       <SelectionState runConfigName="AuthenticateActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -17,6 +19,7 @@
       <SelectionState runConfigName="ClientProfileActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+>>>>>>> 774fc121853cca0dacce8f1b67e51721447ba24b
     </selectionStates>
   </component>
 </project>
