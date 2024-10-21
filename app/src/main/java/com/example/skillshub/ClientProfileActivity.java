@@ -22,7 +22,7 @@ import com.example.skillshub.model.CustomDialog;
 import org.w3c.dom.Text;
 
 
-public class ClientProfileActivity extends ComponentActivity implements CustomDialog.CustomDialogInterface{
+public class ClientProfileActivity extends AppCompatActivity implements CustomDialog.CustomDialogInterface{
 
     ImageView backBtn;
     Button logOut,editDetails,editPassowrd;
@@ -39,10 +39,6 @@ public class ClientProfileActivity extends ComponentActivity implements CustomDi
         CustomDialog customDialog = new CustomDialog();
         customDialog .show(getSupportFragmentManager(),"Test Customdialog");
 
-    }
-
-    private FragmentManager getSupportFragmentManager() {
-        return null;
     }
 
     @Override

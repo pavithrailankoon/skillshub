@@ -71,6 +71,9 @@
         <activity
             android:name=".ChangePassword"
             android:exported="false" />
+        <activity
+            android:name=".signupform.AuthenticateActivity"
+            android:exported="false" />
 
 
         <provider
