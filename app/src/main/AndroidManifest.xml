@@ -72,7 +72,6 @@
             android:name=".ChangePassword"
             android:exported="false" />
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.skillshub.fileprovider"
