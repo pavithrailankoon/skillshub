@@ -1,6 +1,12 @@
 package com.example.skillshub;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,7 +14,22 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class ClientProfileActivity extends AppCompatActivity {
+import com.example.skillshub.model.CustomDialog;
+
+import org.w3c.dom.Text;
+
+
+public class ClientProfileActivity extends AppCompatActivity implements CustomDialog.CustomDialogInterface{
+
+    ImageView backBtn;
+    Button logOut,nameEditBtn;
+    TextView newName;
+
+    public void openDialog(View view){
+        CustomDialog customDialog = new CustomDialog();
+        customDialog .show(getSupportFragmentManager(),"Test Customdialog");
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +41,34 @@ public class ClientProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        backBtn = findViewById(R.id.backBtn);
+        logOut = findViewById(R.id.logOut);
+        newName = findViewById(R.id.name);
+
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),clientHome.class);
+                startActivity(intent);
+            }
+        });
+
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
+
+    @Override
+    public void applyTexts(String name) {
+        newName.setText(name);
     }
 }

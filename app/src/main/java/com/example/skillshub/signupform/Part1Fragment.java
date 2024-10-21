@@ -47,11 +47,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Part1Fragment extends Fragment {
 
     View view;
-    private EditText firstName;
-    private EditText lastName;
+    private EditText fullName;
     private EditText phoneNumber;
-    private EditText password;
-    private EditText passwordConfirm;
     private CircleImageView imageViewProfilePhoto;
     private Button buttonTakePhoto, buttonUploadPhoto;
 
@@ -87,21 +84,15 @@ public class Part1Fragment extends Fragment {
     }
 
     private void initializeViews() {
-        firstName = view.findViewById(R.id.signup_first_name);
-        lastName = view.findViewById(R.id.signup_last_name);
+        fullName = view.findViewById(R.id.signup_full_name);
         phoneNumber = view.findViewById(R.id.signup_mobileno);
-        password = view.findViewById(R.id.signup_password_add);
-        passwordConfirm = view.findViewById(R.id.signup_password_confirm);
         imageViewProfilePhoto = view.findViewById(R.id.signup_upload_avatar);
         buttonTakePhoto = view.findViewById(R.id.signup_take_profile_photo);
         buttonUploadPhoto = view.findViewById(R.id.signup_upload_profile_photo);
 
         // Add TextWatchers to listen for text changes
-        firstName.addTextChangedListener(new GenericTextWatcher(firstName));
-        lastName.addTextChangedListener(new GenericTextWatcher(lastName));
+        fullName.addTextChangedListener(new GenericTextWatcher(fullName));
         phoneNumber.addTextChangedListener(new GenericTextWatcher(phoneNumber));
-        password.addTextChangedListener(new GenericTextWatcher(password));
-        passwordConfirm.addTextChangedListener(new GenericTextWatcher(passwordConfirm));
 
         // Set default image URI
         DEFAULT_IMAGE_URI = Uri.parse("android.resource://" + getContext().getPackageName() + "/" + R.drawable.avatar);
@@ -148,26 +139,13 @@ public class Part1Fragment extends Fragment {
         return imageUri != null ? imageUri : DEFAULT_IMAGE_URI;
     }
 
-    public String getFirstName() {
-        return firstName.getText().toString();
-    }
-
-    public String getLastName() {
-        return lastName.getText().toString();
+    public String getFullName() {
+        return fullName.getText().toString();
     }
 
     public String getPhoneNumber() {
-        return phoneNumber.getText().toString();
+        return phoneNumber.getText().toString().trim();
     }
-
-    public String getPassword() {
-        return password.getText().toString();
-    }
-
-    public String getPasswordConfirm() {
-        return passwordConfirm.getText().toString();
-    }
-
 
 
     // Validation method
@@ -175,14 +153,8 @@ public class Part1Fragment extends Fragment {
         boolean isValid = true;
 
         // Validate first name
-        if (getFirstName().isEmpty()) {
-            firstName.setError("First name is required");
-            isValid = false;
-        }
-
-        // Validate last name
-        if (getLastName().isEmpty()) {
-            lastName.setError("Last name is required");
+        if (getFullName().isEmpty()) {
+            fullName.setError("First name is required");
             isValid = false;
         }
 
@@ -192,26 +164,6 @@ public class Part1Fragment extends Fragment {
             phoneNumber.setError("Valid phone number is required");
             isValid = false;
         }
-
-        // Validate password
-        String strPwd = password.getText().toString().trim();
-        if (strPwd.isEmpty() || strPwd.length() < 6) {
-            if (strPwd.isEmpty()) {
-                password.setError("Password is required");
-            } else if (strPwd.length() < 6) {
-                password.setError("Password must be at least 6 characters");
-            }
-            isValid = false;
-        }
-
-        // Validate password confirm
-        String strPwdConfirm = passwordConfirm.getText().toString().trim();
-        if (strPwdConfirm.isEmpty() || !strPwd.equals(strPwdConfirm)) {
-            passwordConfirm.setError("Password is not matched");
-            isValid = false;
-        }
-
-
         return isValid;
     }
 
@@ -235,17 +187,11 @@ public class Part1Fragment extends Fragment {
         }
         @Override
         public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            password.setError(null);
-            password.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
         }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-            if (editText == password) {
-                if (charSequence.length() < 6) {
-                    password.setError("Password too short");
-                }
-            }
         }
 
         @Override
@@ -255,4 +201,3 @@ public class Part1Fragment extends Fragment {
     }
 
 }
-
