@@ -4,14 +4,11 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
-
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+        android:required="false" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
@@ -24,6 +21,12 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
+            android:name=".Review"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerProfileView"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -34,19 +37,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-       </activity>
-
+        </activity>
         <activity
             android:name=".Introduction"
             android:exported="false" />
-          <activity
+        <activity
             android:name=".clientHome"
             android:exported="false" />
         <activity
             android:name=".ChooseUserActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".ClientProfileActivity"
             android:exported="false" />
@@ -62,13 +62,10 @@
         <activity
             android:name=".clientHome"
             android:exported="false"
-            tools:ignore="DuplicateActivity">
-        </activity>
-
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".clientHome2"
             android:exported="false" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -79,7 +76,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
