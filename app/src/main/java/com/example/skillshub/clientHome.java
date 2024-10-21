@@ -92,7 +92,8 @@ public class clientHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(clientHome.this,"Become A Worker Button work",Toast.LENGTH_SHORT).show();;
-
+                Intent intent = new Intent(clientHome.this, WorkerProfileView.class);
+                startActivity(intent);
             }
         });
 
