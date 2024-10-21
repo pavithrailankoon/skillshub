@@ -220,10 +220,10 @@ public class AuthManager {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             // User deletion was successful
-                            Toast.makeText(context, "User account deleted successfully.", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "User account deleted successfully.", Toast.LENGTH_SHORT).show();
                         } else {
                             // Failed to delete user, handle the exception
-                            Toast.makeText(context, "Failed to delete user: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context, "Failed to delete user: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {

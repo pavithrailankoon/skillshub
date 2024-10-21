@@ -25,14 +25,17 @@
       <SelectionState runConfigName="LoginActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ChooseUserActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="ClientProfileActivity">
-
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
 
-    </selectionStates>
-  </component>
+      <SelectionState runConfigName="welcomeScreen">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+
+      <SelectionState runConfigName="ClientProfileActivity">
+       <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+
+   </component>
 </project>
