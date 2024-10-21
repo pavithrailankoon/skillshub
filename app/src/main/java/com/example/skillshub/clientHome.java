@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.skillshub.firebaseModel.FirebaseStoarageManager;
 import com.example.skillshub.firebaseModel.ReadData;
 
 import java.util.ArrayList;
@@ -117,5 +118,12 @@ public class clientHome extends AppCompatActivity {
             skillList.addAll(mainSkillsListView);
             adapter.notifyDataSetChanged(); // Update the ListView from firestore workerInformation sub-collection
         });
+    }
+
+    private void setUserAvatar(){
+        FirebaseStoarageManager imageManager = new FirebaseStoarageManager();
+
+// Load the profile image once
+        imageManager.loadProfileImage(this, profileImageButton);
     }
 }
