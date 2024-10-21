@@ -12,6 +12,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -54,8 +56,8 @@ public class Part1Fragment extends Fragment {
     private static final int REQUEST_IMAGE_CAMERA = 2;
     private Uri imageUri;
     private Uri DEFAULT_IMAGE_URI;
-
     @Nullable
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
