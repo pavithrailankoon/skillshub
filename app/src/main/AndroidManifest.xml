@@ -74,6 +74,9 @@
         <activity
             android:name=".signupform.AuthenticateActivity"
             android:exported="false" />
+        <activity
+            android:name=".WorkerProfileView"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
