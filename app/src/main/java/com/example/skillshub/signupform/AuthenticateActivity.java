@@ -129,7 +129,12 @@ public class AuthenticateActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Handle positive button click (e.g., delete item)
-                        checkEmailVerified();
+                        if(validateInput()){
+                            checkEmailVerified();
+                        } else {
+                            progressDialog.cancel();
+                            showError("Fill all fields");
+                        }
                     }
                 },
                 "Send link",  // Neutral button text
