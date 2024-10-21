@@ -5,6 +5,7 @@
     <color name="background_green">#156862</color>
     <color name="yellow">#FFDB4F</color>
     <color name="red">#FF1723</color>
+    <color name="lightred">#C22D2D</color>
     <color name="dark_grey">#818589</color>
 
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#FFFFFFFF</color>
