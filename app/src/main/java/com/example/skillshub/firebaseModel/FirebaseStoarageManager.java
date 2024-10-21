@@ -63,6 +63,9 @@ public class FirebaseStoarageManager {
             public void onSuccess(Uri uri) {
                 // Use Picasso or Glide to load the image into ImageView
                 Picasso.get().load(uri).into(imageView);
+                Picasso.get().load(uri)
+                        .placeholder(R.drawable.avatar) // Placeholder image while loading
+                        .into(imageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

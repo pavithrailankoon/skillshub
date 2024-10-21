@@ -3,6 +3,7 @@ package com.example.skillshub.signupform;
 import static android.app.PendingIntent.getActivity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef;
     AuthManager authManager;
+    ProgressDialog progressDialog;
 
     private String registrationType;
     private String profileUrl;
@@ -71,6 +73,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration_control);
 
+        progressDialog = new ProgressDialog(this);
         localDataManager = new LocalDataManager();
         storageManager = new FirebaseStoarageManager();
         authManager = new AuthManager();
@@ -211,6 +214,9 @@ public class RegistrationControlActivity extends AppCompatActivity {
     }
 
     private void saveUserDataToFirestore(FirebaseUser user) {
+        progressDialog.setTitle("Please Wait..");
+        progressDialog.setMessage("Saving user data...");
+        progressDialog.show();
         // Collect data from fragments
         String fullName = ((Part1Fragment) fragments[0]).getFullName();
         String phone = ((Part1Fragment) fragments[0]).getPhoneNumber();
@@ -247,9 +253,13 @@ public class RegistrationControlActivity extends AppCompatActivity {
                 Toast.makeText(RegistrationControlActivity.this, "Failed to upload profile image: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+        progressDialog.cancel();
     }
 
     private void saveWorkerDataToFirestore(FirebaseUser user){
+        progressDialog.setTitle("Please Wait..");
+        progressDialog.setMessage("Saving user data...");
+        progressDialog.show();
         Uri nicFrontUri = ((WorkerVerifyFragment) fragments[2]).getNicFront();
         Uri nicBackUri = ((WorkerVerifyFragment) fragments[2]).getNicBack();
         Uri brUri = ((WorkerVerifyFragment) fragments[2]).getBr();
@@ -313,5 +323,6 @@ public class RegistrationControlActivity extends AppCompatActivity {
                         Toast.makeText(RegistrationControlActivity.this, "Failed to upload NIC front image: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
+        progressDialog.cancel();
     }
 }

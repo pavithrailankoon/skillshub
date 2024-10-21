@@ -1,5 +1,6 @@
 package com.example.skillshub.signupform;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public class AuthenticateActivity extends AppCompatActivity {
     private DialogUtils dialogUtils;
     private ReadData readData;
     private LocalDataManager localDataManager;
+    ProgressDialog progressDialog;
 
     public static final String SHARED_PREFS = "userPrefs";
 
@@ -64,6 +66,7 @@ public class AuthenticateActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_authenticate);
 
+        progressDialog = new ProgressDialog(this);
         localDataManager = new LocalDataManager();
         dialogUtils = new DialogUtils();
         authManager = new AuthManager();
@@ -133,6 +136,9 @@ public class AuthenticateActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.setTitle("Please Wait..");
+                        progressDialog.setMessage("Sending verification link to your email...");
+                        progressDialog.show();
                         // Handle neutral button click (e.g., dismiss dialog)
                         if(validateInput()){
                                 authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
@@ -145,10 +151,12 @@ public class AuthenticateActivity extends AppCompatActivity {
                                                     if (exists) {
                                                         // NIC already exists, show error or handle it
                                                         showError("NIC already exists");
+                                                        progressDialog.cancel();
                                                     } else {
                                                         // NIC is unique, proceed with registration
                                                         showError("NIC is unique, proceed with registration");
                                                         createAuthAccountNotVerified();
+                                                        progressDialog.cancel();
                                                     }
                                                 }
 
@@ -158,6 +166,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                                                 }
                                             });
                                         } else {
+                                            progressDialog.cancel();
                                             authManager.isEmailVerifiedorNot(
                                                     new Runnable() {
                                                         @Override
@@ -178,6 +187,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                                 });
 
                         } else {
+                            progressDialog.cancel();
                             showError("Fill all fields");
                         }
 
@@ -195,6 +205,9 @@ public class AuthenticateActivity extends AppCompatActivity {
     }
 
     private void checkEmailVerified(){
+        progressDialog.setTitle("Please Wait..");
+        progressDialog.setMessage("Verify your email...");
+        progressDialog.show();
         authManager.isEmailVerifiedorNot(
                 new Runnable() {
                     @Override
@@ -202,8 +215,8 @@ public class AuthenticateActivity extends AppCompatActivity {
                         readData.checkNicExists("users", "nic", strNic, new ReadData.FirestoreNicCallback() {
                             @Override
                             public void onCallback(boolean exists) {
-                                if (exists) {
-                                    // NIC already exists, show error or handle it
+                                if (!exists) {
+                                    // NIC already exists, continue to chooseuseractivity
                                     authManager.loginUser(AuthenticateActivity.this, strEmail, strPwd,
                                             // Success callback
                                             () -> {
@@ -214,22 +227,26 @@ public class AuthenticateActivity extends AppCompatActivity {
                                                 Toast.makeText(AuthenticateActivity.this, "Great! You are verified", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(AuthenticateActivity.this, ChooseUserActivity.class);
                                                 startActivity(intent);
+                                                progressDialog.cancel();
                                             },
                                             // Failure callback
                                             () -> {
                                                 // Handle failure case, e.g., show an error dialog
                                                 showError("Suspicious user behavior");
+                                                progressDialog.cancel();
                                             }
                                     );
                                 } else {
                                     // NIC is unique, proceed with registration
                                     showError("Suspicious user behavior");
+                                    progressDialog.cancel();
                                 }
                             }
 
                             @Override
                             public void onFailure(Exception e) {
                                 // Handle the error
+                                progressDialog.cancel();
                             }
                         });
                     }
@@ -238,6 +255,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "Please verify your email first", Toast.LENGTH_SHORT).show();
+                        progressDialog.cancel();
                     }
                 });
     }
@@ -344,6 +362,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // Handle positive button click (e.g., delete item)
                         authManager.deleteUser(AuthenticateActivity.this);
+                        finish();
                     }
                 },
                 null,null,
@@ -417,10 +436,8 @@ public class AuthenticateActivity extends AppCompatActivity {
 //                    public void onEmailCheckComplete(boolean exists) {
 //                        if (exists) {
 //                            email.setError("Already used email");
-//                            showError("Email is already registered. Please use a different one");
 //                        } else {
 //                            editText.setError(null);
-//                            showError("Email is available");
 //                        }
 //                    }
 //

@@ -2,6 +2,7 @@ package com.example.skillshub;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView signUpTextView;
     private AuthManager authManager;
     FirebaseAuth auth;
+    ProgressDialog progressDialog;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        progressDialog = new ProgressDialog(this);
         auth = FirebaseAuth.getInstance();
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
@@ -112,6 +115,9 @@ public class LoginActivity extends AppCompatActivity {
 
     // Method to log in the user with authentication
     private void loginUserAuth(String email, String password) {
+        progressDialog.setTitle("Please Wait..");
+        progressDialog.setMessage("logging...");
+        progressDialog.show();
         authManager.loginUserActivity(LoginActivity.this, email, password,
                 new Runnable() {
                     @Override
@@ -120,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, clientHome.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        progressDialog.cancel();
                         finish();
                     }
                 },
@@ -128,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         // Handle wrong email case
                         emailEditText.setError("Invalid email address");
+                        progressDialog.cancel();
                     }
                 },
                 new Runnable() {
@@ -135,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         // Handle wrong password case
                         passwordEditText.setError("Incorrect password");
+                        progressDialog.cancel();
                     }
                 },
                 new Runnable() {
@@ -142,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         // Handle general failure case
                         Toast.makeText(LoginActivity.this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show();
+                        progressDialog.cancel();
                     }
                 });
     }
