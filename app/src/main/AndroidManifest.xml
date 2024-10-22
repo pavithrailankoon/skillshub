@@ -38,13 +38,13 @@
 
         <activity
             android:name=".Introduction"
-            android:exported="false" />
+            android:exported="true" />
           <activity
             android:name=".clientHome"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChooseUserActivity"
-            android:exported="false">
+            android:exported="true">
 
         </activity>
         <activity
@@ -52,31 +52,36 @@
             android:exported="true" />
         <activity
             android:name=".Home"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".clientHome"
-            android:exported="false"
+            android:exported="true"
             tools:ignore="DuplicateActivity">
         </activity>
 
         <activity
             android:name=".clientHome2"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChangePassword"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".signupform.AuthenticateActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".WorkerProfileView"
-            android:exported="false" />
+            android:exported="true" />
+
+        <activity
+            android:name=".FilterActivity"
+            android:exported="true" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
