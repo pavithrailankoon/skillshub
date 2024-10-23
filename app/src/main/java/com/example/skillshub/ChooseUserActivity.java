@@ -1,41 +1,34 @@
 package com.example.skillshub;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.skillshub.signupform.AuthenticateActivity;
 import com.example.skillshub.signupform.RegistrationControlActivity;
 
-public class
-ChooseUserActivity extends AppCompatActivity {
+public class ChooseUserActivity extends AppCompatActivity {
 
-    View view;
-    Button signupAsCilent;
+    Button signupAsClient;
     Button signupAsWorker;
-    ImageView backButton;
     ImageView chooseRoleBack;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_choose_user);
 
-        signupAsCilent = findViewById(R.id.signup_as_client);
+        signupAsClient = findViewById(R.id.signup_as_client);
         signupAsWorker = findViewById(R.id.signup_as_worker);
         chooseRoleBack = findViewById(R.id.signup_back_btn);
 
@@ -47,7 +40,7 @@ ChooseUserActivity extends AppCompatActivity {
             }
         });
 
-        signupAsCilent.setOnClickListener(new View.OnClickListener() {
+        signupAsClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startRegistrationActivity("client");

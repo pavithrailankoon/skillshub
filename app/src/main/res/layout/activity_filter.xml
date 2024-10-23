@@ -93,7 +93,6 @@
                     android:entries="@array/spinner_district"
                     android:background="@drawable/spinner_border"
                     android:padding="12dp"
-
                     android:textColor="@color/background_green"
                     android:spinnerMode="dropdown"
                     android:layout_marginStart="20dp"
@@ -140,8 +139,8 @@
                     android:layout_height="wrap_content"
                     android:backgroundTintMode="src_in"
                     android:text="Clear"
-                    android:background="@drawable/custom_button"
-                    android:textColor="@color/background_green"
+                    android:background="@drawable/button_yellow_outline"
+                    android:textColor="@color/yellow"
                     android:textAllCaps="false"/>
             </LinearLayout>
 

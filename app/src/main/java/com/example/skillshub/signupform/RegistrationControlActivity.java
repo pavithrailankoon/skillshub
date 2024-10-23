@@ -97,16 +97,16 @@ public class RegistrationControlActivity extends AppCompatActivity {
     private void setClickListeners(){
         signupNextButton.setOnClickListener(v -> {
             //if (validateCurrentFragment()) {
-                if (currentFragmentIndex < fragments.length - 1) {
-                    currentFragmentIndex++;
-                    loadFragment(fragments[currentFragmentIndex]);
-                } else {
-                    // Last fragment: collect data and store in Firebase
-                    saveAndLogin();
-                    Intent intent = new Intent(RegistrationControlActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+            if (currentFragmentIndex < fragments.length - 1) {
+                currentFragmentIndex++;
+                loadFragment(fragments[currentFragmentIndex]);
+            } else {
+                // Last fragment: collect data and store in Firebase
+                saveAndLogin();
+                Intent intent = new Intent(RegistrationControlActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
             //}
         });
 
@@ -137,6 +137,8 @@ public class RegistrationControlActivity extends AppCompatActivity {
             saveUserDataToFirestore(authManager.getCurrentLoginUser());
         } else if (registrationType.equals("worker")){
             saveUserDataToFirestore(authManager.getCurrentLoginUser());
+            saveWorkerDataToFirestore(authManager.getCurrentLoginUser());
+        } else if (registrationType.equals("clientToWorker")){
             saveWorkerDataToFirestore(authManager.getCurrentLoginUser());
         }
     }
@@ -191,6 +193,8 @@ public class RegistrationControlActivity extends AppCompatActivity {
                 return new Fragment[]{new Part1Fragment(), new Part2Fragment()};
             case "worker":
                 return new Fragment[]{new Part1Fragment(), new Part2Fragment(), new WorkerVerifyFragment()};
+            case "clientToWorker":
+                return new Fragment[]{new WorkerVerifyFragment()};
             default:
                 return new Fragment[]{};
         }
@@ -268,61 +272,61 @@ public class RegistrationControlActivity extends AppCompatActivity {
         User userData = new User();
 
         storageManager.uploadImageFiles(user.getUid(), "nic-front-image", nicFrontUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
+            @Override
+            public void onSuccess(String nicFrontUrl) {
+                storageManager.uploadImageFiles(user.getUid(), "nic-back-image", nicBackUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
                     @Override
-                    public void onSuccess(String nicFrontUrl) {
-                        storageManager.uploadImageFiles(user.getUid(), "nic-back-image", nicBackUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
+                    public void onSuccess(String nicBackUrl) {
+                        // Now upload BR image
+                        storageManager.uploadImageFiles(user.getUid(), "br-image", brUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
                             @Override
-                            public void onSuccess(String nicBackUrl) {
-                                // Now upload BR image
-                                storageManager.uploadImageFiles(user.getUid(), "br-image", brUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
+                            public void onSuccess(String brUrl) {
+                                // All images uploaded, now save user data to Firestore
+
+                                // Create the NICVerification data map
+                                Map<String, Object> nicVerification = userData.createWorkerNicData(nicFrontUrl, nicBackUrl, false);
+
+                                // Create the BRVerification data map
+                                Map<String, Object> brVerification = userData.createWorkerBrData(brUrl, false);
+
+                                // Combine the data into the main user map
+                                Map<String, Object> workerDataMap = userData.createWorkerData(nicVerification, brVerification);
+
+                                // Save all worker data
+                                createData.addWorkerInformation(user.getUid(), "workerInformation", workerDataMap, new CreateData.OnWorkerDataUploadListener() {
                                     @Override
-                                    public void onSuccess(String brUrl) {
-                                        // All images uploaded, now save user data to Firestore
-
-                                        // Create the NICVerification data map
-                                        Map<String, Object> nicVerification = userData.createWorkerNicData(nicFrontUrl, nicBackUrl, false);
-
-                                        // Create the BRVerification data map
-                                        Map<String, Object> brVerification = userData.createWorkerBrData(brUrl, false);
-
-                                        // Combine the data into the main user map
-                                        Map<String, Object> workerDataMap = userData.createWorkerData(nicVerification, brVerification);
-
-                                        // Save all worker data
-                                        createData.addWorkerInformation(user.getUid(), "workerInformation", workerDataMap, new CreateData.OnWorkerDataUploadListener() {
-                                            @Override
-                                            public void onSuccess() {
-                                                // Handle success, e.g., notify the user
-                                                System.out.println("Worker data uploaded successfully!");
-                                            }
-
-                                            @Override
-                                            public void onFailure(String errorMessage) {
-                                                // Handle failure, e.g., show an error message
-                                                System.err.println("Error uploading worker data: " + errorMessage);
-                                            }
-                                        });
+                                    public void onSuccess() {
+                                        // Handle success, e.g., notify the user
+                                        System.out.println("Worker data uploaded successfully!");
                                     }
 
                                     @Override
                                     public void onFailure(String errorMessage) {
-                                        Toast.makeText(RegistrationControlActivity.this, "Failed to upload BR image: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                        // Handle failure, e.g., show an error message
+                                        System.err.println("Error uploading worker data: " + errorMessage);
                                     }
                                 });
                             }
 
                             @Override
                             public void onFailure(String errorMessage) {
-                                Toast.makeText(RegistrationControlActivity.this, "Failed to upload NIC back image: " + errorMessage, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegistrationControlActivity.this, "Failed to upload BR image: " + errorMessage, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
 
                     @Override
                     public void onFailure(String errorMessage) {
-                        Toast.makeText(RegistrationControlActivity.this, "Failed to upload NIC front image: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegistrationControlActivity.this, "Failed to upload NIC back image: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Toast.makeText(RegistrationControlActivity.this, "Failed to upload NIC front image: " + errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
         progressDialog.cancel();
     }
 }

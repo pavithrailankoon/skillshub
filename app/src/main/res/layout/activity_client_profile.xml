@@ -45,6 +45,33 @@
         android:id="@+id/backBtn"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="330dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="100dp">
+
+
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="30dp"
+            android:text="Name:"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="80dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
         android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,11 +83,86 @@
         android:id="@+id/becomeWorkerButton"
         android:layout_width="150dp"
         android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="380dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="100dp">
+
+
+        <TextView
+            android:id="@+id/phoneNumberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="30dp"
+            android:text="Contact Number:"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/phoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="145dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="430dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="100dp">
+
+
+        <TextView
+            android:id="@+id/addressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp"
+            android:text="Address:"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/addressLine1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="95dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/addressLine2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="95dp"
+            android:text=""
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="520dp"
         android:background="@drawable/custom_button"
         android:text="Become A Worker"
-
         android:textAllCaps="false"
         android:textColor="@color/background_green"
         android:textSize="12dp"
@@ -115,11 +217,9 @@
         android:id="@+id/button"
         android:layout_width="72dp"
         android:layout_height="17dp"
-
         android:layout_alignStart="@+id/imageView6"
         android:layout_alignEnd="@+id/imageView6"
         android:layout_alignParentTop="true"
-
         android:layout_marginTop="300dp"
         android:background="@drawable/custom_button"
         android:text="Change"

@@ -153,7 +153,7 @@ public class Part1Fragment extends Fragment {
         boolean isValid = true;
 
         // Validate first name
-        if (getFullName().isEmpty()) {
+        if (getFullName() == null || getFullName().isEmpty()) {
             fullName.setError("First name is required");
             isValid = false;
         }
