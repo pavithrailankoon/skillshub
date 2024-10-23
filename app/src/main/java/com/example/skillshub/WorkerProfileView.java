@@ -1,10 +1,12 @@
 package com.example.skillshub;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,21 +16,31 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class WorkerProfileView extends AppCompatActivity {
-    TextView category, name, verified, mail, full_name, content, description;
+    TextView category, name, verified, mail,description;
     Button call, whatsapp, schedule, review;
     FirebaseAuth fAuth;
     ImageView back, workerImage;
     FirebaseFirestore fStore;
     String userID;
+
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -41,8 +53,6 @@ public class WorkerProfileView extends AppCompatActivity {
         name = findViewById(R.id.name);
         verified = findViewById(R.id.verified);
         mail = findViewById(R.id.mail);
-        full_name = findViewById(R.id.reviewname);
-        content = findViewById(R.id.reviewcontent);
         call = findViewById(R.id.call);
         whatsapp = findViewById(R.id.whatsapp);
         schedule = findViewById(R.id.schedule);
@@ -55,9 +65,12 @@ public class WorkerProfileView extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
+
         userID = fAuth.getCurrentUser().getUid();
 
-        DocumentReference documentReference = fStore.collection("users").document(userID);
+        DocumentReference documentReference = fStore.collection("users").document("DbnaB8GfAsXmo7h1NR3ydo3EJgR2");
+        DocumentReference documentReference1 = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
+        CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -65,8 +78,6 @@ public class WorkerProfileView extends AppCompatActivity {
                 name.setText(value.getString("firstName") + " " + value.getString("lastName"));
                 verified.setText(value.getString("verified"));
                 mail.setText(value.getString("email"));
-                full_name.setText(value.getString("firstName") + " " + value.getString("lastName"));
-                content.setText(value.getString("content"));
                 description.setText(value.getString("description"));
                 call.setText(value.getString("phone"));
             }
@@ -101,6 +112,8 @@ public class WorkerProfileView extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void openWhatsapp() {
         PackageManager pm = getPackageManager();

@@ -1,17 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_green"
-    android:baselineAligned="false"
-    android:orientation="horizontal"
-    tools:context=".LoginActivity">
+    android:fillViewport="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/logo"
@@ -187,73 +185,18 @@
             app:layout_constraintTop_toTopOf="@+id/textView25"
             app:layout_constraintVertical_bias="0.0" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="409dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="5dp"
-            app:cardBackgroundColor="@color/background_green"
-            app:cardCornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <Button
+            android:id="@+id/review"
+            android:layout_width="156dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/custom_button"
+            android:text="Write a Review"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.082"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView25">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/imageView13"
-                    android:layout_width="78dp"
-                    android:layout_height="78dp"
-                    android:layout_marginStart="4dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.606"
-                    app:srcCompat="@drawable/avatar" />
-
-                <TextView
-                    android:id="@+id/reviewcontent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:text="TextView"
-                    android:textColor="#FDFBFB"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView13"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.328" />
-
-                <TextView
-                    android:id="@+id/reviewname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/imageView13"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.045"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
-
-                <RatingBar
-                    android:id="@+id/ratingBar2"
-                    android:layout_width="244dp"
-                    android:layout_height="42dp"
-                    android:scaleX="0.4"
-                    android:scaleY="0.4"
-                    tools:layout_editor_absoluteX="25dp"
-                    tools:layout_editor_absoluteY="55dp" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
         <TextView
             android:id="@+id/description"
@@ -267,28 +210,8 @@
             app:layout_constraintTop_toBottomOf="@+id/textView21"
             tools:ignore="DuplicateIds" />
 
-        <Button
-            android:id="@+id/review"
-            android:layout_width="156dp"
-            android:layout_height="36dp"
-            android:background="@drawable/custom_button"
-            android:text="Write a Review"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            tools:ignore="MissingConstraints" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    </LinearLayout>
+</ScrollView>
 
 
-</RelativeLayout>
