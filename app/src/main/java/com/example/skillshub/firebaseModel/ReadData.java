@@ -1,15 +1,24 @@
 package com.example.skillshub.firebaseModel;
 
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 
+import com.example.skillshub.ChangePassword;
+import com.example.skillshub.clientHome;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -19,10 +28,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 public class ReadData {
+    private Context context;
+
+    public ReadData(){
+        this.context = context;
+    }
 
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     // Method to fetch all districts from Firestore
     public void getDistricts(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
@@ -204,4 +220,138 @@ public class ReadData {
         void onSuccess(List<String> mainSkillsList, Map<String, List<String>> subSkillsMap);
         void onFailure(String errorMessage);
     }
+
+    public void fetchUniqueCategoryNames(final FirestoreCallback firestoreCallback) {
+        // Create a HashSet to store unique category names
+        Set<String> categoryNamesSet = new HashSet<>();
+
+        // Reference the 'user' collection
+        db.collection("user").addSnapshotListener((userSnapshot, error) -> {
+            if (error != null) {
+                // Handle error if there's a problem with fetching the users
+                firestoreCallback.onFailure(error.getMessage());
+                return;
+            }
+
+            // Clear the previous category names
+            categoryNamesSet.clear();
+
+            // Loop through all user documents
+            if (userSnapshot != null) {
+                for (QueryDocumentSnapshot userDoc : userSnapshot) {
+                    String uid = userDoc.getId();
+
+                    // Access workerProfiles sub-collection if it exists
+                    db.collection("user").document(uid).collection("workerProfiles")
+                            .addSnapshotListener((workerSnapshot, e) -> {
+                                if (e != null) {
+                                    // Handle error for this user
+                                    return;
+                                }
+
+                                if (workerSnapshot != null && !workerSnapshot.isEmpty()) {
+                                    for (QueryDocumentSnapshot workerDoc : workerSnapshot) {
+                                        String categoryName = workerDoc.getId(); // Assuming categoryName is used as document ID
+                                        categoryNamesSet.add(categoryName);
+                                    }
+                                }
+
+                                // After processing, update the callback with unique category names
+                                firestoreCallback.onSuccess(new ArrayList<>(categoryNamesSet));
+                            });
+                }
+            }
+        });
+    }
+
+    // Callback interface to handle Firestore data fetching asynchronously
+    public interface FirestoreCallback {
+        void onSuccess(ArrayList<String> categoryNames);
+        void onFailure(String errorMessage);
+    }
+
+
+    public void fetchUniqueSubcategories(final String mainCategoryName, final FirestoreSubSkillCallback firestoreCallback) {
+        // Create a HashSet to store unique subcategory names
+        Set<String> subcategoryNamesSet = new HashSet<>();
+
+        // Reference the 'user' collection
+        db.collection("user").addSnapshotListener((userSnapshot, error) -> {
+            if (error != null) {
+                // Handle error if there's a problem with fetching the users
+                firestoreCallback.onFailure(error.getMessage());
+                return;
+            }
+
+            // Clear the previous subcategory names
+            subcategoryNamesSet.clear();
+
+            // Loop through all user documents
+            if (userSnapshot != null) {
+                for (QueryDocumentSnapshot userDoc : userSnapshot) {
+                    String uid = userDoc.getId();
+
+                    // Access workerProfiles sub-collection for the specific main category
+                    db.collection("user").document(uid)
+                            .collection("workerProfiles")
+                            .document(mainCategoryName) // Access the document for the specific main category
+                            .addSnapshotListener((workerSnapshot, e) -> {
+                                if (e != null) {
+                                    // Handle error for this user
+                                    return;
+                                }
+
+                                if (workerSnapshot != null && workerSnapshot.exists()) {
+                                    // Get the array field 'subcategories'
+                                    List<String> subcategories = (List<String>) workerSnapshot.get("subcategories");
+                                    if (subcategories != null) {
+                                        // Add each subcategory to the HashSet
+                                        subcategoryNamesSet.addAll(subcategories);
+                                    }
+                                }
+
+                                // After processing, update the callback with unique subcategory names
+                                firestoreCallback.onSuccess(new ArrayList<>(subcategoryNamesSet));
+                            });
+                }
+            }
+        });
+    }
+
+    // Callback interface to handle Firestore data fetching asynchronously
+    public interface FirestoreSubSkillCallback {
+        void onSuccess(ArrayList<String> subcategoryNames);
+        void onFailure(String errorMessage);
+    }
+
+    public ListenerRegistration getUserFieldRealtime(String fieldName, FirestoreUserDataCallback callback) {
+        String uid = auth.getCurrentUser().getUid(); // Get the user ID (uid)
+        DocumentReference docRef = db.collection("users").document(uid);
+
+        // Add Snapshot Listener for real-time updates
+        return docRef.addSnapshotListener((DocumentSnapshot snapshot, FirebaseFirestoreException e) -> {
+            if (e != null) {
+                callback.onError(e.getMessage()); // Handle error
+                return;
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Object fieldValue = snapshot.get(fieldName);
+                if (fieldValue != null) {
+                    callback.onSuccess(fieldValue); // Return the field value
+                } else {
+                    callback.onError("Field does not exist."); // Field not found
+                }
+            } else {
+                callback.onError("Document does not exist."); // Document not found
+            }
+        });
+    }
+
+    // Callback interface for async results
+    public interface FirestoreUserDataCallback {
+        void onSuccess(Object fieldValue);
+        void onError(String errorMessage);
+    }
+
 }

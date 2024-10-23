@@ -32,7 +32,13 @@ public class AuthManager {
     }
 
     public FirebaseUser getCurrentLoginUser(){
-        return user;
+        if (user != null) {
+            return user;
+        } else {
+            // Optionally handle the case when no user is logged in
+            Log.e("FirebaseAuth", "No user is currently logged in.");
+            return null; // or throw an exception based on your requirements
+        }
     }
 
     // Method to check if the user's email is verified

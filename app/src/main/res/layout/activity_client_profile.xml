@@ -167,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="80dp"
-            android:text="Prasad Maduranaga"
+            android:text=""
             android:textStyle="bold"
             android:textColor="@color/white"/>
 
@@ -202,7 +202,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="145dp"
-            android:text="0768914228"
+            android:text=""
             android:textStyle="bold"
             android:textColor="@color/white"/>
 
@@ -235,7 +235,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="95dp"
-            android:text="Weheraduwa, Mddawaththa"
+            android:text=""
             android:textStyle="bold"
             android:textColor="@color/white"/>
         <TextView
@@ -243,7 +243,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="95dp"
-            android:text="Matara"
+            android:text=""
             android:layout_marginTop="30dp"
             android:textStyle="bold"
             android:textColor="@color/white"/>

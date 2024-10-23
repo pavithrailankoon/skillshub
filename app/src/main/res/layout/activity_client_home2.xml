@@ -57,12 +57,27 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/client2_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
             app:srcCompat="@drawable/back" />
+
+
+        <ImageView
+            android:id="@+id/refresh_category"
+            android:layout_width="39dp"
+            android:layout_height="54dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="27dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toStartOf="@+id/becomeWorkerButton"
+            android:layout_toEndOf="@+id/imageView5"
+            android:src="@drawable/baseline_refresh_24" />
 
         <ImageButton
             android:id="@+id/filter_button"
@@ -113,7 +128,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-
+            android:dividerHeight="5dp"
             android:scrollbars="vertical"
             tools:layout_editor_absoluteX="-16dp"
             tools:layout_editor_absoluteY="64dp"
@@ -131,20 +146,13 @@
 
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/main_category_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Technicians"
             android:layout_marginStart="30dp"
              />
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Electricians"
-            android:layout_marginStart="180dp"
-            />
 
         <ImageView
             android:id="@+id/imageView7"
@@ -156,5 +164,14 @@
 
 
     </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/progress_bg"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
 
 </RelativeLayout>
