@@ -32,7 +32,7 @@ public class ChooseUserActivity extends AppCompatActivity {
         signupAsWorker = findViewById(R.id.signup_as_worker);
         chooseRoleBack = findViewById(R.id.signup_back_btn);
 
-        chooseRoleBack.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChooseUserActivity.this, AuthenticateActivity.class);

@@ -53,6 +53,7 @@ dependencies {
     implementation libs.firebase.firestore
     implementation("com.google.firebase:firebase-storage")
     implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation("com.google.android.gms:play-services-maps:18.0.0")
     implementation libs.annotation
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx

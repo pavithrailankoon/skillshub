@@ -30,13 +30,12 @@
             android:id="@+id/textView13"
             android:layout_width="253dp"
             android:layout_height="73dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="44dp"
             android:text="Hi \nWelcome Back!"
             android:textColor="@color/yellow"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.101"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 
@@ -51,10 +50,8 @@
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/password"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.123"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13"
-            app:layout_constraintVertical_bias="0.482">
+            app:layout_constraintTop_toBottomOf="@+id/textView13">
 
         </EditText>
 
@@ -62,13 +59,13 @@
             android:id="@+id/password"
             android:layout_width="329dp"
             android:layout_height="39dp"
-            android:layout_marginTop="108dp"
+            android:layout_marginTop="104dp"
             android:hint="Password"
             android:inputType="textPassword"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.123"
+            app:layout_constraintHorizontal_bias="0.487"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13">
 
@@ -78,12 +75,12 @@
             android:id="@+id/forgot_password"
             android:layout_width="123dp"
             android:layout_height="18dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="28dp"
             android:text="Forgot Password?"
             android:textAlignment="textEnd"
             android:textColor="@color/yellow"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.034"
+            app:layout_constraintHorizontal_bias="0.138"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password" />
 
