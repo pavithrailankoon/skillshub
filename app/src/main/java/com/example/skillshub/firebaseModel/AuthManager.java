@@ -234,7 +234,12 @@ public class AuthManager {
                     });
         } else {
             // No user is currently signed in
-            Toast.makeText(context, "No user is currently signed in.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "No user is currently signed in.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Logout from the firebase auth
+    public static void logOut() {
+        FirebaseAuth.getInstance().signOut();
     }
 }

@@ -9,14 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name"
-
         />
 
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="20dp"
         />
 
@@ -25,7 +23,6 @@
         android:layout_height="wrap_content"
         android:text="Mobile Number"
         android:layout_marginTop="70dp"
-
         />
 
     <EditText
@@ -49,16 +46,16 @@
         android:id="@+id/addressLine1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="160dp"
+        android:hint="Addressline 1"
         />
 
     <EditText
         android:id="@+id/addressLine2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="210dp"
+        android:hint="Addressline 2"
         />
 
 

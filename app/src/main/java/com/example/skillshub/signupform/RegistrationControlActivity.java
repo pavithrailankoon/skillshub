@@ -194,7 +194,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
             case "worker":
                 return new Fragment[]{new Part1Fragment(), new Part2Fragment(), new WorkerVerifyFragment()};
             case "clientToWorker":
-                return new Fragment[]{new WorkerVerifyFragment()};
+                return new Fragment[]{new Part1Fragment(), new WorkerVerifyFragment()};
             default:
                 return new Fragment[]{};
         }
@@ -238,13 +238,12 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
         // Create location data map
         User userData = new User();
-        Map<String, Object> location = userData.createLocationData(address1, address2, district, city);
 
         storageManager.uploadImageFiles(user.getUid(), "profile-image", profileUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
             @Override
             public void onSuccess(String profileUrl) {
                 // Profile image uploaded, now save user data to Firestore
-                Map<String, Object> userDataMap = userData.createUserData(fullName, phone, email, nic, profileUrl, location, role);
+                Map<String, Object> userDataMap = userData.createUserData(fullName, phone, email, nic, profileUrl, role, address1, address2, district, city);
 
                 createData.saveUserDataToFirestore(user.getUid(), userDataMap,
                         () -> Toast.makeText(RegistrationControlActivity.this, "User data added successfully", Toast.LENGTH_SHORT).show(),

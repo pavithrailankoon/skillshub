@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +52,9 @@ public class LoginActivity extends AppCompatActivity {
         signUpTextView = findViewById(R.id.text3);
         authManager = new AuthManager();
 
+        emailEditText.addTextChangedListener(new LoginActivity.GenericTextWatcher(emailEditText));
+        passwordEditText.addTextChangedListener(new LoginActivity.GenericTextWatcher(passwordEditText));
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,8 +78,11 @@ public class LoginActivity extends AppCompatActivity {
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, AuthenticateActivity.class);
-                startActivity(intent);
+                if (validateInput()){
+                    Intent intent = new Intent(LoginActivity.this, AuthenticateActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -115,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Method to log in the user with authentication
     private void loginUserAuth(String email, String password) {
+        loginButton.setEnabled(false);
         progressDialog.setTitle("Please Wait..");
         progressDialog.setMessage("logging...");
         progressDialog.show();
@@ -136,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Handle wrong email case
                         emailEditText.setError("Invalid email address");
                         progressDialog.cancel();
+                        loginButton.setEnabled(true);
                     }
                 },
                 new Runnable() {
@@ -144,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Handle wrong password case
                         passwordEditText.setError("Incorrect password");
                         progressDialog.cancel();
+                        loginButton.setEnabled(true);
                     }
                 },
                 new Runnable() {
@@ -152,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Handle general failure case
                         Toast.makeText(LoginActivity.this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show();
                         progressDialog.cancel();
+                        loginButton.setEnabled(true);
                     }
                 });
     }
@@ -173,5 +185,50 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return isValid;
+    }
+
+    public boolean validateInput() {
+        boolean isValid = true;
+
+        String strEmail = emailEditText.getText().toString().trim();
+        String strPwd = passwordEditText.getText().toString().trim();
+
+        // Email validation
+        if (strEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(strEmail).matches()) {
+            emailEditText.setError(strEmail.isEmpty() ? "Email is required" : "Invalid email address");
+            isValid = false;
+        }
+
+        if (strPwd.isEmpty() || strPwd.length()>=6){
+            passwordEditText.setError(strPwd.isEmpty() ? "Password is required" : "Short password");
+            isValid = false;
+        }
+
+
+        return isValid;
+    }
+
+    private class GenericTextWatcher implements TextWatcher {
+
+        private EditText editText;
+
+        public GenericTextWatcher(EditText editText) {
+            this.editText = editText;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            editText.setError(null);
+            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            validateInput();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            validateInput();
+        }
     }
 }

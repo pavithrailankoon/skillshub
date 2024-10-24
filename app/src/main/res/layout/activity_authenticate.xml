@@ -23,7 +23,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.274"
+        app:layout_constraintVertical_bias="0.453"
         tools:layout_editor_absoluteX="0dp">
 
         <TextView
@@ -71,46 +71,47 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:text="Your Generated Password"
             android:padding="10dp"
-            android:textSize="18sp"
-            android:textColor="@android:color/holo_blue_dark" />
+            android:text="Your Generated Password"
+            android:textColor="@color/yellow"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="20dp"
             android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp">
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
 
             <!-- Generated Password Display -->
             <TextView
                 android:id="@+id/generated_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:padding="10dp"
-                android:textSize="18sp"
-                android:textColor="@android:color/holo_blue_dark" />
+                android:text=""
+                android:textColor="@color/yellow"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/copy_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Copy Password"
                 android:padding="10dp"
-                android:textSize="18sp"
-                android:textColor="@android:color/holo_blue_dark" />
+                android:text="Copy Password"
+                android:textColor="@color/yellow"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="0dp"
             android:gravity="center_horizontal"
-            android:layout_gravity="bottom">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/auth_leave_button"
@@ -140,25 +141,26 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textStyle="bold"
                 android:layout_marginRight="10dp"
-                android:text="Have an account?" />
+                android:layout_weight="1"
+                android:text="Have an account?"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/signup_redirect_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:text="Login"
                 android:textColor="@color/yellow"
-                android:text="Login" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

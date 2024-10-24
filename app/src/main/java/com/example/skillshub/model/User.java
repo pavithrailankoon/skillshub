@@ -6,7 +6,7 @@ import java.util.Map;
 public class User {
 
     // Helper method to create the user data map
-    public Map<String, Object> createUserData(String fullName, String phone, String email, String nic, String profileUrl, Map<String, Object> location, String role) {
+    public Map<String, Object> createUserData(String fullName, String phone, String email, String nic, String profileUrl, String role, String address1, String address2, String district, String city) {
         Map<String, Object> userData = new HashMap<>();
         userData.put("fullName", fullName);
         userData.put("phone", phone);
@@ -14,20 +14,12 @@ public class User {
         userData.put("nic", nic);
         userData.put("role", role);
         userData.put("profileImageURL", profileUrl);
-        userData.put("location", location);
+        userData.put("address1", address1);
+        userData.put("address2", address2);
+        userData.put("district", district);
+        userData.put("city", city);
 
         return userData;
-    }
-
-    // Helper method to create the location map
-    public Map<String, Object> createLocationData(String address1, String address2, String district, String city) {
-        Map<String, Object> location = new HashMap<>();
-        location.put("address1", address1);
-        location.put("address2", address2);
-        location.put("district", district);
-        location.put("city", city);
-
-        return location;
     }
 
     public Map<String, Object> createWorkerNicData(String nicFontURL, String nicBackURL, boolean isNicVerified) {
