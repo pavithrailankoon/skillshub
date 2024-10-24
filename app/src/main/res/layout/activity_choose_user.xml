@@ -22,30 +22,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="100dp">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
             android:text="Choose Your Role"
             android:textColor="@color/yellow"
             android:textSize="20dp"
-            android:layout_marginBottom="25dp"
-            android:layout_gravity="center"
             android:textStyle="bold" />
-
 
         <Button
             android:id="@+id/signup_as_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="15dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/button_yellow_outline"
+            android:padding="15dp"
             android:text="I want to be Client 🤝"
             android:textColor="@color/yellow"
             android:textStyle="bold" />
@@ -54,26 +54,11 @@
             android:id="@+id/signup_as_worker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_yellow_outline"
-            android:text="I want to be Worker 💼"
-            android:padding="15dp"
             android:layout_gravity="center"
+            android:background="@drawable/button_yellow_outline"
+            android:padding="15dp"
+            android:text="I want to be Worker 💼"
             android:textColor="@color/yellow"
             android:textStyle="bold" />
     </LinearLayout>
-
-        <ImageView
-            android:id="@+id/back_button"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/background_green"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView9"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.057"
-            app:srcCompat="@drawable/back" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-

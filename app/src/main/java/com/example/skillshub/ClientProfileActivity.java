@@ -5,45 +5,34 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
 
+import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.ReadData;
+import com.example.skillshub.firebaseModel.UpdateData; // Change this to the correct import
 import com.example.skillshub.model.CustomDialog;
-
-import org.w3c.dom.Text;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
+public class ClientProfileActivity extends AppCompatActivity implements CustomDialog.CustomDialogInterface {
 
-public class ClientProfileActivity extends AppCompatActivity implements CustomDialog.CustomDialogInterface{
-
-    ImageView backBtn;
-    Button logOut,editDetails,editPassowrd;
-    TextView newName,newPhoneNumber,newAddressLine1,newAddressLine2;
+    ImageView backBtn, profileImage;
+    Button logOut, editDetails, editPassword;
+    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2;
+    private UpdateData updateData;
     private ReadData readData;
+    private AuthManager authManager;
 
     private static final int REQUEST_IMAGE_GALLERY = 1;
     private static final int REQUEST_IMAGE_CAMERA = 2;
     private Uri imageUri;
-    private Uri DEFAULT_IMAGE_URI;
-
-    ChangePassword changePassword = new ChangePassword();
-
-    public void openDialog(View view){
-        CustomDialog customDialog = new CustomDialog();
-        customDialog .show(getSupportFragmentManager(),"Test Customdialog");
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,107 +40,105 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_client_profile);
 
+        updateData = new UpdateData();
         readData = new ReadData();
+        authManager = new AuthManager();
 
         backBtn = findViewById(R.id.backBtn);
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
-        editPassowrd = findViewById(R.id.editPassword);
+        editPassword = findViewById(R.id.editPassword);
+        profileImage = findViewById(R.id.client_profile_image);
 
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
         newAddressLine1 = findViewById(R.id.addressLine1);
         newAddressLine2 = findViewById(R.id.addressLine2);
 
-        readData.getUserFieldRealtime("fullName", new ReadData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Object fieldValue) {
-                String fulName = fieldValue.toString();
-                newName.setText(fulName);
-            }
+        backBtn.setOnClickListener(view -> onBackPressed());
 
-            @Override
-            public void onError(String errorMessage) {
-                System.err.println("Error: " + errorMessage);
-            }
+        logOut.setOnClickListener(v -> {
+            authManager.logOut();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+            Toast.makeText(ClientProfileActivity.this, "Logout", Toast.LENGTH_SHORT).show();
         });
 
-        readData.getUserFieldRealtime("phone", new ReadData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Object fieldValue) {
-                String phoneNumber = fieldValue.toString();
-                newPhoneNumber.setText(phoneNumber);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                System.err.println("Error: " + errorMessage);
-            }
+        editPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), ChangePassword.class);
+            startActivity(intent);
         });
 
-        readData.getUserFieldRealtime("location", new ReadData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Object fieldValue) {
-                if (fieldValue instanceof Map) {
-                    // Cast the Object to a Map<String, Object>
-                    Map<String, Object> mapValue = (Map<String, Object>) fieldValue;
+        // Set up the edit button to show the dialog
+        editDetails.setOnClickListener(this::openDialog);
 
-                    // Example: Access a specific value by key
-                    Object addressline1 = mapValue.get("addressLine1");
-                    Object addressline2 = mapValue.get("addressLine2");
-                    if (addressline1 != null) {
-                        newAddressLine1.setText((CharSequence) addressline1);
-                    } else if (addressline2 != null){
-                        newAddressLine2.setText((CharSequence) addressline2);
-                    } else {
-                        System.out.println("Field does not exist in the map");
-                    }
-
-                } else {
-                    System.out.println("Field is not a map.");
-                }
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                System.err.println("Error: " + errorMessage);
-            }
-        });
-
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        editPassowrd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),ChangePassword.class);
-                startActivity(intent);
-            }
-        });
-
-
+        retrieveUserData();
     }
 
-
     @Override
-    public void applyTexts(String name, String phoneNumber,String addressLine1,String addressLine2) {
+    public void applyTexts(String name, String phoneNumber, String addressLine1, String addressLine2) {
         newName.setText(name);
         newPhoneNumber.setText(phoneNumber);
         newAddressLine1.setText(addressLine1);
         newAddressLine2.setText(addressLine2);
 
+        // Update Firestore with the new details using the reusable method
+        updateUserProfile(name, phoneNumber, addressLine1, addressLine2);
+    }
 
+    private void updateUserProfile(String name, String phoneNumber, String addressLine1, String addressLine2) {
+        updateData.updateUserFields(name, phoneNumber, addressLine1, addressLine2, new UpdateData.FirestoreUserDataCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> userData) {
+                Toast.makeText(ClientProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(ClientProfileActivity.this, "Error updating profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void openDialog(View view) {
+        CustomDialog customDialog = new CustomDialog();
+
+        // Pass existing user data to the dialog
+        customDialog.setInitialValues(newName.getText().toString(),
+                newPhoneNumber.getText().toString(),
+                newAddressLine1.getText().toString(),
+                newAddressLine2.getText().toString());
+        customDialog.show(getSupportFragmentManager(), "Test CustomDialog");
+    }
+
+    private void retrieveUserData() {
+        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> userData) {
+                if (userData != null) {
+                    // Safeguard for null or missing fields
+                    newName.setText(userData.getOrDefault("fullName", "No name available").toString());
+                    newPhoneNumber.setText(userData.getOrDefault("phone", "No phone available").toString());
+                    newAddressLine1.setText(userData.getOrDefault("address1", "No address available").toString());
+                    newAddressLine2.setText(userData.getOrDefault("address2", "No address available").toString());
+
+                    // Load profile image
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
+                    if (!profileImageURL.isEmpty()) {
+                        Picasso.get().load(profileImageURL).placeholder(R.drawable.avatar).error(R.drawable.avatar).into(profileImage);
+                    } else {
+                        Picasso.get().load(R.drawable.avatar).into(profileImage);
+                    }
+                } else {
+                    Toast.makeText(ClientProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(ClientProfileActivity.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

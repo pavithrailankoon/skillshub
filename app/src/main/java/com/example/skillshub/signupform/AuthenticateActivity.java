@@ -433,27 +433,6 @@ public class AuthenticateActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable editable) {
             validateInput();
-//            if (editText == email) {
-//                String strEmail = email.getText().toString().trim();
-//
-//                authManager.checkIfEmailExists(strEmail, new AuthManager.EmailCheckCallback() {
-//                    @Override
-//                    public void onEmailCheckComplete(boolean exists) {
-//                        if (exists) {
-//                            email.setError("Already used email");
-//                        } else {
-//                            editText.setError(null);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception exception) {
-//
-//                    }
-//                });
-//            } else if (editText == nic){
-//                checkNicAvailable();
-//            }
         }
     }
 
