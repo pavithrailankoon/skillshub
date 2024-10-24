@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:layout_marginVertical="10dp"
+    android:layout_marginHorizontal="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="20dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/mainCategoryImage"
+            android:src="@drawable/technicians"
+            android:layout_margin="25dp">
+        </com.google.android.material.imageview.ShapeableImageView>
+
+        <TextView
+            android:id="@+id/workerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="30dp"
+            android:text="Prasad Maduranga"
+            android:textColor="@color/background_green"
+            android:textSize="18dp"
+            android:textStyle="bold">
+
+        </TextView>
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="55dp"
+            android:layout_marginEnd="30dp"
+            android:text="Dewinuwara"
+            android:textColor="@color/background_green"
+            android:textSize="14dp">
+
+        </TextView>
+        <TextView
+            android:id="@+id/district"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="75dp"
+            android:layout_marginEnd="30dp"
+            android:text="Matara"
+            android:textColor="@color/background_green"
+            android:textSize="14dp">
+
+        </TextView>
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24"
+            android:background="@color/background_green"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="300dp"
+            />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

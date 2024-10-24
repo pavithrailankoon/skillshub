@@ -132,7 +132,7 @@
             android:scrollbars="vertical"
             tools:layout_editor_absoluteX="-16dp"
             tools:layout_editor_absoluteY="64dp"
-            tools:listitem="@layout/custom_list_item_layout">
+            tools:listitem="@layout/custom_list_item_layout2">
 
 
         </ListView>
@@ -151,6 +151,13 @@
             android:text="Technicians"
             android:layout_marginStart="30dp"
              />
+        <TextView
+            android:id="@+id/sub_category_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CCTV"
+            android:layout_marginStart="180dp"
+            />
 
 
         <ImageView
