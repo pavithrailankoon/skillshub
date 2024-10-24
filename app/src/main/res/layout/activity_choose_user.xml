@@ -61,5 +61,4 @@
             android:textColor="@color/yellow"
             android:textStyle="bold" />
     </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
