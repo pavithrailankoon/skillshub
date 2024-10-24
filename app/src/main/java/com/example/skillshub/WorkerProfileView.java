@@ -1,9 +1,12 @@
 package com.example.skillshub;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +42,7 @@ public class WorkerProfileView extends AppCompatActivity {
     ImageView back, workerImage;
     FirebaseFirestore fStore;
     String userID;
+    Dialog calenderView;
 
 
 
@@ -111,7 +115,16 @@ public class WorkerProfileView extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        schedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calenderView.setContentView(R.layout.activity_client_calender);
+                calenderView.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+        });
     }
+
 
 
 

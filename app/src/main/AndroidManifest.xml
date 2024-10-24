@@ -68,10 +68,11 @@
             android:exported="false" />
         <activity
             android:name=".WorkerProfileView"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".FilterActivity"
             android:exported="true" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
