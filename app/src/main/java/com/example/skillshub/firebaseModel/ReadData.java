@@ -324,34 +324,42 @@ public class ReadData {
         void onFailure(String errorMessage);
     }
 
-    public ListenerRegistration getUserFieldRealtime(String fieldName, FirestoreUserDataCallback callback) {
-        String uid = auth.getCurrentUser().getUid(); // Get the user ID (uid)
+    // Method to retrieve all fields from the user's document
+    public void getUserFields(FirestoreUserDataCallback callback) {
+        if (auth.getCurrentUser() == null) {
+            // If the user is not authenticated, return an error
+            callback.onFailure(new Exception("User is not authenticated!"));
+            return;
+        }
+
+        String uid = auth.getCurrentUser().getUid();  // Get the user ID (uid)
         DocumentReference docRef = db.collection("users").document(uid);
 
-        // Add Snapshot Listener for real-time updates
-        return docRef.addSnapshotListener((DocumentSnapshot snapshot, FirebaseFirestoreException e) -> {
-            if (e != null) {
-                callback.onError(e.getMessage()); // Handle error
-                return;
-            }
-
-            if (snapshot != null && snapshot.exists()) {
-                Object fieldValue = snapshot.get(fieldName);
-                if (fieldValue != null) {
-                    callback.onSuccess(fieldValue); // Return the field value
+        // Get all fields from the document in a one-time read (no real-time updates)
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    Map<String, Object> userData = document.getData();
+                    callback.onSuccess(userData);
                 } else {
-                    callback.onError("Field does not exist."); // Field not found
+                    callback.onFailure(new Exception("Document not found for the user: " + uid));
                 }
             } else {
-                callback.onError("Document does not exist."); // Document not found
+                Exception taskException = task.getException();
+                if (taskException != null) {
+                    callback.onFailure(taskException);  // Pass the exception from Firestore
+                } else {
+                    callback.onFailure(new Exception("Unknown error occurred while fetching user data"));
+                }
             }
         });
     }
 
-    // Callback interface for async results
+    // Callback interface to handle Firestore operations results
     public interface FirestoreUserDataCallback {
-        void onSuccess(Object fieldValue);
-        void onError(String errorMessage);
+        void onSuccess(Map<String, Object> userData);
+        void onFailure(Exception e);
     }
 
 }
