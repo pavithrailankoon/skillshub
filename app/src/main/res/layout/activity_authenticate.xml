@@ -18,13 +18,19 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="415dp"
+        android:layout_height="358dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.295">
+
         app:layout_constraintVertical_bias="0.453"
         tools:layout_editor_absoluteX="0dp">
+
 
         <TextView
             android:id="@+id/signup_topic"
@@ -73,7 +79,11 @@
             android:layout_marginEnd="30dp"
             android:padding="10dp"
             android:text="Your Generated Password"
+
+            android:textColor="@android:color/holo_blue_dark"
+
             android:textColor="@color/yellow"
+
             android:textSize="18sp" />
 
         <LinearLayout
@@ -91,7 +101,11 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text=""
+
+                android:textColor="@android:color/holo_blue_dark"
+
                 android:textColor="@color/yellow"
+
                 android:textSize="18sp" />
 
             <TextView
@@ -99,8 +113,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="Copy Password"
+
+                android:textColor="@android:color/holo_blue_dark"
+
                 android:textColor="@color/yellow"
+
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -109,16 +126,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+
+
             android:layout_marginBottom="0dp"
+
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/auth_leave_button"
-                android:layout_width="103dp"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_button"
+                android:background="@drawable/custom_button"
                 android:text="Go Back"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -129,16 +149,17 @@
 
             <Button
                 android:id="@+id/auth_check_button"
-                android:layout_width="111dp"
-                android:layout_height="wrap_content"
+                android:layout_width="145dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/rounded_button"
+                android:background="@drawable/custom_button"
                 android:text="Next Step"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

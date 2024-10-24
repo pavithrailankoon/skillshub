@@ -46,11 +46,13 @@
         android:id="@+id/backBtn"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/back"
-        android:background="@color/background_green"
         android:layout_alignParentTop="true"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="16dp"/>
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/background_green"
+        android:src="@drawable/back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
