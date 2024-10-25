@@ -42,7 +42,7 @@ public class WorkerProfileView extends AppCompatActivity {
     ImageView back, workerImage;
     FirebaseFirestore fStore;
     String userID;
-    Dialog calenderView;
+
 
 
 
@@ -116,13 +116,6 @@ public class WorkerProfileView extends AppCompatActivity {
             }
         });
 
-        schedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                calenderView.setContentView(R.layout.activity_client_calender);
-                calenderView.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-        });
     }
 
 

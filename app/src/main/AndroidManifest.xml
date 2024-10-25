@@ -4,14 +4,11 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
-
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+        android:required="false" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
@@ -24,6 +21,12 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
+            android:name=".WorkerShedule"
+            android:exported="false" />
+        <activity
+            android:name=".Shedule"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -34,23 +37,22 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-       </activity>
-
+        </activity>
         <activity
             android:name=".Introduction"
             android:exported="false" />
-          <activity
+        <activity
             android:name=".clientHome"
             android:exported="true" />
         <activity
             android:name=".ChooseUserActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".ClientProfileActivity"
             android:exported="true" />
         <activity
-            android:name=".Home"
-            android:exported="false" />
+            android:name=".Admin"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
@@ -73,7 +75,6 @@
             android:name=".FilterActivity"
             android:exported="true" />
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.skillshub.fileprovider"
@@ -83,7 +84,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
