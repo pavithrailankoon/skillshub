@@ -48,7 +48,7 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
         editPassword = findViewById(R.id.editPassword);
-        profileImage = findViewById(R.id.client_profile_image);
+//        profileImage = findViewById(R.id.client_profile_image);
 
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
