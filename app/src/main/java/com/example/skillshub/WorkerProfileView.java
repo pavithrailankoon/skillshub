@@ -54,7 +54,7 @@ public class WorkerProfileView extends AppCompatActivity {
     RatingBar ratingBar;
     EditText reviewComment;
     Button submit_review,clear;
-    String userID;
+//    String userID;
 
 
 
@@ -110,7 +110,8 @@ public class WorkerProfileView extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                Intent intent = new Intent(WorkerProfileView.this, clientHome2.class);
+                startActivity(intent);
             }
         });
        whatsapp.setOnClickListener(new View.OnClickListener() {
@@ -132,8 +133,8 @@ public class WorkerProfileView extends AppCompatActivity {
         schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                calenderView.setContentView(R.layout.activity_client_calender);
-                calenderView.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Intent intent = new Intent(WorkerProfileView.this, Shedule.class);
+                startActivity(intent);
             }
         });
         clear.setOnClickListener(new View.OnClickListener() {
