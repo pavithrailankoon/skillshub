@@ -54,6 +54,7 @@ public class WorkerProfileView extends AppCompatActivity {
     RatingBar ratingBar;
     EditText reviewComment;
     Button submit_review,clear;
+    String userID;
 
 
 
@@ -126,6 +127,7 @@ public class WorkerProfileView extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 
         schedule.setOnClickListener(new View.OnClickListener() {
             @Override

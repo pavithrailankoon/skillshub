@@ -21,7 +21,10 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
-            android:name=".Schedule"
+            android:name=".WorkerShedule"
+            android:exported="false" />
+        <activity
+            android:name=".Shedule"
             android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
@@ -48,8 +51,8 @@
             android:name=".ClientProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".Home"
-            android:exported="false" />
+            android:name=".Admin"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -71,6 +74,7 @@
         <activity
             android:name=".FilterActivity"
             android:exported="false" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
