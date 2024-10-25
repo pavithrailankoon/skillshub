@@ -70,7 +70,7 @@
             android:exported="false" />
         <activity
             android:name=".WorkerProfileView"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".FilterActivity"
             android:exported="false" />
