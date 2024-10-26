@@ -27,6 +27,9 @@
             android:name=".Shedule"
             android:exported="false" />
         <activity
+            android:name=".Schedule"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
