@@ -40,8 +40,6 @@ public class WorkerProfileView extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userID;
 
-
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +59,8 @@ public class WorkerProfileView extends AppCompatActivity {
         back = findViewById(R.id.back);
         workerImage = findViewById(R.id.workerImage);
 
-
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-
 
         userID = fAuth.getCurrentUser().getUid();
 
@@ -113,8 +109,6 @@ public class WorkerProfileView extends AppCompatActivity {
         });
     }
 
-
-
     private void openWhatsapp() {
         PackageManager pm = getPackageManager();
         try {
@@ -134,12 +128,6 @@ public class WorkerProfileView extends AppCompatActivity {
             Toast.makeText(WorkerProfileView.this, "WhatsApp is not installed on your device", Toast.LENGTH_SHORT).show();
         }
     }
-
-//    private void setUserAvatar(){
-  //      FirebaseStoarageManager imageManager = new FirebaseStoarageManager();
-
-   //     imageManager.loadProfileImage(this, p)
-   // }
 }
 
 

@@ -3,13 +3,12 @@ package com.example.skillshub.firebaseModel;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.skillshub.signupform.RegistrationControlActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateData {
@@ -42,24 +41,22 @@ public class CreateData {
                 });
     }
 
-    // Method to add data to a sub-collection
-    public void addWorkerInformation(String userId, String subCollection, Map<String, Object> workerData, OnWorkerDataUploadListener listener) {
-        CollectionReference workersInfoCollection = db.collection("users").document(userId).collection(subCollection);
+    public void saveWorkerCategory(String uid, String selectedCategory, Object selectedSubcategories) {
+        // Create a map with the selectedSubcategories field
+        Map<String, Object> categoryData = new HashMap<>();
+        categoryData.put("selectedSubcategories", selectedSubcategories);
 
-        // Auto-generate document ID and add data
-        workersInfoCollection.add(workerData)
-                .addOnSuccessListener(documentReference -> {
-                    listener.onSuccess();
+        // Navigate to the path: users > uid > workerProfiles > selectedCategory
+        db.collection("users").document(uid)
+                .collection("workerProfiles").document(selectedCategory)
+                .set(categoryData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Category saved successfully!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    listener.onFailure(e.getMessage());
+                    Toast.makeText(context, "Error saving category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    // Optional interface for callback to handle success/failure
-    public interface OnWorkerDataUploadListener {
-        void onSuccess();
-        void onFailure(String errorMessage);
-    }
 
 }

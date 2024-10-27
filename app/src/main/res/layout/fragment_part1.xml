@@ -48,18 +48,6 @@
                 android:orientation="horizontal"
                 android:layout_margin="30dp">
 
-                <Button
-                    android:id="@+id/signup_take_profile_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:background="@drawable/yellow_button_background"
-                    android:layout_weight="1"
-                    android:text="TAKE PHOTO" />
-
-                <View
-                    android:layout_width="30dp"
-                    android:layout_height="48dp" />
 
                 <Button
                     android:id="@+id/signup_upload_profile_photo"

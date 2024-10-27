@@ -43,7 +43,7 @@ public class CustomDialog extends DialogFragment {
         builder.setView(view)
                 .setTitle("Edit User Details")
                 .setNegativeButton("Cancel", (dialog, which) -> dismiss())
-                .setPositiveButton("Save", null); // Placeholder for positive button
+                .setPositiveButton("Save", null);
 
         // Create the dialog
         AlertDialog dialog = builder.create();
@@ -66,7 +66,6 @@ public class CustomDialog extends DialogFragment {
 
         return dialog;
     }
-
 
     public void setCustomDialogInterface(CustomDialogInterface customDialogInterface) {
         this.customDialogInterface = customDialogInterface;
