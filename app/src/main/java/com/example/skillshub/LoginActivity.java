@@ -78,9 +78,11 @@ public class LoginActivity extends AppCompatActivity {
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(LoginActivity.this, AuthenticateActivity.class);
                 startActivity(intent);
             }
+
         });
 
         // Handle system back button press
