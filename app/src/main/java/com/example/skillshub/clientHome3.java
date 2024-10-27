@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,10 +18,15 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skillshub.adapters.SubCategoryAdapter;
+import com.example.skillshub.adapters.WorkerListAdapter;
 import com.example.skillshub.firebaseModel.FirebaseStoarageManager;
 import com.example.skillshub.firebaseModel.ReadData;
+import com.example.skillshub.model.Worker;
+import com.example.skillshub.signupform.RegistrationControlActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -32,12 +38,13 @@ public class clientHome3 extends AppCompatActivity {
     private ImageView backButton;
     private ProgressBar progressBar;
     private ImageView refresh;
-    private String recievedMainSkill;
+    private Button button;
+    private String recievedSubSkill;
 
     private ReadData readData;
-    private ListView categoryListView;
-    private ArrayList<String> subCategoryList;
-    private SubCategoryAdapter subCategoryAdapter;
+    private ListView workerListView;
+    private List<Worker> workerList = new ArrayList<>();
+    private WorkerListAdapter workerListAdapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -47,19 +54,18 @@ public class clientHome3 extends AppCompatActivity {
         setContentView(R.layout.activity_client_home2);
 
         readData = new ReadData();
-        recievedMainSkill = getIntent().getStringExtra("SELECTED_CATEGORY");
+        recievedSubSkill = getIntent().getStringExtra("SELECTED_SUB_CATEGORY");
         refresh  = (ImageView) findViewById(R.id.refresh_category);
         progressBar = findViewById(R.id.progressbar);
         backButton = findViewById(R.id.client2_back);
         categoryPath = findViewById(R.id.main_category_path);
-        categoryPath.setText(recievedMainSkill);
+        categoryPath.setText(recievedSubSkill);
 
-        categoryListView = findViewById(R.id.listView2);
-        subCategoryList = new ArrayList<>();
+        workerListView = findViewById(R.id.listView2);
 
         // Set up the custom adapter
-        subCategoryAdapter = new SubCategoryAdapter(this, subCategoryList);
-        categoryListView.setAdapter(subCategoryAdapter);
+        workerListAdapter = new WorkerListAdapter(this, workerList);
+        workerListView.setAdapter(workerListAdapter);
 
         profileImageButton = (CircleImageView) findViewById(R.id.avatar);
         profileImageButton.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +80,8 @@ public class clientHome3 extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(clientHome3.this, "Refreshing sub-categories...", Toast.LENGTH_SHORT).show();
-                getUniqueSubSkills();
+                Toast.makeText(clientHome3.this, "Refreshing available workers", Toast.LENGTH_SHORT).show();
+                getWorkerList();
             }
         });
 
@@ -105,20 +111,31 @@ public class clientHome3 extends AppCompatActivity {
             }
         });
 
-        getUniqueSubSkills();
+        button = (Button) findViewById(R.id.becomeWorkerButton);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(clientHome3.this, RegistrationControlActivity.class);
+                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
+                startActivity(intent);
+                Toast.makeText(clientHome3.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        getWorkerList();
 
         // Set the OnItemClickListener for the ListView
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        workerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the selected item text from the categoryList
-                String selectedSubCategory = subCategoryList.get(position);
+                //String selectedWorkerUID = workerList.get(position);
 
                 // Create an Intent to start the new Activity
-                //Intent intent = new Intent(clientHome2.this, clientHome2.class);
+                //Intent intent = new Intent(clientHome3.this, WorkerProfileView.class);
 
                 // Pass the selected text to the new Activity using putString
-                //intent.putExtra("SELECTED_SUB_CATEGORY", selectedSubCategory);
+                //intent.putExtra("SELECTED_WORKER", selectedWorker);
 
                 // Start the new Activity
                 //startActivity(intent);
@@ -126,36 +143,24 @@ public class clientHome3 extends AppCompatActivity {
         });
     }
 
-    private void getUniqueSubSkills() {
-        progressBar.setVisibility(View.VISIBLE);
-        readData.fetchUniqueSubcategories(recievedMainSkill, new ReadData.FirestoreSubSkillCallback() {
+    private void getWorkerList(){
+        // Call the method to retrieve workers by subcategory
+        readData.getWorkersBySubcategory(recievedSubSkill, new ReadData.FirestoreWorkerCallback() {
             @Override
-            public void onSuccess(ArrayList<String> subcategoryNames) {
-                // Handle the successful retrieval of subcategory names
-                // Run on the UI thread
+            public void onWorkerDataRetrieved(List<Worker> workers) {
                 runOnUiThread(() -> {
-                    try {
-                        // Clear the existing data
-                        subCategoryList.clear();
-                        // Add the new data to the list
-                        subCategoryList.addAll(subcategoryNames);
-                        // Notify the adapter that the data set has changed
-                        subCategoryAdapter.notifyDataSetChanged();
-                        progressBar.setVisibility(View.GONE);
-                    } catch (Exception e) {
-                        // Log the exception for debugging
-                        Log.e("CategoryListActivity", "Error updating list: " + e.getMessage());
-                        Toast.makeText(clientHome3.this, "Can not retrive. Refresh" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
+                    if (workers != null) {
+                        workerList.clear();
+                        workerList.addAll(workers);
+                        workerListAdapter.notifyDataSetChanged();
+
+                        if (workers.isEmpty()) {
+                            Toast.makeText(clientHome3.this, "No workers found.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(clientHome3.this, "Failed to retrieve workers.", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                // Handle the failure case
-                Toast.makeText(clientHome3.this, "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
             }
         });
     }

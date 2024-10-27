@@ -195,25 +195,55 @@
                 android:layout_marginTop="20dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="@string/signup_select_category" />
+                android:text="Choose your skill" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/white" />
 
-        <TextView
-            android:id="@+id/signup_add_newcategory"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Add New Category"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="showSkillDialog"
-            android:textColor="@color/yellow"
-            android:gravity="center"
-            android:textStyle="bold"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Container where list views will be dynamically added -->
+            <LinearLayout
+                android:id="@+id/layout_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Button to add new list view -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Note !"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Please select one main skill and up to three related sub-skills that best match your expertise."
+                android:textColor="@color/white"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/signup_add_newcategory"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Add Your Category"
+                android:background="@drawable/button_yellow_outline"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="showSkillDialog"
+                android:textColor="@color/yellow"
+                android:gravity="center"
+                android:textStyle="bold"/>
         </LinearLayout>
 
+
+        </LinearLayout>
 
 </RelativeLayout>

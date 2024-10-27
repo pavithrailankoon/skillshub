@@ -13,6 +13,11 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+
+      <SelectionState runConfigName="LoginActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+
       <SelectionState runConfigName="WorkerProfileView">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2024-10-25T17:25:41.191343800Z">
@@ -24,10 +29,17 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
+
+      <SelectionState runConfigName="ChooseUserActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="AuthenticateActivity">
+
       <SelectionState runConfigName="Schedule">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="WorkerShedule">
+
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

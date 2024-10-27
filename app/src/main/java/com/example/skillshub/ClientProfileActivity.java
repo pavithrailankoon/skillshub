@@ -1,5 +1,6 @@
 package com.example.skillshub;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
     private static final int REQUEST_IMAGE_CAMERA = 2;
     private Uri imageUri;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,10 +86,6 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
         newAddressLine2.setText(addressLine2);
 
         // Update Firestore with the new details using the reusable method
-        updateUserProfile(name, phoneNumber, addressLine1, addressLine2);
-    }
-
-    private void updateUserProfile(String name, String phoneNumber, String addressLine1, String addressLine2) {
         updateData.updateUserFields(name, phoneNumber, addressLine1, addressLine2, new UpdateData.FirestoreUserDataCallback() {
             @Override
             public void onSuccess(Map<String, Object> userData) {

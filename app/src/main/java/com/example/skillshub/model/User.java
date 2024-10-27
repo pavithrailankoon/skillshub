@@ -22,29 +22,15 @@ public class User {
         return userData;
     }
 
-    public Map<String, Object> createWorkerNicData(String nicFontURL, String nicBackURL, boolean isNicVerified) {
-        Map<String, Object> nicdata = new HashMap<>();
-        nicdata.put("nicFontURL", nicFontURL);
-        nicdata.put("nicBackURL", nicBackURL);
-        nicdata.put("isNicVerified", isNicVerified);
+    public Map<String, Object> createWorkerNicData(String nicFontURL, String nicBackURL, boolean isNicVerified, String brUrl, boolean isBrVerified) {
+        Map<String, Object> verifyData = new HashMap<>();
+        verifyData.put("nicFontURL", nicFontURL);
+        verifyData.put("nicBackURL", nicBackURL);
+        verifyData.put("isNicVerified", isNicVerified);
+        verifyData.put("brURL", brUrl);
+        verifyData.put("isBrVerified", isBrVerified);
 
-        return nicdata;
-    }
-
-    public Map<String, Object> createWorkerBrData(String brURL, boolean isBrVerified) {
-        Map<String, Object> brdata = new HashMap<>();
-        brdata.put("brURL", brURL);
-        brdata.put("isBrVerified", isBrVerified);
-
-        return brdata;
-    }
-
-    public Map<String, Object> createWorkerData(Map<String, Object> nicVerification, Map<String, Object> brVerification) {
-        Map<String, Object> workerdata = new HashMap<>();
-        workerdata.put("BRVerification", nicVerification);
-        workerdata.put("NICVerification", brVerification);
-
-        return workerdata;
+        return verifyData;
     }
 
 }

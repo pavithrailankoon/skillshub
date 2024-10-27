@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,6 +25,7 @@ import com.example.skillshub.adapters.CategoryAdapter;
 import com.example.skillshub.adapters.SubCategoryAdapter;
 import com.example.skillshub.firebaseModel.FirebaseStoarageManager;
 import com.example.skillshub.firebaseModel.ReadData;
+import com.example.skillshub.signupform.RegistrationControlActivity;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,7 @@ public class clientHome2 extends AppCompatActivity {
     private ImageView backButton;
     private ProgressBar progressBar;
     private ImageView refresh;
+    private Button button;
     private String recievedMainSkill;
 
     private ReadData readData;
@@ -98,6 +101,17 @@ public class clientHome2 extends AppCompatActivity {
             }
         });
 
+        button = (Button) findViewById(R.id.becomeWorkerButton);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(clientHome2.this, RegistrationControlActivity.class);
+                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
+                startActivity(intent);
+                Toast.makeText(clientHome2.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         filterButton = (ImageButton) findViewById(R.id.filter_button);
 
@@ -120,13 +134,13 @@ public class clientHome2 extends AppCompatActivity {
                 String selectedSubCategory = subCategoryList.get(position);
 
                 // Create an Intent to start the new Activity
-                //Intent intent = new Intent(clientHome2.this, clientHome2.class);
+                Intent intent = new Intent(clientHome2.this, clientHome3.class);
 
                 // Pass the selected text to the new Activity using putString
-                //intent.putExtra("SELECTED_SUB_CATEGORY", selectedSubCategory);
+                intent.putExtra("SELECTED_SUB_CATEGORY", selectedSubCategory);
 
                 // Start the new Activity
-                //startActivity(intent);
+                startActivity(intent);
             }
         });
     }
