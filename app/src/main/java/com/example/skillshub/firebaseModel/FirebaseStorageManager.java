@@ -13,12 +13,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-public class FirebaseStoarageManager {
+public class FirebaseStorageManager {
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private AuthManager authmanger;
 
-    public FirebaseStoarageManager(){
+    public FirebaseStorageManager(){
         this.storage = FirebaseStorage.getInstance();
         this.storageRef = storage.getReference();
         this.authmanger = new AuthManager();
@@ -82,10 +82,10 @@ public class FirebaseStoarageManager {
         StorageReference userFolderRef = storageRef.child(uid);
 
         // Keep track of the URLs of each image after upload
-        final String[] imageUrls = new String[3];
+        final String[] imageUrls = new String[3]; // Initialize all values to null by default
         final int[] uploadCount = {0}; // Counter to track completed uploads
 
-        // Helper method to handle image upload and completion tracking
+        // Upload NIC Front Image
         uploadSingleImage(userFolderRef, "nic-front-image", nicFrontUri, new OnImageUploadCompleteListener() {
             @Override
             public void onSuccess(String imageUrl) {
@@ -99,6 +99,7 @@ public class FirebaseStoarageManager {
             }
         });
 
+        // Upload NIC Back Image
         uploadSingleImage(userFolderRef, "nic-back-image", nicBackUri, new OnImageUploadCompleteListener() {
             @Override
             public void onSuccess(String imageUrl) {
@@ -112,22 +113,33 @@ public class FirebaseStoarageManager {
             }
         });
 
-        uploadSingleImage(userFolderRef, "br-image", brUri, new OnImageUploadCompleteListener() {
-            @Override
-            public void onSuccess(String imageUrl) {
-                imageUrls[2] = imageUrl;
-                checkAllUploadsComplete(listener, imageUrls, uploadCount);
-            }
+        // Only upload BR Image if it is provided (not null)
+        if (brUri != null) {
+            uploadSingleImage(userFolderRef, "br-image", brUri, new OnImageUploadCompleteListener() {
+                @Override
+                public void onSuccess(String imageUrl) {
+                    imageUrls[2] = imageUrl;
+                    checkAllUploadsComplete(listener, imageUrls, uploadCount);
+                }
 
-            @Override
-            public void onFailure(String errorMessage) {
-                listener.onFailure("Failed to upload BR Image: " + errorMessage);
-            }
-        });
+                @Override
+                public void onFailure(String errorMessage) {
+                    listener.onFailure("Failed to upload BR Image: " + errorMessage);
+                }
+            });
+        } else {
+            // If BR image is not provided, increment the counter directly
+            uploadCount[0]++;
+            checkAllUploadsComplete(listener, imageUrls, uploadCount);
+        }
     }
 
     // Helper method to upload a single image and notify via listener
     private void uploadSingleImage(StorageReference folderRef, String fileName, Uri imageUri, OnImageUploadCompleteListener listener) {
+        if (imageUri == null) {
+            listener.onFailure("Image URI is null for " + fileName);
+            return;
+        }
         StorageReference imageRef = folderRef.child(fileName);
         imageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri -> listener.onSuccess(uri.toString())))
@@ -137,7 +149,7 @@ public class FirebaseStoarageManager {
     // Helper method to check if all images are uploaded
     private void checkAllUploadsComplete(OnImagesUploadCompleteListener listener, String[] imageUrls, int[] uploadCount) {
         uploadCount[0]++;
-        if (uploadCount[0] == 3) {
+        if (uploadCount[0] == 3) { // All uploads (including potential nulls) are complete
             listener.onAllUploadsSuccess(imageUrls[0], imageUrls[1], imageUrls[2]);
         }
     }
@@ -147,5 +159,6 @@ public class FirebaseStoarageManager {
         void onAllUploadsSuccess(String nicFrontUrl, String nicBackUrl, String brUrl);
         void onFailure(String errorMessage);
     }
+
 
 }

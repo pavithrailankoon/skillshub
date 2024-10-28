@@ -1,7 +1,6 @@
 package com.example.skillshub;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,17 +18,13 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.skillshub.adapters.CategoryAdapter;
-import com.example.skillshub.firebaseModel.FirebaseStoarageManager;
+import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.signupform.RegistrationControlActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -181,7 +175,7 @@ public class clientHome extends AppCompatActivity {
     }
 
     private void setUserAvatar(){
-        FirebaseStoarageManager imageManager = new FirebaseStoarageManager();
+        FirebaseStorageManager imageManager = new FirebaseStorageManager();
 
         // Load the profile image once
         imageManager.loadProfileImage(this, profileImageButton);
