@@ -57,7 +57,7 @@
             android:exported="true" />
         activity     
             android:name=".Admin"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -75,7 +75,7 @@
             android:exported="false" />
         <activity
             android:name=".WorkerProfileView"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".FilterActivity"
             android:exported="false" />

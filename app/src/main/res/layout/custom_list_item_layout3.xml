@@ -18,51 +18,47 @@
         android:background="@color/yellow">
 
         <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
+            android:id="@+id/submitreview"
+            android:layout_width="215dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="278dp"
+            android:layout_below="@+id/submitratings"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="1dp"
+            android:layout_toEndOf="@+id/clientpropic"
             android:text="TextView"
             android:textColor="@color/black" />
 
         <ImageView
-            android:id="@+id/imageView9"
+            android:id="@+id/clientpropic"
             android:layout_width="75dp"
             android:layout_height="74dp"
-            android:layout_below="@+id/textView6"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="-3dp"
+            android:layout_below="@+id/clientName"
+            android:layout_marginTop="0dp"
             android:src="@drawable/avatar" />
 
         <TextView
-            android:id="@+id/mainCategoryName"
+            android:id="@+id/clientName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageView9"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="199dp"
-            android:text="Ratings"
-            android:textColor="@color/background_green"
-            android:textSize="20dp">
-
-        </TextView>
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/mainCategoryName"
-            android:layout_alignStart="@+id/mainCategoryName"
-            android:layout_marginStart="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="TextView"
             android:textColor="@color/black" />
+
+        <RatingBar
+            android:id="@+id/submitratings"
+            android:layout_width="235dp"
+            android:layout_height="41dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="27dp"
+            android:layout_toEndOf="@+id/clientpropic"
+            android:numStars="5"
+            android:scaleX="0.9"
+            android:scaleY="0.7"
+            android:stepSize="0.5" />
 
     </RelativeLayout>
 
