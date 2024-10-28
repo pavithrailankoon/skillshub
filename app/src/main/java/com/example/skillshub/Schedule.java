@@ -43,6 +43,8 @@ public class Schedule extends AppCompatActivity {
         task = findViewById(R.id.task);
         fStore = FirebaseFirestore.getInstance();
 
+        datePicker.setMinDate(System.currentTimeMillis() - 1000);
+
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

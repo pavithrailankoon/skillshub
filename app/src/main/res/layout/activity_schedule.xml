@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:background="@color/background_green"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Schedule">
+    android:background="@color/background_green"
+    android:fillViewport="true">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <DatePicker
         android:id="@+id/datePicker"
@@ -33,8 +37,8 @@
         android:id="@+id/clear_btn"
         android:layout_width="117dp"
         android:layout_height="38dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="44dp"
         android:background="@drawable/custom_button"
         android:text="clear"
         android:textColor="@color/black"
@@ -54,3 +58,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

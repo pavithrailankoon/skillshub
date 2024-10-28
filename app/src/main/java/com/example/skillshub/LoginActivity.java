@@ -37,6 +37,11 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth auth;
     ProgressDialog progressDialog;
 
+
+    //admin login user name and password
+    String adminEmail = "admin@gmail.com";
+    String adminPassword = "admin";
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (validateInput(email, password)) {
                     loginUserAuth(email, password);
+                }
+                // admin loging
+                if (email.equals(adminEmail) && password.equals(adminPassword)) {
+                    Intent intent = new Intent(LoginActivity.this, Admin.class);
+                    startActivity(intent);
                 }
             }
         });
