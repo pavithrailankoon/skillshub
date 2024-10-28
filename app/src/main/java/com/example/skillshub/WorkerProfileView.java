@@ -1,12 +1,9 @@
 package com.example.skillshub;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -23,14 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -42,7 +35,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +43,12 @@ import java.util.Map;
 
 public class WorkerProfileView extends AppCompatActivity {
     TextView category, name, verified, mail,description;
-    ImageView call, whatsapp, schedule;
+    Button call, whatsapp, schedule, review;
     FirebaseAuth fAuth;
+    ImageView back, workerImage;
+    FirebaseFirestore fStore;
+    String userID;
+  
     ImageView back, workerImage,refresh;
     FirebaseFirestore fStore,db;
     String userID,phoneNumber;
@@ -84,9 +80,11 @@ public class WorkerProfileView extends AppCompatActivity {
         call = findViewById(R.id.call);
         whatsapp = findViewById(R.id.whatsapp);
         schedule = findViewById(R.id.schedule);
+        review = findViewById(R.id.review);
         description = findViewById(R.id.description);
         back = findViewById(R.id.back);
         workerImage = findViewById(R.id.workerImage);
+
         ratingBar = findViewById(R.id.ratingBar);
         reviewComment = findViewById(R.id.reviewComment);
         submit_review = findViewById(R.id.submit_review);
@@ -121,9 +119,18 @@ public class WorkerProfileView extends AppCompatActivity {
                 verified.setText(value.getString("verified"));
                 mail.setText(value.getString("email"));
                 description.setText(value.getString("description"));
+                call.setText(value.getString("phone"));
                 phoneNumber = value.getString("phone");
             }
+
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+        review.setOnClickListener(new View.OnClickListener() {
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +146,8 @@ public class WorkerProfileView extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WorkerProfileView.this, clientHome2.class);
+                Toast.makeText(WorkerProfileView.this, "Write Your Review", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(WorkerProfileView.this, Review.class);
                 startActivity(intent);
             }
         });
@@ -153,16 +161,7 @@ public class WorkerProfileView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + phoneNumber));
-                startActivity(intent);
-            }
-        });
-
-
-        schedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(WorkerProfileView.this, Shedule.class);
+                intent.setData(Uri.parse("tel:" + call.getText().toString()));
                 startActivity(intent);
             }
         });
@@ -280,15 +279,24 @@ public class WorkerProfileView extends AppCompatActivity {
     private void openWhatsapp() {
         PackageManager pm = getPackageManager();
         try {
+           pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+            // WhatsApp is installed, proceed with intent
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            // You can specify a number (starting with country code) to open a specific chat
+            String phoneNumber = "1234567890"; // replace with the actual number
             pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             // You can specify a number (starting with country code) to open a specific chat
             intent.setData(Uri.parse("tel:" + phoneNumber));
+
             String url = "https://wa.me/" + phoneNumber; // WhatsApp API link format
+
+            // Intent to open WhatsApp
             intent.setData(Uri.parse(url));
             startActivity(intent);
 
         } catch (PackageManager.NameNotFoundException e) {
+            // WhatsApp not installed, show a message
             Toast.makeText(WorkerProfileView.this, "WhatsApp is not installed on your device", Toast.LENGTH_SHORT).show();
         }
 

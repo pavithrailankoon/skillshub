@@ -246,12 +246,18 @@ public class ReadData {
                 .get()
                 .addOnSuccessListener(userDocuments -> {
                     List<Worker> workers = new ArrayList<>();
-                    AtomicInteger workerCounter = new AtomicInteger(0);  // To track processed workers
+                    AtomicInteger workerCounter = new AtomicInteger(0); // Track processed workers
+                    int totalUsers = userDocuments.size(); // Number of user documents
+
+                    if (totalUsers == 0) {
+                        // No users found, so invoke callback with an empty list
+                        callback.onWorkerDataRetrieved(workers);
+                        return;
+                    }
 
                     for (DocumentSnapshot userDocument : userDocuments) {
                         String uid = userDocument.getId();
 
-                        // query the workerProfiles subcollection for this user
                         db.collection("user").document(uid).collection("workerProfiles")
                                 .whereArrayContains("subcategories", subcategory)
                                 .get()
@@ -265,56 +271,71 @@ public class ReadData {
                                                 document.getString("profileImageURL")
                                         );
 
-                                        // calculate the rating for this worker
-                                        calculateWorkerRating(uid, worker, workers, callback, workerCounter, userDocuments.size());
+                                        // Calculate rating and process worker
+                                        calculateWorkerRating(uid, worker, workers, callback, workerCounter, totalUsers);
+                                    }
+
+                                    // Check if this user had no matching worker profiles
+                                    if (queryDocumentSnapshots.isEmpty() && workerCounter.incrementAndGet() == totalUsers) {
+                                        // All users processed; invoke callback with sorted workers
+                                        finalizeWorkerList(workers, callback);
                                     }
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("Firestore Error", "Error getting worker profiles", e);
+
+                                    // Ensure counter is updated even on failure
+                                    if (workerCounter.incrementAndGet() == totalUsers) {
+                                        finalizeWorkerList(workers, callback);
+                                    }
                                 });
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore Error", "Error getting user documents", e);
+                    callback.onWorkerDataRetrieved(new ArrayList<>()); // Return an empty list on failure
                 });
     }
 
-    // Modified calculateWorkerRating method to handle sorting after all ratings are calculated
-    public void calculateWorkerRating(String uid, Worker worker, List<Worker> workers, FirestoreWorkerCallback callback, AtomicInteger workerCounter, int totalWorkers) {
-        db.collection("user").document(uid)
-                .collection("reviewsAsAWorker")
-                .addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    if (e != null) {
-                        Log.e("Firestore Error", "Failed to listen for rating changes", e);
-                        return;
+    private void calculateWorkerRating(String uid, Worker worker, List<Worker> workers, FirestoreWorkerCallback callback,
+                                       AtomicInteger workerCounter, int totalUsers) {
+        db.collection("user").document(uid).collection("reviewsAsAWorker")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    double totalRating = 0;
+                    int reviewCount = queryDocumentSnapshots.size();
+
+                    for (DocumentSnapshot review : queryDocumentSnapshots) {
+                        Double rating = review.getDouble("reviewRate");
+                        if (rating != null) {
+                            totalRating += rating;
+                        }
                     }
 
-                    if (queryDocumentSnapshots != null) {
-                        double totalRating = 0;
-                        int reviewCount = queryDocumentSnapshots.size();
+                    double averageRating = (reviewCount > 0) ? (totalRating / reviewCount) : 0;
+                    worker.setAverageRating(averageRating);
 
-                        for (DocumentSnapshot review : queryDocumentSnapshots) {
-                            totalRating += review.getDouble("reviewRate");
-                        }
+                    workers.add(worker);
 
-                        double averageRating = (reviewCount > 0) ? (totalRating / reviewCount) : 0;
+                    if (workerCounter.incrementAndGet() == totalUsers) {
+                        finalizeWorkerList(workers, callback);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore Error", "Failed to get reviews", e);
 
-                        // Set the calculated rating to the worker object
-                        worker.setAverageRating(averageRating);
-
-                        // Add worker to list once rating is calculated
-                        workers.add(worker);
-
-                        // Increment the counter to track how many workers have been processed
-                        if (workerCounter.incrementAndGet() == totalWorkers) {
-                            // Sort the workers by average rating in descending order
-                            workers.sort((w1, w2) -> Double.compare(w2.getAverageRating(), w1.getAverageRating()));
-
-                            // Send sorted data back via callback
-                            callback.onWorkerDataRetrieved(workers);
-                        }
+                    // Proceed even if there's an error retrieving reviews
+                    if (workerCounter.incrementAndGet() == totalUsers) {
+                        finalizeWorkerList(workers, callback);
                     }
                 });
+    }
+
+    private void finalizeWorkerList(List<Worker> workers, FirestoreWorkerCallback callback) {
+        // Sort the list by average rating in descending order
+        workers.sort((w1, w2) -> Double.compare(w2.getAverageRating(), w1.getAverageRating()));
+        // Send the sorted list to the callback
+        callback.onWorkerDataRetrieved(workers);
     }
 
     public interface FirestoreWorkerCallback {
