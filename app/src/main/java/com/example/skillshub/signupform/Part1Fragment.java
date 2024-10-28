@@ -50,10 +50,9 @@ public class Part1Fragment extends Fragment {
     private EditText fullName;
     private EditText phoneNumber;
     private CircleImageView imageViewProfilePhoto;
-    private Button buttonTakePhoto, buttonUploadPhoto;
+    private Button buttonUploadPhoto;
 
     private static final int REQUEST_IMAGE_GALLERY = 1;
-    private static final int REQUEST_IMAGE_CAMERA = 2;
     private Uri imageUri;
     private Uri DEFAULT_IMAGE_URI;
     @Nullable
@@ -64,19 +63,6 @@ public class Part1Fragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_part1, container, false);
         initializeViews();
 
-        //buttonTakePhoto.setOnClickListener(v -> openCamera());
-        buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    checkPermissions();
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(cameraIntent, REQUEST_IMAGE_CAMERA);
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "Couldn't load photo", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
         buttonUploadPhoto.setOnClickListener(v -> openGallery());
 
         return view;
@@ -87,7 +73,6 @@ public class Part1Fragment extends Fragment {
         fullName = view.findViewById(R.id.signup_full_name);
         phoneNumber = view.findViewById(R.id.signup_mobileno);
         imageViewProfilePhoto = view.findViewById(R.id.signup_upload_avatar);
-        buttonTakePhoto = view.findViewById(R.id.signup_take_profile_photo);
         buttonUploadPhoto = view.findViewById(R.id.signup_upload_profile_photo);
 
         // Add TextWatchers to listen for text changes
@@ -114,17 +99,6 @@ public class Part1Fragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
                 imageUri = data.getData();
                 imageViewProfilePhoto.setImageURI(imageUri);
-        }
-
-        if (requestCode == REQUEST_IMAGE_CAMERA && resultCode == RESULT_OK && data != null) {
-            try {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-                imageViewProfilePhoto.setImageBitmap(photo);
-
-            } catch (Exception e) {
-                Toast.makeText(getContext(), "Couldn't load photo", Toast.LENGTH_LONG).show();
-            }
         }
 
         // If no image is selected, set the default image URI

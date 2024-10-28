@@ -2,17 +2,21 @@ package com.example.skillshub.firebaseModel;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.skillshub.ChangePassword;
 import com.example.skillshub.clientHome;
+import com.example.skillshub.model.Worker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -29,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReadData {
     private Context context;
@@ -67,90 +72,6 @@ public class ReadData {
                 .addOnFailureListener(onFailure);
     }
 
-    // Method to fetch all skills from Firestore
-    public void getMainSkill(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-        db.collection("skills")
-                .addSnapshotListener((queryDocumentSnapshots, error) -> {
-                    if (error != null) {
-                        // Call onFailure in case of an error
-                        onFailure.onFailure(error);
-                        return;
-                    }
-
-                    if (queryDocumentSnapshots != null) {
-                        List<String> mainSkills = new ArrayList<>();
-                        for (DocumentSnapshot document : queryDocumentSnapshots) {
-                            mainSkills.add(document.getId()); // Each document ID represents a skill
-                        }
-                        // Call onSuccess with the updated list
-                        onSuccess.onSuccess(mainSkills);
-                    }
-                });
-    }
-
-
-    // Method to fetch sub skills for a given skills from Firestore
-    public void getSubSkill(String mainSkills, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-        db.collection("skills").document(mainSkills)
-                .addSnapshotListener((documentSnapshot, error) -> {
-                    if (error != null) {
-                        // Handle error scenario
-                        onFailure.onFailure(error);
-                        return;
-                    }
-
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        // Retrieve subSkills array
-                        List<String> subSkills = (List<String>) documentSnapshot.get("subCategories");
-
-                        if (subSkills != null) {
-                            onSuccess.onSuccess(subSkills);  // Pass the list of subSkills to the success listener
-                        } else {
-                            onFailure.onFailure(new Exception("No sub skills found for the main skill"));
-                        }
-                    } else {
-                        // Document does not exist or is null
-                        onFailure.onFailure(new Exception("Document does not exist"));
-                    }
-                });
-    }
-
-
-    // Method to retrieve job categories
-    public void getSkillsList(final FirestoreSkillsCallback callback) {
-        db.collection("users")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Set<String> uniqueCategories = new HashSet<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            // Check if the job_categories subcollection exists
-                            document.getReference().collection("workerProfiles")
-                                    .get()
-                                    .addOnCompleteListener(categoryTask -> {
-                                        if (categoryTask.isSuccessful()) {
-                                            // Check if the result is not empty
-                                            if (!categoryTask.getResult().isEmpty()) {
-                                                for (QueryDocumentSnapshot categoryDoc : categoryTask.getResult()) {
-                                                    String category = categoryDoc.getString("category_name");
-                                                    if (category != null) {
-                                                        uniqueCategories.add(category); // Add to Set to ensure uniqueness
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        // After iterating over all users, trigger callback with the unique categories
-                                        callback.onSuccess(new ArrayList<>(uniqueCategories));
-                                    });
-                        }
-                    }
-                });
-    }
-
-    public interface FirestoreSkillsCallback {
-        void onSuccess(List<String> uniqueCategories);
-    }
-
     // Method to check if a NIC already exists in the users collection
     public void checkNicExists(String collection, String field, String value, final FirestoreNicCallback callback) {
         db.collection(collection)
@@ -178,47 +99,6 @@ public class ReadData {
     public interface FirestoreNicCallback {
         void onCallback(boolean exists);
         void onFailure(Exception e);
-    }
-
-
-    public void fetchSkillsRealtime(OnFirestoreDataListener listener) {
-        db.collection("skills")
-                .addSnapshotListener((querySnapshot, e) -> {
-                    if (e != null) {
-                        listener.onFailure(e.getMessage());  // Firestore listener failure
-                        return;
-                    }
-
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        List<String> mainSkillsList = new ArrayList<>();
-                        Map<String, List<String>> subSkillsMap = new HashMap<>();
-
-                        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                            // Extract mainSkill (Document ID)
-                            String mainSkill = document.getId();
-                            mainSkillsList.add(mainSkill);  // Add to mainSkills list
-
-                            // Extract subSkills (Assume it's an array field in Firestore)
-                            List<String> subSkills = (List<String>) document.get("subSkills");
-                            if (subSkills != null) {
-                                subSkillsMap.put(mainSkill, subSkills);  // Map mainSkill -> subSkills
-                            } else {
-                                subSkillsMap.put(mainSkill, new ArrayList<>());  // Handle empty subSkills
-                            }
-                        }
-
-                        // Notify the listener that data has been retrieved successfully
-                        listener.onSuccess(mainSkillsList, subSkillsMap);
-                    } else {
-                        listener.onFailure("No skills found.");
-                    }
-                });
-    }
-
-    // Define a callback interface to handle success/failure
-    public interface OnFirestoreDataListener {
-        void onSuccess(List<String> mainSkillsList, Map<String, List<String>> subSkillsMap);
-        void onFailure(String errorMessage);
     }
 
     public void fetchUniqueCategoryNames(final FirestoreCallback firestoreCallback) {
@@ -335,23 +215,21 @@ public class ReadData {
         String uid = auth.getCurrentUser().getUid();  // Get the user ID (uid)
         DocumentReference docRef = db.collection("users").document(uid);
 
-        // Get all fields from the document in a one-time read (no real-time updates)
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document != null && document.exists()) {
-                    Map<String, Object> userData = document.getData();
-                    callback.onSuccess(userData);
-                } else {
-                    callback.onFailure(new Exception("Document not found for the user: " + uid));
-                }
+        // Use addSnapshotListener for real-time updates
+        docRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                // Handle the error
+                callback.onFailure(e);
+                return;
+            }
+
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                // If the document exists, pass the data back to the callback
+                Map<String, Object> userData = documentSnapshot.getData();
+                callback.onSuccess(userData);
             } else {
-                Exception taskException = task.getException();
-                if (taskException != null) {
-                    callback.onFailure(taskException);  // Pass the exception from Firestore
-                } else {
-                    callback.onFailure(new Exception("Unknown error occurred while fetching user data"));
-                }
+                // Document does not exist or is null
+                callback.onFailure(new Exception("Document not found for the user: " + uid));
             }
         });
     }
@@ -362,4 +240,173 @@ public class ReadData {
         void onFailure(Exception e);
     }
 
+    // Method to retrieve worker data filtered by subcategory
+    public void getWorkersBySubcategory(String subcategory, FirestoreWorkerCallback callback) {
+        db.collection("user")
+                .get()
+                .addOnSuccessListener(userDocuments -> {
+                    List<Worker> workers = new ArrayList<>();
+                    AtomicInteger workerCounter = new AtomicInteger(0);  // To track processed workers
+
+                    for (DocumentSnapshot userDocument : userDocuments) {
+                        String uid = userDocument.getId();
+
+                        // query the workerProfiles subcollection for this user
+                        db.collection("user").document(uid).collection("workerProfiles")
+                                .whereArrayContains("subcategories", subcategory)
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                                        Worker worker = new Worker(
+                                                uid,
+                                                document.getString("fullName"),
+                                                document.getString("district"),
+                                                document.getString("city"),
+                                                document.getString("profileImageURL")
+                                        );
+
+                                        // calculate the rating for this worker
+                                        calculateWorkerRating(uid, worker, workers, callback, workerCounter, userDocuments.size());
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore Error", "Error getting worker profiles", e);
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore Error", "Error getting user documents", e);
+                });
+    }
+
+    // Modified calculateWorkerRating method to handle sorting after all ratings are calculated
+    public void calculateWorkerRating(String uid, Worker worker, List<Worker> workers, FirestoreWorkerCallback callback, AtomicInteger workerCounter, int totalWorkers) {
+        db.collection("user").document(uid)
+                .collection("reviewsAsAWorker")
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e("Firestore Error", "Failed to listen for rating changes", e);
+                        return;
+                    }
+
+                    if (queryDocumentSnapshots != null) {
+                        double totalRating = 0;
+                        int reviewCount = queryDocumentSnapshots.size();
+
+                        for (DocumentSnapshot review : queryDocumentSnapshots) {
+                            totalRating += review.getDouble("reviewRate");
+                        }
+
+                        double averageRating = (reviewCount > 0) ? (totalRating / reviewCount) : 0;
+
+                        // Set the calculated rating to the worker object
+                        worker.setAverageRating(averageRating);
+
+                        // Add worker to list once rating is calculated
+                        workers.add(worker);
+
+                        // Increment the counter to track how many workers have been processed
+                        if (workerCounter.incrementAndGet() == totalWorkers) {
+                            // Sort the workers by average rating in descending order
+                            workers.sort((w1, w2) -> Double.compare(w2.getAverageRating(), w1.getAverageRating()));
+
+                            // Send sorted data back via callback
+                            callback.onWorkerDataRetrieved(workers);
+                        }
+                    }
+                });
+    }
+
+    public interface FirestoreWorkerCallback {
+        void onWorkerDataRetrieved(List<Worker> workers);
+    }
+
+    public void getWorkerBasicFields(FirestoreWorkerBasicDataCallback callback, String uid) {
+        if (auth.getCurrentUser() == null) {
+            // If the user is not authenticated, return an error
+            callback.onFailure(new Exception("User is not authenticated!"));
+            return;
+        }
+
+        DocumentReference docRef = db.collection("users").document(uid);
+
+        // Use addSnapshotListener for real-time updates
+        docRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                // Handle the error
+                callback.onFailure(e);
+                return;
+            }
+
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                // If the document exists, pass the data back to the callback
+                Map<String, Object> userData = documentSnapshot.getData();
+                callback.onSuccess(userData);
+            } else {
+                // Document does not exist or is null
+                callback.onFailure(new Exception("Document not found for the user: " + uid));
+            }
+        });
+    }
+
+    // Callback interface to handle Firestore operations results
+    public interface FirestoreWorkerBasicDataCallback {
+        void onSuccess(Map<String, Object> userData);
+        void onFailure(Exception e);
+    }
+
+    public void getMainCategories(Context context, MainCategoryCallback callback) {
+        CollectionReference skillCollection = db.collection("skills");
+        List<String> mainCategories = new ArrayList<>();
+
+        skillCollection.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    mainCategories.add(document.getId()); // Assuming document ID is the main category name
+                }
+                callback.onCallback(mainCategories);
+            } else {
+                Toast.makeText(context, "Failed to load categories", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void loadSubcategories(String mainCategory, LinearLayout checkboxContainer, Context context) {
+        CollectionReference skillCollection = db.collection("skills");
+        checkboxContainer.removeAllViews();
+
+        skillCollection.document(mainCategory).get().addOnSuccessListener(document -> {
+            if (document.exists()) {
+                List<String> subcategories = (List<String>) document.get("subCategories");
+                if (subcategories != null) {
+                    ArrayList<CheckBox> checkBoxList = new ArrayList<>();
+
+                    for (String subcategory : subcategories) {
+                        CheckBox checkBox = new CheckBox(context);
+                        checkBox.setText(subcategory);
+                        checkBoxList.add(checkBox);
+                        checkboxContainer.addView(checkBox);
+
+                        // Allow only 3 subcategories to be selected
+                        checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            long selectedCount = checkBoxList.stream().filter(CheckBox::isChecked).count();
+                            if (selectedCount > 3) {
+                                buttonView.setChecked(false);
+                                Toast.makeText(context, "You can select only 3 subcategories", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            } else {
+                Toast.makeText(context, "No subcategories available for " + mainCategory, Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(context, "Failed to load subcategories", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    // Callback interface to handle main category retrieval
+    public interface MainCategoryCallback {
+        void onCallback(List<String> mainCategories);
+    }
 }

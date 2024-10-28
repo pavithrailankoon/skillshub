@@ -76,4 +76,76 @@ public class FirebaseStoarageManager {
             }
         });
     }
+
+    public void uploadMultipleImages(String uid, Uri nicFrontUri, Uri nicBackUri, Uri brUri, OnImagesUploadCompleteListener listener) {
+        // Create a reference to the folder in Firebase Storage
+        StorageReference userFolderRef = storageRef.child(uid);
+
+        // Keep track of the URLs of each image after upload
+        final String[] imageUrls = new String[3];
+        final int[] uploadCount = {0}; // Counter to track completed uploads
+
+        // Helper method to handle image upload and completion tracking
+        uploadSingleImage(userFolderRef, "nic-front-image", nicFrontUri, new OnImageUploadCompleteListener() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                imageUrls[0] = imageUrl;
+                checkAllUploadsComplete(listener, imageUrls, uploadCount);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                listener.onFailure("Failed to upload NIC Front Image: " + errorMessage);
+            }
+        });
+
+        uploadSingleImage(userFolderRef, "nic-back-image", nicBackUri, new OnImageUploadCompleteListener() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                imageUrls[1] = imageUrl;
+                checkAllUploadsComplete(listener, imageUrls, uploadCount);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                listener.onFailure("Failed to upload NIC Back Image: " + errorMessage);
+            }
+        });
+
+        uploadSingleImage(userFolderRef, "br-image", brUri, new OnImageUploadCompleteListener() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                imageUrls[2] = imageUrl;
+                checkAllUploadsComplete(listener, imageUrls, uploadCount);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                listener.onFailure("Failed to upload BR Image: " + errorMessage);
+            }
+        });
+    }
+
+    // Helper method to upload a single image and notify via listener
+    private void uploadSingleImage(StorageReference folderRef, String fileName, Uri imageUri, OnImageUploadCompleteListener listener) {
+        StorageReference imageRef = folderRef.child(fileName);
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri -> listener.onSuccess(uri.toString())))
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    // Helper method to check if all images are uploaded
+    private void checkAllUploadsComplete(OnImagesUploadCompleteListener listener, String[] imageUrls, int[] uploadCount) {
+        uploadCount[0]++;
+        if (uploadCount[0] == 3) {
+            listener.onAllUploadsSuccess(imageUrls[0], imageUrls[1], imageUrls[2]);
+        }
+    }
+
+    // Listener interface for multiple image uploads
+    public interface OnImagesUploadCompleteListener {
+        void onAllUploadsSuccess(String nicFrontUrl, String nicBackUrl, String brUrl);
+        void onFailure(String errorMessage);
+    }
+
 }

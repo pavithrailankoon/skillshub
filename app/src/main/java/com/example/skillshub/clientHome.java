@@ -115,7 +115,7 @@ public class clientHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(clientHome.this, RegistrationControlActivity.class);
-                intent.putExtra("REGISTRATION_TYPE", "clientToWorker");
+                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
                 startActivity(intent);
                 Toast.makeText(clientHome.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
             }
