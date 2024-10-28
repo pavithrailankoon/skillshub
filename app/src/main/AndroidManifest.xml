@@ -4,9 +4,7 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
-
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+        android:required="false" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,6 +21,12 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
+            android:name=".WorkerShedule"
+            android:exported="false" />
+        <activity
+            android:name=".Shedule"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -32,22 +36,18 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-       </activity>
-
+        </activity>
         <activity
             android:name=".Introduction"
             android:exported="false" />
-          <activity
+        <activity
             android:name=".clientHome"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ChooseUserActivity"
-            android:exported="true"/>
+            android:exported="false" />
         <activity
             android:name=".ClientProfileActivity"
-            android:exported="true" />
-        <activity
-            android:name=".Home"
             android:exported="false" />
         <activity
             android:name=".signupform.AuthenticateActivity"
@@ -55,6 +55,12 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
+        activity     
+            android:name=".Admin"
+            android:exported="true" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
@@ -67,13 +73,13 @@
         <activity
             android:name=".ChangePassword"
             android:exported="false" />
-
         <activity
             android:name=".WorkerProfileView"
             android:exported="true" />
         <activity
             android:name=".FilterActivity"
-            android:exported="true" />
+            android:exported="false" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -84,7 +90,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

@@ -38,7 +38,7 @@ public class WorkerProfileView extends AppCompatActivity {
     FirebaseAuth fAuth;
     ImageView back, workerImage;
     FirebaseFirestore fStore;
-    String userID, receivedWorkerUid;
+    String userID;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -59,15 +59,13 @@ public class WorkerProfileView extends AppCompatActivity {
         back = findViewById(R.id.back);
         workerImage = findViewById(R.id.workerImage);
 
-        receivedWorkerUid = getIntent().getStringExtra("SELECTED_SUB_CATEGORY");
-
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
         userID = fAuth.getCurrentUser().getUid();
 
-        DocumentReference documentReference = fStore.collection("users").document(receivedWorkerUid);
-        DocumentReference documentReference1 = fStore.collection("user").document(receivedWorkerUid);
+        DocumentReference documentReference = fStore.collection("users").document("DbnaB8GfAsXmo7h1NR3ydo3EJgR2");
+        DocumentReference documentReference1 = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override

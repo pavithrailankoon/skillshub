@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/background_green"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Schedule">
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="355dp"
+        android:layout_height="432dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+
+    <Button
+        android:id="@+id/clear_btn"
+        android:layout_width="117dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="96dp"
+        android:background="@drawable/custom_button"
+        android:text="clear"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/task" />
+
+    <Button
+        android:id="@+id/set_btn"
+        android:layout_width="117dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="80dp"
+        android:background="@drawable/custom_button"
+        android:text="Set Schedule"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/clear_btn"
+        app:layout_constraintTop_toTopOf="@+id/clear_btn" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
