@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ClientProfileActivity extends AppCompatActivity implements CustomDialog.CustomDialogInterface {
 
-    ImageView backBtn, profileImage;
+    ImageView backBtn, profileImage,contact_developers;
     Button logOut, editDetails, editPassword;
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2;
     private UpdateData updateData;
@@ -50,6 +50,7 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
         editPassword = findViewById(R.id.editPassword);
+        contact_developers = findViewById(R.id.contact_developers);
 //        profileImage = findViewById(R.id.client_profile_image);
 
         newName = findViewById(R.id.name);
@@ -58,6 +59,16 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
         newAddressLine2 = findViewById(R.id.addressLine2);
 
         backBtn.setOnClickListener(view -> onBackPressed());
+
+        contact_developers.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com")); // Set hardcoded email address
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Body of the email");
+            if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(emailIntent);
+            }
+        });
 
         logOut.setOnClickListener(v -> {
             authManager.logOut();
@@ -122,7 +133,7 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
                     newAddressLine2.setText(userData.getOrDefault("address2", "No address available").toString());
 
                     // Load profile image
-                    String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
+       /*             String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
                     if (!profileImageURL.isEmpty()) {
                         Picasso.get().load(profileImageURL).placeholder(R.drawable.avatar).error(R.drawable.avatar).into(profileImage);
                     } else {
@@ -130,7 +141,7 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
                     }
                 } else {
                     Toast.makeText(ClientProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                }
+        */        }
             }
 
             @Override
