@@ -44,7 +44,7 @@ public class CreateData {
     public void saveWorkerCategory(String uid, String selectedCategory, Object selectedSubcategories) {
         // Create a map with the selectedSubcategories field
         Map<String, Object> categoryData = new HashMap<>();
-        categoryData.put("selectedSubcategories", selectedSubcategories);
+        categoryData.put("subcategories", selectedSubcategories);
 
         // Navigate to the path: users > uid > workerProfiles > selectedCategory
         db.collection("users").document(uid)

@@ -18,42 +18,47 @@
         android:background="@color/yellow">
 
 
-
         <TextView
+            android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:text="Date:"
-            android:textStyle="bold"
 
+            android:textColor="@color/background_green"
             android:textSize="14dp"
-            android:textColor="@color/background_green">
+            android:textStyle="bold">
 
         </TextView>
 
         <TextView
+            android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/textView11"
+            android:layout_alignStart="@+id/textView11"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="6dp"
             android:text="Description:"
-            android:layout_marginTop="35dp"
-            android:layout_marginStart="20dp"
-            android:textStyle="bold"
+            android:textColor="@color/background_green"
             android:textSize="14dp"
-            android:textColor="@color/background_green">
+            android:textStyle="bold">
 
         </TextView>
 
         <TextView
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="60dp"
+            android:layout_alignTop="@+id/textView11"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/textView11"
             android:text="2020.03.20"
-            android:textStyle="bold"
-            android:id="@+id/date"
+            android:textColor="@color/background_green"
             android:textSize="14dp"
-            android:textColor="@color/background_green">
+            android:textStyle="bold">
 
         </TextView>
 
@@ -61,10 +66,12 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_below="@+id/textView12"
+            android:layout_alignStart="@+id/textView12"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="60dp"
             android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             android:textColor="@color/background_green"
             android:textSize="12dp"
@@ -74,16 +81,15 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_below="@+id/description"
-            android:layout_alignParentEnd="true"
-
+            android:layout_alignEnd="@+id/description"
             android:layout_marginStart="250dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="20dp"
-
+            android:layout_marginEnd="0dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/custom_delete_button"
             android:text="delete"
-            android:textColor="@color/white"/>
+            android:id="@+id/delete_btn"
+            android:textColor="@color/white" />
 
 
     </RelativeLayout>

@@ -55,8 +55,6 @@ public class WorkerVerifyFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_user_verify, container, false);
         initializeViews(view);
 
-        Drawable uploadFnicIcon = frontNic.getDrawable();
-
         frontNic.setOnClickListener(v -> addFrontNic());
         backNic.setOnClickListener(v -> addBackNic());
         brImage.setOnClickListener(v -> addBr());
@@ -79,47 +77,46 @@ public class WorkerVerifyFragment extends Fragment {
 
     @SuppressLint("MissingInflatedId")
     public void showCustomAlertDialog() {
-        // Inflate custom layout
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         View view = inflater.inflate(R.layout.custom_list_item_category, null);
-        // Initialize views
+
         Spinner spinnerMainCategory = view.findViewById(R.id.spinner_main_category);
         LinearLayout checkboxContainer = view.findViewById(R.id.checkbox_container);
         progressBar = view.findViewById(R.id.progressbarCategory);
 
-        // Show progress bar and start loading main categories
         progressBar.setVisibility(View.VISIBLE);
 
-        // Retrieve and populate main categories in Spinner
         readData.getMainCategories(requireContext(), mainCategories -> {
             progressBar.setVisibility(View.GONE);
-            ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, mainCategories);
-            spinnerMainCategory.setAdapter(categoryAdapter);
 
-            // Listen for spinner selection to load subcategories
-            spinnerMainCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String selectedCategory = mainCategories.get(position);
-                    readData.loadSubcategories(selectedCategory, checkboxContainer, requireContext());
-                }
+            if (mainCategories != null && !mainCategories.isEmpty()) {
+                ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, mainCategories);
+                spinnerMainCategory.setAdapter(categoryAdapter);
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    checkboxContainer.removeAllViews();
-                }
-            });
+                spinnerMainCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedCategory = mainCategories.get(position);
+                        readData.loadSubcategories(selectedCategory, checkboxContainer, requireContext());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        checkboxContainer.removeAllViews();
+                    }
+                });
+            } else {
+                Toast.makeText(requireContext(), "No main categories found", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // Create and show the AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setView(view)
                 .setTitle("Select Categories and Subcategories")
                 .setPositiveButton("Save", (dialog, which) -> {
-                    String selectedCategory = spinnerMainCategory.getSelectedItem().toString();
+                    String selectedCategory = (String) spinnerMainCategory.getSelectedItem();
                     ArrayList<String> selectedSubcategories = new ArrayList<>();
 
-                    // Collect selected subcategories
                     for (int i = 0; i < checkboxContainer.getChildCount(); i++) {
                         CheckBox checkBox = (CheckBox) checkboxContainer.getChildAt(i);
                         if (checkBox.isChecked()) {
@@ -127,11 +124,11 @@ public class WorkerVerifyFragment extends Fragment {
                         }
                     }
 
-                    // Store in map and use as needed
-                    selectedData = new HashMap<>();
-                    selectedData.put("categoryName", selectedCategory);
-                    selectedData.put("subcategories", selectedSubcategories);
-                    Toast.makeText(requireContext(), "Data saved: " + selectedData.size() + " skills collected", Toast.LENGTH_LONG).show();
+                    if (selectedCategory != null) {
+                        selectedData.put("categoryName", selectedCategory);
+                        selectedData.put("subcategories", selectedSubcategories);
+                        Toast.makeText(requireContext(), "Data saved: " + selectedData.size() + " skills collected", Toast.LENGTH_LONG).show();
+                    }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()
@@ -146,6 +143,8 @@ public class WorkerVerifyFragment extends Fragment {
         clearNicFront = view.findViewById(R.id.signup_clear_nicfront_upload);
         clearNicBack = view.findViewById(R.id.signup_clear_nicback_upload);
         clearBr = view.findViewById(R.id.signup_clear_br_upload);
+
+        selectedData = new HashMap<>();
     }
 
     //Method to open gallery using a button
@@ -169,57 +168,49 @@ public class WorkerVerifyFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && data != null) {
-            nicFrontUri = data.getData();
-            if(nicFrontUri != null){
-                frontNic.setBackgroundColor(Color.parseColor("#0000FF"));
-            } else {
-                frontNic.setBackgroundColor(Color.parseColor("#818589"));
+        if (resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedUri = data.getData();
+            if (requestCode == 1) {
+                nicFrontUri = selectedUri;
+                frontNic.setBackgroundColor(nicFrontUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+                Toast.makeText(requireContext(), "Front NIC image added", Toast.LENGTH_LONG).show();
+            } else if (requestCode == 2) {
+                nicBackUri = selectedUri;
+                backNic.setBackgroundColor(nicBackUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+                Toast.makeText(requireContext(), "Back NIC image added", Toast.LENGTH_LONG).show();
+            } else if (requestCode == 3) {
+                brUri = selectedUri;
+                brImage.setBackgroundColor(brUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+                Toast.makeText(requireContext(), "Business Certificate image added", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(requireContext(), "Front NIC image added", Toast.LENGTH_LONG).show();
-        }
-
-        if (requestCode == 2 && data != null) {
-            nicBackUri = data.getData();
-            if(nicBackUri != null){
-                backNic.setBackgroundColor(Color.parseColor("#0000FF"));
-            } else {
-                backNic.setBackgroundColor(Color.parseColor("#818589"));
-            }
-            Toast.makeText(requireContext(), "Back NIC image added", Toast.LENGTH_LONG).show();
-        }
-
-        if (requestCode == 3 && data != null) {
-            brUri = data.getData();
-            if(brUri != null){
-                brImage.setBackgroundColor(Color.parseColor("#0000FF"));
-            } else {
-                brImage.setBackgroundColor(Color.parseColor("#818589"));
-            }
-            Toast.makeText(requireContext(), "Business Certificate added as an Image", Toast.LENGTH_LONG).show();
         }
     }
 
     public boolean validateInput() {
-        // Check if the required fields are null
+        // Check if the front NIC is uploaded
         if (nicFrontUri == null) {
             Toast.makeText(requireContext(), "Please upload the front side of your NIC.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
+        // Check if the back NIC is uploaded
         if (nicBackUri == null) {
             Toast.makeText(requireContext(), "Please upload the back side of your NIC.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (selectedData == null || selectedData.isEmpty()) {
+        // Check if at least one skill category and subcategory is selected
+        if (selectedData == null || selectedData.isEmpty() ||
+                !selectedData.containsKey("subcategories") ||
+                ((List<String>) selectedData.get("subcategories")).isEmpty()) {
             Toast.makeText(requireContext(), "Please select at least one skill category and subcategory.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        // All required fields are present
+        // All required fields are valid
         return true;
     }
+
 
 
     public Uri getNicFront() {

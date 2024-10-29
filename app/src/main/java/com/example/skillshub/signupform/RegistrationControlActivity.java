@@ -22,27 +22,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.skillshub.ChooseUserActivity;
 import com.example.skillshub.LoginActivity;
 import com.example.skillshub.R;
 import com.example.skillshub.WorkerProfileView;
 import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.CreateData;
-import com.example.skillshub.firebaseModel.FirebaseStoarageManager;
+import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.model.User;
 import com.example.skillshub.utils.LocalDataManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RegistrationControlActivity extends AppCompatActivity {
@@ -56,7 +50,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
     private LocalDataManager localDataManager;
     private Context context;
-    private FirebaseStoarageManager storageManager;
+    private FirebaseStorageManager storageManager;
     private CreateData createData;
     private User userData;
     FirebaseUser user;
@@ -84,7 +78,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         localDataManager = new LocalDataManager();
-        storageManager = new FirebaseStoarageManager();
+        storageManager = new FirebaseStorageManager();
         authManager = new AuthManager();
         createData = new CreateData();
         userData = new User();
@@ -109,7 +103,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
     private void setClickListeners(){
         signupNextButton.setOnClickListener(v -> {
-            //if (validateCurrentFragment()) {
+            if (validateCurrentFragment()) {
             if (currentFragmentIndex < fragments.length - 1) {
                 currentFragmentIndex++;
                 loadFragment(fragments[currentFragmentIndex]);
@@ -126,7 +120,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
                     finish();
                 }
             }
-            //}
+            }
         });
 
         signupRedirectToLogin.setOnClickListener(v -> {
@@ -264,7 +258,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         // Create location data map
         User userData = new User();
 
-        storageManager.uploadImageFiles(user.getUid(), "profile-image", profileUri, new FirebaseStoarageManager.OnImageUploadCompleteListener() {
+        storageManager.uploadImageFiles(user.getUid(), "profile-image", profileUri, new FirebaseStorageManager.OnImageUploadCompleteListener() {
             @Override
             public void onSuccess(String profileUrl) {
 //                progressDialog.cancel();
@@ -292,7 +286,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         Uri brUri = ((WorkerVerifyFragment) fragments[2]).getBr();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get the user ID
 
-        storageManager.uploadMultipleImages(uid, nicFrontUri, nicBackUri, brUri, new FirebaseStoarageManager.OnImagesUploadCompleteListener() {
+        storageManager.uploadMultipleImages(uid, nicFrontUri, nicBackUri, brUri, new FirebaseStorageManager.OnImagesUploadCompleteListener() {
             @Override
             public void onAllUploadsSuccess(String nicFrontUrl, String nicBackUrl, String brUrl) {
                 saveImageUrlsToFirestore(uid, nicFrontUrl, nicBackUrl, brUrl);
@@ -331,7 +325,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         Map<String, Object> selectedSkills = ((WorkerVerifyFragment) fragments[2]).getCategories();
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Object selectedSubcategories = selectedSkills.get("selectedCategory");
+        Object selectedSubcategories = selectedSkills.get("subcategories");
         String selectedCategory = "";
         for (Map.Entry<String, Object> entry : selectedSkills.entrySet()) {
             selectedCategory = entry.getKey();
