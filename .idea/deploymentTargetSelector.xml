@@ -2,6 +2,7 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
+
       <SelectionState runConfigName="WorkerProfileView">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -11,6 +12,11 @@
       <SelectionState runConfigName="Admin">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+
+      <SelectionState runConfigName="Schedule">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+
     </selectionStates>
   </component>
 </project>
