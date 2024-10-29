@@ -27,6 +27,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +47,7 @@ public class ReadData {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    ////////////////////////////////////////////////////////////////////////////////////
     // Method to fetch all districts from Firestore
     public void getDistricts(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         db.collection("location").get()
@@ -71,6 +74,8 @@ public class ReadData {
                 })
                 .addOnFailureListener(onFailure);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     // Method to check if a NIC already exists in the users collection
     public void checkNicExists(String collection, String field, String value, final FirestoreNicCallback callback) {
@@ -100,6 +105,8 @@ public class ReadData {
         void onCallback(boolean exists);
         void onFailure(Exception e);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     public void fetchUniqueCategoryNames(final FirestoreCallback firestoreCallback) {
         // Create a HashSet to store unique category names
@@ -149,6 +156,8 @@ public class ReadData {
         void onSuccess(ArrayList<String> categoryNames);
         void onFailure(String errorMessage);
     }
+
+////////////////////////////////////////////////////////////////////////////////////
 
 
     public void fetchUniqueSubcategories(final String mainCategoryName, final FirestoreSubSkillCallback firestoreCallback) {
@@ -204,6 +213,8 @@ public class ReadData {
         void onFailure(String errorMessage);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
     // Method to retrieve all fields from the user's document
     public void getUserFields(FirestoreUserDataCallback callback) {
         if (auth.getCurrentUser() == null) {
@@ -239,6 +250,8 @@ public class ReadData {
         void onSuccess(Map<String, Object> userData);
         void onFailure(Exception e);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     // Method to retrieve worker data filtered by subcategory
     public void getWorkersBySubcategory(String subcategory, FirestoreWorkerCallback callback) {
@@ -297,6 +310,8 @@ public class ReadData {
                 });
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
     private void calculateWorkerRating(String uid, Worker worker, List<Worker> workers, FirestoreWorkerCallback callback,
                                        AtomicInteger workerCounter, int totalUsers) {
         db.collection("user").document(uid).collection("reviewsAsAWorker")
@@ -338,9 +353,16 @@ public class ReadData {
         callback.onWorkerDataRetrieved(workers);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
     public interface FirestoreWorkerCallback {
         void onWorkerDataRetrieved(List<Worker> workers);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     public void getWorkerBasicFields(FirestoreWorkerBasicDataCallback callback, String uid) {
         if (auth.getCurrentUser() == null) {
@@ -376,6 +398,8 @@ public class ReadData {
         void onFailure(Exception e);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
     public void getMainCategories(Context context, MainCategoryCallback callback) {
         CollectionReference skillCollection = db.collection("skills");
         List<String> mainCategories = new ArrayList<>();
@@ -391,6 +415,8 @@ public class ReadData {
             }
         });
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     public void loadSubcategories(String mainCategory, LinearLayout checkboxContainer, Context context) {
         CollectionReference skillCollection = db.collection("skills");
@@ -430,4 +456,6 @@ public class ReadData {
     public interface MainCategoryCallback {
         void onCallback(List<String> mainCategories);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 }

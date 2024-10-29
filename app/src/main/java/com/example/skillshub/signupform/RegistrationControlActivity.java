@@ -325,7 +325,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         Map<String, Object> selectedSkills = ((WorkerVerifyFragment) fragments[2]).getCategories();
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Object selectedSubcategories = selectedSkills.get("subcategories");
+        Object selectedSubcategories = selectedSkills.get("namww");
         String selectedCategory = "";
         for (Map.Entry<String, Object> entry : selectedSkills.entrySet()) {
             selectedCategory = entry.getKey();

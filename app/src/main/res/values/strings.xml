@@ -20,28 +20,18 @@
     <string name="filter_subcategory">Sub Category</string>
     <string name="filter_location">Location</string>
     <string-array name="spinner_category">
-        <item>Technician</item>
-        <item>Vehicle</item>
-        <item>Construction</item>
-        <item>Events</item>
+        <item>Please wait until loading</item>
     </string-array>
     <string-array name="spinner_sub_category">
-        <item>AC repair</item>
-        <item>CCTV</item>
-        <item>TV/Radio electronic repair</item>
-        <item>Electricity</item>
+        <item>Please wait until loading</item>
+
     </string-array>
     <string-array name="spinner_district">
-        <item>Matara</item>
-        <item>Galle</item>
-        <item>Colombo</item>
-        <item>Kandy</item>
+        <item>Please wait until loading</item>
+
     </string-array>
     <string-array name="spinner_city">
-        <item>Welladama</item>
-        <item>Maddawatta</item>
-        <item>Devundara</item>
-        <item>Matara Town</item>
+        <item>Please wait until loading</item>
     </string-array>
 
     <!-- Strings related to login -->

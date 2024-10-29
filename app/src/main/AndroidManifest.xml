@@ -45,7 +45,7 @@
             android:exported="false" />
         <activity
             android:name=".ChooseUserActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ClientProfileActivity"
             android:exported="false" />
@@ -55,11 +55,8 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
-        activity     
-            android:name=".Admin"
-            android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Admin"
             android:exported="false" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
@@ -75,10 +72,10 @@
             android:exported="false" />
         <activity
             android:name=".WorkerProfileView"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".FilterActivity"
-            android:exported="false" />
+            android:exported="true" />
 
 
         <provider
