@@ -209,18 +209,19 @@
         android:id="@+id/editDetailsBtn"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/custom_button"
         android:onClick="openDialog"
         android:text="Edit Details"
         android:textAllCaps="false"
         android:textColor="@color/background_green"
         android:textSize="12dp"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/addressLine1"
-        app:layout_constraintStart_toStartOf="@+id/addressText"
-        app:layout_constraintTop_toBottomOf="@+id/addressLine2" />
+        app:layout_constraintEnd_toEndOf="@+id/textView22"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <Button
         android:id="@+id/deleteAccount"
@@ -273,6 +274,48 @@
         android:text="Contact Developers :"
         app:layout_constraintStart_toStartOf="@+id/deleteAccount"
         app:layout_constraintTop_toBottomOf="@+id/deleteAccount" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="City:"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/addressText"
+        app:layout_constraintTop_toTopOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Matara"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/addressLine2"
+        app:layout_constraintTop_toBottomOf="@+id/addressLine2" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="District:"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Matara"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toTopOf="@+id/textView18" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
