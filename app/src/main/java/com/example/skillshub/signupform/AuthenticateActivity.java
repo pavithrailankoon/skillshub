@@ -15,6 +15,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +42,8 @@ public class AuthenticateActivity extends AppCompatActivity {
     private TextView generatedPwd;
     private TextView copyPwdButton;
     private TextView signupRedirectToLogin;
-    private Button authCheck;
-    private Button authLeave;
+    private Button authCheck, authLeave;
+    private ImageView backButton;
 
     private String strEmail;
     private String strPwd;
@@ -72,6 +73,7 @@ public class AuthenticateActivity extends AppCompatActivity {
         authManager = new AuthManager();
         readData = new ReadData();
 
+        backButton = findViewById(R.id.signup_back_btn);
         email = findViewById(R.id.auth_email);
         nic = findViewById(R.id.auth_nic);
         generatedPwd = findViewById(R.id.generated_password);
@@ -91,6 +93,12 @@ public class AuthenticateActivity extends AppCompatActivity {
             }
         });
         authLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveUser();
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 leaveUser();

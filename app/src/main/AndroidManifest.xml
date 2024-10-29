@@ -57,7 +57,7 @@
             android:exported="true" />
         <activity
             android:name=".Admin"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
