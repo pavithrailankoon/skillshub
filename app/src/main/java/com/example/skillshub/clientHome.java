@@ -23,6 +23,9 @@ import com.example.skillshub.adapters.CategoryAdapter;
 import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.signupform.RegistrationControlActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -37,6 +40,10 @@ public class clientHome extends AppCompatActivity {
     private ImageView refresh;
     private ProgressBar progressBar;
     ProgressDialog progressDialog;
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    String uid;
 
     private ReadData readData;
     private ListView categoryListView;
@@ -55,6 +62,19 @@ public class clientHome extends AppCompatActivity {
         progressBar = findViewById(R.id.progressbar);
         filterButton = (ImageButton) findViewById(R.id.filter_button);
         refresh  = (ImageView) findViewById(R.id.refresh_category);
+        button = (Button) findViewById(R.id.becomeWorkerButton);
+
+
+
+
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        user = auth.getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+        }
+
 
         // Initialize the ListView and ArrayList
         categoryListView = findViewById(R.id.listView1);
@@ -65,6 +85,7 @@ public class clientHome extends AppCompatActivity {
         categoryListView.setAdapter(categoryAdapter);
 
         //setUserAvatar();
+        button.setOnClickListener(v -> checkWorkerProfileAndNavigate());
 
         refresh.setOnClickListener(new View.OnClickListener(){
 
@@ -104,19 +125,42 @@ public class clientHome extends AppCompatActivity {
 
         //Become A worker Button Code
 
-        button = (Button) findViewById(R.id.becomeWorkerButton);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(clientHome.this, RegistrationControlActivity.class);
-                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
-                startActivity(intent);
-                Toast.makeText(clientHome.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         getUniqueMainSkills();
         categoryClickListener();
+    }
+
+    private void checkWorkerProfileAndNavigate() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+
+            // Check if 'workerProfiles' subcollection has any documents
+            db.collection("users").document(uid).collection("workerProfiles")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (!task.getResult().isEmpty()) {
+                                // 'workerProfiles' subcollection exists, navigate to ClientProfileActivity
+                                Intent intent = new Intent(this, WorkerProfile.class);
+                                startActivity(intent);
+                            } else {
+                                // 'workerProfiles' subcollection does not exist, navigate to RegisterProfileActivity
+                                Intent intent = new Intent(this, RegistrationControlActivity.class);
+                                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
+                                Toast.makeText(clientHome.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
+                                startActivity(intent);
+                            }
+                        } else {
+                            Log.e("Firestore Error", "Error checking workerProfiles subcollection", task.getException());
+                            Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            // Handle case if the user is not logged in or uid is null
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            // You could optionally navigate to a login screen here
+        }
     }
 
     private void categoryClickListener() {
