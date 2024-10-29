@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full Name" />
+
+    <EditText
+        android:id="@+id/editTextPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number" />
+
+    <EditText
+        android:id="@+id/editTextAddressLine1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Address Line 1" />
+
+    <EditText
+        android:id="@+id/editTextAddressLine2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Address Line 2" />
+
+    <EditText
+        android:id="@+id/editTextCity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="City" />
+
+    <EditText
+        android:id="@+id/editTextDistrict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="District" />
+</LinearLayout>
