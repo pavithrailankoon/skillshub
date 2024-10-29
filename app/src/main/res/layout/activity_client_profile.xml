@@ -98,8 +98,8 @@
         android:id="@+id/button"
         android:layout_width="72dp"
         android:layout_height="17dp"
-        android:layout_alignStart="@+id/imageView6"
-        android:layout_alignEnd="@+id/imageView6"
+        android:layout_alignStart="@+id/client_profile_image"
+        android:layout_alignEnd="@+id/client_profile_image"
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
         android:background="@drawable/custom_button"
@@ -107,9 +107,9 @@
         android:textAllCaps="false"
         android:textColor="@color/background_green"
         android:textSize="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView6"
-        app:layout_constraintStart_toStartOf="@+id/imageView6"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+        app:layout_constraintEnd_toEndOf="@+id/client_profile_image"
+        app:layout_constraintStart_toStartOf="@+id/client_profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/client_profile_image" />
 
 
     <TextView

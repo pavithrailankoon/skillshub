@@ -97,9 +97,9 @@ public class clientHome3 extends AppCompatActivity {
 
         // Set the OnItemClickListener for the ListView
         workerListView.setOnItemClickListener((parent, view, position, id) -> {
-            Worker selectedWorker = workerList.get(position);
+            Worker selectedWorkerUid = workerList.get(position);
             Intent intent = new Intent(clientHome3.this, WorkerProfileView.class);
-            intent.putExtra("SELECTED_WORKER", (CharSequence) selectedWorker);
+            intent.putExtra("SELECTED_WORKER", (CharSequence) selectedWorkerUid);
             startActivity(intent);
         });
     }
@@ -138,7 +138,7 @@ public class clientHome3 extends AppCompatActivity {
     }
 
     private void setUserAvatar() {
-        FirebaseStorageManager imageManager = new FirebaseStorageManager(); // Corrected class name
-        imageManager.loadProfileImage(this, profileImageButton); // Ensure method exists in FirebaseStorageManager
+        FirebaseStorageManager imageManager = new FirebaseStorageManager();
+        imageManager.loadProfileImage(this, profileImageButton);
     }
 }
