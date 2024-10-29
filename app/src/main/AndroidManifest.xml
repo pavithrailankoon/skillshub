@@ -48,14 +48,11 @@
             android:exported="false" />
         <activity
             android:name=".ClientProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".signupform.AuthenticateActivity"
             android:exported="true" />
         <activity
-            android:name=".LoginActivity"
-            android:exported="true" />
-        activity     
             android:name=".Admin"
             android:exported="false" />
         <activity
