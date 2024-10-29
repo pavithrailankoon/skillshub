@@ -21,8 +21,8 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
-            android:name=".WorkerShedule"
-            android:exported="false" />
+            android:name=".Schedule"
+            android:exported="true" />
         <activity
             android:name=".Shedule"
             android:exported="false" />
@@ -34,6 +34,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -76,7 +77,6 @@
         <activity
             android:name=".FilterActivity"
             android:exported="false" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
