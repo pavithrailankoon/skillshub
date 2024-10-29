@@ -27,6 +27,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +47,7 @@ public class ReadData {
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    ////////////////////////////////////////////////////////////////////////////////////
     // Method to fetch all districts from Firestore
     public void getDistricts(OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         db.collection("location").get()
@@ -71,6 +74,8 @@ public class ReadData {
                 })
                 .addOnFailureListener(onFailure);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     // Method to check if a NIC already exists in the users collection
     public void checkNicExists(String collection, String field, String value, final FirestoreNicCallback callback) {
@@ -100,6 +105,8 @@ public class ReadData {
         void onCallback(boolean exists);
         void onFailure(Exception e);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     public void fetchUniqueCategoryNames(final FirestoreCallback firestoreCallback) {
         // Create a HashSet to store unique category names
@@ -149,6 +156,8 @@ public class ReadData {
         void onSuccess(ArrayList<String> categoryNames);
         void onFailure(String errorMessage);
     }
+
+////////////////////////////////////////////////////////////////////////////////////
 
 
     public void fetchUniqueSubcategories(final String mainCategoryName, final FirestoreSubSkillCallback firestoreCallback) {
@@ -204,6 +213,8 @@ public class ReadData {
         void onFailure(String errorMessage);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
     // Method to retrieve all fields from the user's document
     public void getUserFields(FirestoreUserDataCallback callback) {
         if (auth.getCurrentUser() == null) {
@@ -240,17 +251,17 @@ public class ReadData {
         void onFailure(Exception e);
     }
 
-    // Method to retrieve worker data filtered by subcategory
+    ////////////////////////////////////////////////////////////////////////////////////
+
     public void getWorkersBySubcategory(String subcategory, FirestoreWorkerCallback callback) {
         db.collection("user")
                 .get()
                 .addOnSuccessListener(userDocuments -> {
                     List<Worker> workers = new ArrayList<>();
-                    AtomicInteger workerCounter = new AtomicInteger(0); // Track processed workers
-                    int totalUsers = userDocuments.size(); // Number of user documents
+                    AtomicInteger workerCounter = new AtomicInteger(0);
+                    int totalUsers = userDocuments.size();
 
                     if (totalUsers == 0) {
-                        // No users found, so invoke callback with an empty list
                         callback.onWorkerDataRetrieved(workers);
                         return;
                     }
@@ -258,33 +269,45 @@ public class ReadData {
                     for (DocumentSnapshot userDocument : userDocuments) {
                         String uid = userDocument.getId();
 
+                        // Check workerProfiles sub-collection for the specified subcategory
                         db.collection("user").document(uid).collection("workerProfiles")
                                 .whereArrayContains("subcategories", subcategory)
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                                    for (DocumentSnapshot document : queryDocumentSnapshots) {
-                                        Worker worker = new Worker(
-                                                uid,
-                                                document.getString("fullName"),
-                                                document.getString("district"),
-                                                document.getString("city"),
-                                                document.getString("profileImageURL")
-                                        );
+                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                        // If subcategory is found, retrieve main document data
+                                        DocumentReference documentReference = db.collection("user").document(uid);
+                                        documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                                            if (documentSnapshot.exists()) {
+                                                Worker worker = new Worker(
+                                                        uid,
+                                                        documentSnapshot.getString("fullName"),
+                                                        documentSnapshot.getString("district"),
+                                                        documentSnapshot.getString("city"),
+                                                        documentSnapshot.getString("profileImageURL")
+                                                );
 
-                                        // Calculate rating and process worker
-                                        calculateWorkerRating(uid, worker, workers, callback, workerCounter, totalUsers);
-                                    }
-
-                                    // Check if this user had no matching worker profiles
-                                    if (queryDocumentSnapshots.isEmpty() && workerCounter.incrementAndGet() == totalUsers) {
-                                        // All users processed; invoke callback with sorted workers
+                                                // Calculate rating and add to workers list
+                                                calculateWorkerRating(uid, worker, workers, callback, workerCounter, totalUsers);
+                                            } else {
+                                                Log.e("Firestore Error", "User document does not exist for UID: " + uid);
+                                                if (workerCounter.incrementAndGet() == totalUsers) {
+                                                    finalizeWorkerList(workers, callback);
+                                                }
+                                            }
+                                        }).addOnFailureListener(e -> {
+                                            Log.e("Firestore Error", "Failed to retrieve user document", e);
+                                            if (workerCounter.incrementAndGet() == totalUsers) {
+                                                finalizeWorkerList(workers, callback);
+                                            }
+                                        });
+                                    } else if (workerCounter.incrementAndGet() == totalUsers) {
+                                        // All users processed; invoke callback if no matching profiles found
                                         finalizeWorkerList(workers, callback);
                                     }
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("Firestore Error", "Error getting worker profiles", e);
-
-                                    // Ensure counter is updated even on failure
                                     if (workerCounter.incrementAndGet() == totalUsers) {
                                         finalizeWorkerList(workers, callback);
                                     }
@@ -293,9 +316,12 @@ public class ReadData {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore Error", "Error getting user documents", e);
-                    callback.onWorkerDataRetrieved(new ArrayList<>()); // Return an empty list on failure
+                    callback.onWorkerDataRetrieved(new ArrayList<>());
                 });
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     private void calculateWorkerRating(String uid, Worker worker, List<Worker> workers, FirestoreWorkerCallback callback,
                                        AtomicInteger workerCounter, int totalUsers) {
@@ -314,7 +340,6 @@ public class ReadData {
 
                     double averageRating = (reviewCount > 0) ? (totalRating / reviewCount) : 0;
                     worker.setAverageRating(averageRating);
-
                     workers.add(worker);
 
                     if (workerCounter.incrementAndGet() == totalUsers) {
@@ -323,24 +348,28 @@ public class ReadData {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore Error", "Failed to get reviews", e);
-
-                    // Proceed even if there's an error retrieving reviews
                     if (workerCounter.incrementAndGet() == totalUsers) {
                         finalizeWorkerList(workers, callback);
                     }
                 });
     }
 
+
     private void finalizeWorkerList(List<Worker> workers, FirestoreWorkerCallback callback) {
-        // Sort the list by average rating in descending order
         workers.sort((w1, w2) -> Double.compare(w2.getAverageRating(), w1.getAverageRating()));
-        // Send the sorted list to the callback
         callback.onWorkerDataRetrieved(workers);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     public interface FirestoreWorkerCallback {
         void onWorkerDataRetrieved(List<Worker> workers);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     public void getWorkerBasicFields(FirestoreWorkerBasicDataCallback callback, String uid) {
         if (auth.getCurrentUser() == null) {
@@ -376,6 +405,8 @@ public class ReadData {
         void onFailure(Exception e);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////
+
     public void getMainCategories(Context context, MainCategoryCallback callback) {
         CollectionReference skillCollection = db.collection("skills");
         List<String> mainCategories = new ArrayList<>();
@@ -391,6 +422,8 @@ public class ReadData {
             }
         });
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 
     public void loadSubcategories(String mainCategory, LinearLayout checkboxContainer, Context context) {
         CollectionReference skillCollection = db.collection("skills");
@@ -430,4 +463,6 @@ public class ReadData {
     public interface MainCategoryCallback {
         void onCallback(List<String> mainCategories);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////
 }

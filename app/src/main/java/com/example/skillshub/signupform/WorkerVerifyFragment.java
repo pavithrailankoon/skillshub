@@ -49,6 +49,7 @@ public class WorkerVerifyFragment extends Fragment {
     private Uri nicFrontUri, nicBackUri, brUri;
     private Map<String, Object> selectedData;
     private ReadData readData;
+    private String selectedCategory;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -114,7 +115,7 @@ public class WorkerVerifyFragment extends Fragment {
         builder.setView(view)
                 .setTitle("Select Categories and Subcategories")
                 .setPositiveButton("Save", (dialog, which) -> {
-                    String selectedCategory = (String) spinnerMainCategory.getSelectedItem();
+                    selectedCategory = (String) spinnerMainCategory.getSelectedItem();
                     ArrayList<String> selectedSubcategories = new ArrayList<>();
 
                     for (int i = 0; i < checkboxContainer.getChildCount(); i++) {
@@ -223,6 +224,10 @@ public class WorkerVerifyFragment extends Fragment {
 
     public Uri getBr() {
         return brUri;
+    }
+
+    public String getMainCategory(){
+        return selectedCategory;
     }
 
     public Map<String, Object> getCategories(){

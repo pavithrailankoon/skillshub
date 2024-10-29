@@ -1,55 +1,83 @@
 package com.example.skillshub;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skillshub.firebaseModel.AuthManager;
+import com.example.skillshub.firebaseModel.CreateData;
+import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
-import com.example.skillshub.firebaseModel.UpdateData; // Change this to the correct import
+import com.example.skillshub.firebaseModel.UpdateData;
 import com.example.skillshub.model.CustomDialog;
+import com.example.skillshub.signupform.RegistrationControlActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
-public class ClientProfileActivity extends AppCompatActivity implements CustomDialog.CustomDialogInterface {
+public class ClientProfileActivity extends AppCompatActivity {
 
     ImageView backBtn, profileImage,contact_developers;
     Button logOut, editDetails, editPassword;
+
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2;
     private UpdateData updateData;
     private ReadData readData;
+    private CreateData createData;
     private AuthManager authManager;
+    private FirebaseStorageManager storageManager;
+    private FirebaseUser user;
+    private ArrayAdapter<String> districtAdapter;
+    private ArrayAdapter<String> cityAdapter;
 
     private static final int REQUEST_IMAGE_GALLERY = 1;
-    private static final int REQUEST_IMAGE_CAMERA = 2;
+    private Uri DEFAULT_IMAGE_URI;
     private Uri imageUri;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_client_profile);
 
+        // Initialize Firebase-related objects
         updateData = new UpdateData();
         readData = new ReadData();
+        createData = new CreateData();
         authManager = new AuthManager();
+        storageManager = new FirebaseStorageManager();
 
+        // Find views by ID
         backBtn = findViewById(R.id.backBtn);
+        profileImage = findViewById(R.id.client_profile_image);
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
-        editPassword = findViewById(R.id.editPassword);
+
+        buttonUploadPhoto = findViewById(R.id.button);
+        DEFAULT_IMAGE_URI = Uri.parse("android.resource://" + this.getPackageName() + "/" + R.drawable.avatar);
         contact_developers = findViewById(R.id.contact_developers);
 //        profileImage = findViewById(R.id.client_profile_image);
 
@@ -75,7 +103,7 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             finish();
-            Toast.makeText(ClientProfileActivity.this, "Logout", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ClientProfileActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
         });
 
         editPassword.setOnClickListener(v -> {
@@ -83,42 +111,48 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
             startActivity(intent);
         });
 
-        // Set up the edit button to show the dialog
-        editDetails.setOnClickListener(this::openDialog);
+        editDetails.setOnClickListener(v -> {
+            showUpdateUserDialog();
+        });
+
+        buttonUploadPhoto.setOnClickListener(v -> openGallery());
 
         retrieveUserData();
     }
 
-    @Override
-    public void applyTexts(String name, String phoneNumber, String addressLine1, String addressLine2) {
-        newName.setText(name);
-        newPhoneNumber.setText(phoneNumber);
-        newAddressLine1.setText(addressLine1);
-        newAddressLine2.setText(addressLine2);
-
-        // Update Firestore with the new details using the reusable method
-        updateData.updateUserFields(name, phoneNumber, addressLine1, addressLine2, new UpdateData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Map<String, Object> userData) {
-                Toast.makeText(ClientProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(ClientProfileActivity.this, "Error updating profile: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY);
     }
 
-    private void openDialog(View view) {
-        CustomDialog customDialog = new CustomDialog();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        // Pass existing user data to the dialog
-        customDialog.setInitialValues(newName.getText().toString(),
-                newPhoneNumber.getText().toString(),
-                newAddressLine1.getText().toString(),
-                newAddressLine2.getText().toString());
-        customDialog.show(getSupportFragmentManager(), "Test CustomDialog");
+        if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
+            imageUri = data.getData();
+            profileImage.setImageURI(imageUri);
+            storageManager.uploadImageFiles(user.getUid(), "profile-image", imageUri, new FirebaseStorageManager.OnImageUploadCompleteListener() {
+                @Override
+                public void onSuccess(String profileUrl) {
+                     //Profile image updating
+
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+//                progressDialog.cancel();
+                    Toast.makeText( ClientProfileActivity.this, "Failed to upload profile image: " + errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        // If no image is selected, set the default image URI
+        if (imageUri == null) {
+            imageUri = DEFAULT_IMAGE_URI;
+            profileImage.setImageURI(imageUri);
+        }
     }
 
     private void retrieveUserData() {
@@ -126,18 +160,22 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
             @Override
             public void onSuccess(Map<String, Object> userData) {
                 if (userData != null) {
-                    // Safeguard for null or missing fields
                     newName.setText(userData.getOrDefault("fullName", "No name available").toString());
                     newPhoneNumber.setText(userData.getOrDefault("phone", "No phone available").toString());
                     newAddressLine1.setText(userData.getOrDefault("address1", "No address available").toString());
                     newAddressLine2.setText(userData.getOrDefault("address2", "No address available").toString());
 
-                    // Load profile image
-       /*             String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
+                    // Load profile image with a null check
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
+
                     if (!profileImageURL.isEmpty()) {
-                        Picasso.get().load(profileImageURL).placeholder(R.drawable.avatar).error(R.drawable.avatar).into(profileImage);
+                        Picasso.get()
+                                .load(profileImageURL)
+                                .placeholder(R.drawable.avatar)
+                                .error(R.drawable.avatar)
+                                .into(profileImage);
                     } else {
-                        Picasso.get().load(R.drawable.avatar).into(profileImage);
+                        profileImage.setImageResource(R.drawable.avatar);
                     }
                 } else {
                     Toast.makeText(ClientProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
@@ -149,5 +187,111 @@ public class ClientProfileActivity extends AppCompatActivity implements CustomDi
                 Toast.makeText(ClientProfileActivity.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void showUpdateUserDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.update_user_info, null);
+
+        EditText editTextName = dialogView.findViewById(R.id.editTextName);
+        EditText editTextPhoneNumber = dialogView.findViewById(R.id.editTextPhoneNumber);
+        EditText editTextAddressLine1 = dialogView.findViewById(R.id.editTextAddressLine1);
+        EditText editTextAddressLine2 = dialogView.findViewById(R.id.editTextAddressLine2);
+        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.editTextCity);
+        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.editTextDistrict);
+
+        districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
+        editTextDistrict.setAdapter(districtAdapter);
+
+        cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
+        editTextCity.setAdapter(cityAdapter);
+
+        editTextCity.setEnabled(false);
+
+        loadDistricts();
+
+        setupDistrictSelectionListener(editTextDistrict, editTextCity);
+        setupCityClickListener(editTextCity);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            String uid = auth.getCurrentUser().getUid();
+            DocumentReference documentReference = db.collection("user").document(uid);
+
+            documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    editTextName.setText(documentSnapshot.getString("fullName"));
+                    editTextPhoneNumber.setText(documentSnapshot.getString("phone"));
+                    editTextAddressLine1.setText(documentSnapshot.getString("addressLine1"));
+                    editTextAddressLine2.setText(documentSnapshot.getString("addressLine2"));
+                    editTextCity.setText(documentSnapshot.getString("city"));
+                    editTextDistrict.setText(documentSnapshot.getString("district"));
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
+            });
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Update User Information")
+                    .setView(dialogView)
+                    .setPositiveButton("Update", (dialog, which) -> {
+                        String name = editTextName.getText().toString().trim();
+                        String phoneNumber = editTextPhoneNumber.getText().toString().trim();
+                        String addressLine1 = editTextAddressLine1.getText().toString().trim();
+                        String addressLine2 = editTextAddressLine2.getText().toString().trim();
+                        String city = editTextCity.getText().toString().trim();
+                        String district = editTextDistrict.getText().toString().trim();
+
+                        Map<String, Object> updatedUserData = new HashMap<>();
+                        updatedUserData.put("name", name);
+                        updatedUserData.put("phoneNumber", phoneNumber);
+                        updatedUserData.put("addressLine1", addressLine1);
+                        updatedUserData.put("addressLine2", addressLine2);
+                        updatedUserData.put("city", city);
+                        updatedUserData.put("district", district);
+
+                        documentReference.update(updatedUserData)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show());
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .create()
+                    .show();
+        } else {
+            Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadDistricts() {
+        readData.getDistricts(districts -> {
+            districtAdapter.clear();
+            districtAdapter.addAll(districts);
+            districtAdapter.notifyDataSetChanged();
+        }, e -> Log.e("Activity", "Failed to load districts", e));
+    }
+
+    private void setupDistrictSelectionListener(AutoCompleteTextView district, AutoCompleteTextView city) {
+        district.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedDistrict = (String) parent.getItemAtPosition(position);
+            loadCities(selectedDistrict);
+            city.setEnabled(true);
+        });
+    }
+
+    private void setupCityClickListener(AutoCompleteTextView city) {
+        city.setOnClickListener(v -> {
+            if (!city.isEnabled()) {
+                Toast.makeText(this, "Please, select district first", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadCities(String district) {
+        readData.getCities(district, cities -> {
+            cityAdapter.clear();
+            cityAdapter.addAll(cities);
+            cityAdapter.notifyDataSetChanged();
+        }, e -> Log.e("MainActivity", "Failed to load cities", e));
     }
 }

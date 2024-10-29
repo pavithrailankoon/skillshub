@@ -42,7 +42,6 @@ public class Shedule extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_shedule);
 
-
         backBtn = findViewById(R.id.backBtn);
         refresh_schedule = findViewById(R.id.refresh_schedule);
         recyclerView = findViewById(R.id.recyclerView);

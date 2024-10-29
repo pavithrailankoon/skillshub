@@ -10,14 +10,20 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 public class Admin extends AppCompatActivity {
 
     Button logoutBtn;
     FirebaseFirestore db;
-    TextView users;
+    TextView users, client;
 
 
     @Override
@@ -28,7 +34,9 @@ public class Admin extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         users = findViewById(R.id.users);
+        client = findViewById(R.id.client);
         fetchUserCount();
+        fetchClientCount();
 
             logoutBtn = findViewById(R.id.logoutBtn);
 
@@ -57,5 +65,26 @@ public class Admin extends AppCompatActivity {
 
                         }
                     });
+    }
+
+    private void fetchClientCount() {
+        db.collection("user")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        QuerySnapshot snapshot = task.getResult();
+                        if (snapshot != null) {
+                            int clientCount = snapshot.size();
+                            client.setText(String.valueOf(clientCount));
+                        }
+                    }else{
+                        Log.e("Firestore", "Error getting documents: ", task.getException());
+
+                    }
+                });
+    }
+
+    private void fetchWorkerCount() {
+
     }
 }

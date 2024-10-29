@@ -43,10 +43,10 @@
             android:exported="false" />
         <activity
             android:name=".clientHome"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChooseUserActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ClientProfileActivity"
             android:exported="true" />
@@ -54,11 +54,11 @@
             android:name=".signupform.AuthenticateActivity"
             android:exported="true" />
         <activity
-            android:name=".Admin"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
+        <activity
+            android:name=".Admin"
+            android:exported="true" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
@@ -73,10 +73,10 @@
             android:exported="false" />
         <activity
             android:name=".WorkerProfileView"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".FilterActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
