@@ -41,6 +41,8 @@
         <activity
             android:name=".Introduction"
             android:exported="false" />
+        <activity android:name=".WorkerProfile"
+            android:exported="true" />
         <activity
             android:name=".clientHome"
             android:exported="true" />
