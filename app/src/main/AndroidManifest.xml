@@ -42,7 +42,7 @@
             android:exported="false" />
         <activity
             android:name=".clientHome"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ChooseUserActivity"
             android:exported="true" />

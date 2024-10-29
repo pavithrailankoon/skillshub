@@ -5,13 +5,10 @@
       <SelectionState runConfigName="WorkerProfileView">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="FilterActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="LoginActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ChooseUserActivity">
+      <SelectionState runConfigName="clientHome">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
