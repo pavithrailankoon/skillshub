@@ -4,7 +4,7 @@
     <option name="columnSorters">
       <list>
         <ColumnSorterState>
-          <option name="column" value="Status" />
+          <option name="column" value="Type" />
           <option name="order" value="ASCENDING" />
         </ColumnSorterState>
         <ColumnSorterState>
@@ -12,7 +12,7 @@
           <option name="order" value="ASCENDING" />
         </ColumnSorterState>
         <ColumnSorterState>
-          <option name="column" value="Type" />
+          <option name="column" value="Status" />
           <option name="order" value="ASCENDING" />
         </ColumnSorterState>
       </list>

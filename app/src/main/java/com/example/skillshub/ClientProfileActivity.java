@@ -41,8 +41,9 @@ import java.util.Map;
 
 public class ClientProfileActivity extends AppCompatActivity {
 
-    ImageView backBtn, profileImage;
-    Button logOut, editDetails, editPassword, buttonUploadPhoto;
+    ImageView backBtn, profileImage,contact_developers;
+    Button logOut, editDetails, editPassword;
+
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2;
     private UpdateData updateData;
     private ReadData readData;
@@ -74,9 +75,11 @@ public class ClientProfileActivity extends AppCompatActivity {
         profileImage = findViewById(R.id.client_profile_image);
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
-        editPassword = findViewById(R.id.editPassword);
+
         buttonUploadPhoto = findViewById(R.id.button);
         DEFAULT_IMAGE_URI = Uri.parse("android.resource://" + this.getPackageName() + "/" + R.drawable.avatar);
+        contact_developers = findViewById(R.id.contact_developers);
+//        profileImage = findViewById(R.id.client_profile_image);
 
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
@@ -84,6 +87,16 @@ public class ClientProfileActivity extends AppCompatActivity {
         newAddressLine2 = findViewById(R.id.addressLine2);
 
         backBtn.setOnClickListener(view -> onBackPressed());
+
+        contact_developers.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com")); // Set hardcoded email address
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Body of the email");
+            if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(emailIntent);
+            }
+        });
 
         logOut.setOnClickListener(v -> {
             authManager.logOut();
@@ -154,6 +167,7 @@ public class ClientProfileActivity extends AppCompatActivity {
 
                     // Load profile image with a null check
                     String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
+
                     if (!profileImageURL.isEmpty()) {
                         Picasso.get()
                                 .load(profileImageURL)
@@ -165,7 +179,7 @@ public class ClientProfileActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(ClientProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                }
+        */        }
             }
 
             @Override
