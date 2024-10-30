@@ -98,8 +98,9 @@ public class clientHome3 extends AppCompatActivity {
         // Set the OnItemClickListener for the ListView
         workerListView.setOnItemClickListener((parent, view, position, id) -> {
             Worker selectedWorkerUid = workerList.get(position);
+            String workerUid = selectedWorkerUid.getUid();
             Intent intent = new Intent(clientHome3.this, WorkerProfileView.class);
-            intent.putExtra("SELECTED_WORKER", (CharSequence) selectedWorkerUid);
+            intent.putExtra("SELECTED_WORKER", workerUid);
             startActivity(intent);
         });
     }

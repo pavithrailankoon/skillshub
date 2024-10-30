@@ -60,22 +60,16 @@ public class WorkerProfileView extends AppCompatActivity {
     EditText reviewComment;
     Button submit_review;
     DocumentReference documentReference1;
-    //CollectionReference collectionReference;
-
     Reviewadapter adapter;
     ArrayList<ReviewModel> list;
     RecyclerView listView;
     String receivedWorkerUid;
 
-//    String userID;
-
-
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+       // EdgeToEdge.enable(this);
         setContentView(R.layout.activity_worker_profile_view);
 
         category = findViewById(R.id.category);
@@ -118,7 +112,7 @@ public class WorkerProfileView extends AppCompatActivity {
 
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         fetchreviewfromfirebase(documentReference2);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        documentReference1.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 category.setText(value.getString("category"));
