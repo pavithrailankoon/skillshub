@@ -7,6 +7,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -20,6 +21,10 @@ import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.model.Worker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +37,9 @@ public class FilterActivity extends AppCompatActivity {
     Spinner city;
     private WorkerListAdapter adapter;
     private List<Worker> filteredWorkerList = new ArrayList<>();
-
+    String selectedMainCategory, selectedSubCategory, selectedDistrict, selectedCity;
     private ReadData readData;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,76 @@ public class FilterActivity extends AppCompatActivity {
         });
 
         loadDistricts();
+
+        // Main Category Spinner Listener
+        mainSkill.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedMainCategory = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        subSkill.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedSubCategory = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedDistrict = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCity = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+    }
+
+    private void filterWorkers() {
+        CollectionReference usersRef = db.collection("user");
+
+        // Start query based on mainCategory and proceed with other conditions
+        Query query = usersRef.whereEqualTo("workerProfiles.mainCategory", selectedMainCategory)
+                .whereArrayContains("workerProfiles.subcategories", selectedSubCategory)
+                .whereEqualTo("district", selectedDistrict)
+                .whereEqualTo("city", selectedCity);
+
+        // Execute the query
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<String> workerNames = new ArrayList<>();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String workerName = document.getString("workerName"); // Assuming worker name field
+                    workerNames.add(workerName);
+                }
+
+                // Display worker names
+                if (workerNames.isEmpty()) {
+                    // No workers found
+                    Toast.makeText(this, "No workers found with the selected criteria.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Display workerNames in a ListView, RecyclerView, etc.
+                    //displayWorkers(workerNames);
+                }
+            } else {
+                Log.d("Firestore", "Error getting documents: ", task.getException());
+            }
+        });
     }
 
     private void populateSpinner(ArrayList<String> categoryNames) {

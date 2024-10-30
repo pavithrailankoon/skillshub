@@ -360,50 +360,92 @@ public class ReadData {
         callback.onWorkerDataRetrieved(workers);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////
 
     public interface FirestoreWorkerCallback {
         void onWorkerDataRetrieved(List<Worker> workers);
     }
 
+
     ////////////////////////////////////////////////////////////////////////////////////
+    public void getFilteredWorkers(String mainCategory, String subcategory, String district, String city, FirestoreWorkerCallback callback) {
+        db.collection("user")
+                .get()
+                .addOnSuccessListener(userDocuments -> {
+                    List<Worker> workers = new ArrayList<>();
+                    AtomicInteger workerCounter = new AtomicInteger(0);
+                    int totalUsers = userDocuments.size();
 
+                    if (totalUsers == 0) {
+                        callback.onWorkerDataRetrieved(workers);
+                        return;
+                    }
 
+                    for (DocumentSnapshot userDocument : userDocuments) {
+                        String uid = userDocument.getId();
 
+                        // Check mainCategory and subcategory in workerProfiles sub-collection
+                        db.collection("user").document(uid).collection("workerProfiles")
+                                .whereEqualTo("mainCategory", mainCategory)
+                                .whereArrayContains("subcategories", subcategory)
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    if (!queryDocumentSnapshots.isEmpty()) {
+                                        // Retrieve district and city from the main document
+                                        DocumentReference documentReference = db.collection("user").document(uid);
+                                        documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                                            if (documentSnapshot.exists()) {
+                                                String workerDistrict = documentSnapshot.getString("district");
+                                                String workerCity = documentSnapshot.getString("city");
 
-    public void getWorkerBasicFields(FirestoreWorkerBasicDataCallback callback, String uid) {
-        if (auth.getCurrentUser() == null) {
-            // If the user is not authenticated, return an error
-            callback.onFailure(new Exception("User is not authenticated!"));
-            return;
-        }
+                                                // Check district and city
+                                                if (district.equals(workerDistrict) && city.equals(workerCity)) {
+                                                    Worker worker = new Worker(
+                                                            uid,
+                                                            documentSnapshot.getString("fullName"),
+                                                            workerDistrict,
+                                                            workerCity,
+                                                            documentSnapshot.getString("profileImageURL")
+                                                    );
 
-        DocumentReference docRef = db.collection("users").document(uid);
-
-        // Use addSnapshotListener for real-time updates
-        docRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (e != null) {
-                // Handle the error
-                callback.onFailure(e);
-                return;
-            }
-
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                // If the document exists, pass the data back to the callback
-                Map<String, Object> userData = documentSnapshot.getData();
-                callback.onSuccess(userData);
-            } else {
-                // Document does not exist or is null
-                callback.onFailure(new Exception("Document not found for the user: " + uid));
-            }
-        });
+                                                    // Calculate rating and add to workers list
+                                                    calculateWorkerRating(uid, worker, workers, callback, workerCounter, totalUsers);
+                                                } else {
+                                                    // Increment counter if no match on district and city
+                                                    if (workerCounter.incrementAndGet() == totalUsers) {
+                                                        finalizeWorkerList(workers, callback);
+                                                    }
+                                                }
+                                            } else {
+                                                Log.e("Firestore Error", "User document does not exist for UID: " + uid);
+                                                if (workerCounter.incrementAndGet() == totalUsers) {
+                                                    finalizeWorkerList(workers, callback);
+                                                }
+                                            }
+                                        }).addOnFailureListener(e -> {
+                                            Log.e("Firestore Error", "Failed to retrieve user document", e);
+                                            if (workerCounter.incrementAndGet() == totalUsers) {
+                                                finalizeWorkerList(workers, callback);
+                                            }
+                                        });
+                                    } else if (workerCounter.incrementAndGet() == totalUsers) {
+                                        // All users processed; invoke callback if no matching profiles found
+                                        finalizeWorkerList(workers, callback);
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Firestore Error", "Error getting worker profiles", e);
+                                    if (workerCounter.incrementAndGet() == totalUsers) {
+                                        finalizeWorkerList(workers, callback);
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore Error", "Error getting user documents", e);
+                    callback.onWorkerDataRetrieved(new ArrayList<>());
+                });
     }
 
-    // Callback interface to handle Firestore operations results
-    public interface FirestoreWorkerBasicDataCallback {
-        void onSuccess(Map<String, Object> userData);
-        void onFailure(Exception e);
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////
 
