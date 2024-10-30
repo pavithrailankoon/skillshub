@@ -113,7 +113,7 @@ public class ReadData {
         Set<String> categoryNamesSet = new HashSet<>();
 
         // Reference the 'user' collection
-        db.collection("user").addSnapshotListener((userSnapshot, error) -> {
+        db.collection("users").addSnapshotListener((userSnapshot, error) -> {
             if (error != null) {
                 // Handle error if there's a problem with fetching the users
                 firestoreCallback.onFailure(error.getMessage());
@@ -129,7 +129,7 @@ public class ReadData {
                     String uid = userDoc.getId();
 
                     // Access workerProfiles sub-collection if it exists
-                    db.collection("user").document(uid).collection("workerProfiles")
+                    db.collection("users").document(uid).collection("workerProfiles")
                             .addSnapshotListener((workerSnapshot, e) -> {
                                 if (e != null) {
                                     // Handle error for this user
@@ -165,7 +165,7 @@ public class ReadData {
         Set<String> subcategoryNamesSet = new HashSet<>();
 
         // Reference the 'user' collection
-        db.collection("user").addSnapshotListener((userSnapshot, error) -> {
+        db.collection("users").addSnapshotListener((userSnapshot, error) -> {
             if (error != null) {
                 // Handle error if there's a problem with fetching the users
                 firestoreCallback.onFailure(error.getMessage());
@@ -181,7 +181,7 @@ public class ReadData {
                     String uid = userDoc.getId();
 
                     // Access workerProfiles sub-collection for the specific main category
-                    db.collection("user").document(uid)
+                    db.collection("users").document(uid)
                             .collection("workerProfiles")
                             .document(mainCategoryName) // Access the document for the specific main category
                             .addSnapshotListener((workerSnapshot, e) -> {
@@ -254,7 +254,7 @@ public class ReadData {
     ////////////////////////////////////////////////////////////////////////////////////
 
     public void getWorkersBySubcategory(String subcategory, FirestoreWorkerCallback callback) {
-        db.collection("user")
+        db.collection("users")
                 .get()
                 .addOnSuccessListener(userDocuments -> {
                     List<Worker> workers = new ArrayList<>();
@@ -270,13 +270,13 @@ public class ReadData {
                         String uid = userDocument.getId();
 
                         // Check workerProfiles sub-collection for the specified subcategory
-                        db.collection("user").document(uid).collection("workerProfiles")
+                        db.collection("users").document(uid).collection("workerProfiles")
                                 .whereArrayContains("subcategories", subcategory)
                                 .get()
                                 .addOnSuccessListener(queryDocumentSnapshots -> {
                                     if (!queryDocumentSnapshots.isEmpty()) {
                                         // If subcategory is found, retrieve main document data
-                                        DocumentReference documentReference = db.collection("user").document(uid);
+                                        DocumentReference documentReference = db.collection("users").document(uid);
                                         documentReference.get().addOnSuccessListener(documentSnapshot -> {
                                             if (documentSnapshot.exists()) {
                                                 Worker worker = new Worker(
@@ -325,7 +325,7 @@ public class ReadData {
 
     private void calculateWorkerRating(String uid, Worker worker, List<Worker> workers, FirestoreWorkerCallback callback,
                                        AtomicInteger workerCounter, int totalUsers) {
-        db.collection("user").document(uid).collection("reviewsAsAWorker")
+        db.collection("users").document(uid).collection("reviewsAsAWorker")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     double totalRating = 0;
@@ -368,7 +368,7 @@ public class ReadData {
 
     ////////////////////////////////////////////////////////////////////////////////////
     public void getFilteredWorkers(String mainCategory, String subcategory, String district, String city, FirestoreWorkerCallback callback) {
-        db.collection("user")
+        db.collection("users")
                 .get()
                 .addOnSuccessListener(userDocuments -> {
                     List<Worker> workers = new ArrayList<>();
@@ -384,7 +384,7 @@ public class ReadData {
                         String uid = userDocument.getId();
 
                         // Check mainCategory and subcategory in workerProfiles sub-collection
-                        db.collection("user").document(uid).collection("workerProfiles")
+                        db.collection("users").document(uid).collection("workerProfiles")
                                 .whereEqualTo("mainCategory", mainCategory)
                                 .whereArrayContains("subcategories", subcategory)
                                 .get()

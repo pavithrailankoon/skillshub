@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,6 +36,8 @@ public class Shedule extends AppCompatActivity {
     RecyclerView recyclerView;
     DocumentReference documentReference1;
     FirebaseFirestore fStore;
+    FirebaseAuth auth;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +50,16 @@ public class Shedule extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         refresh_schedule = findViewById(R.id.refresh_schedule);
 
+        auth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
+        userID = auth.getCurrentUser().getUid();
 
         list1 = new ArrayList<>();
         Scheduleadapter = new Scheduleadapter(list1);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(Scheduleadapter);
 
-        documentReference1 = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
+        documentReference1 = fStore.collection("users").document(userID);
         CollectionReference documentReference2 = documentReference1.collection("schedule");
         fetchreviewfromfirebase(documentReference2);
 

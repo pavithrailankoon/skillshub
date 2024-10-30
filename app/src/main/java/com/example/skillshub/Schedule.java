@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,6 +43,8 @@ public class Schedule extends AppCompatActivity {
     Button submit, clear,delete_btn;
     EditText task;
     FirebaseFirestore fStore;
+    FirebaseAuth auth;
+    String userID;
 
     private ImageView backBtn, refresh_schedule;
     Scheduleadapter Scheduleadapter;
@@ -54,6 +58,10 @@ public class Schedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
 
+        auth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        userID = auth.getCurrentUser().getUid();
+
         datePicker = findViewById(R.id.datePicker);
         submit = findViewById(R.id.set_btn);
         clear = findViewById(R.id.clear_btn);
@@ -65,8 +73,6 @@ public class Schedule extends AppCompatActivity {
         refresh_schedule = findViewById(R.id.refresh_schedule);
         recyclerView = findViewById(R.id.recyclerView);
         refresh_schedule = findViewById(R.id.refresh_schedule);
-
-        fStore = FirebaseFirestore.getInstance();
 
         list1 = new ArrayList<>();
         Scheduleadapter = new Scheduleadapter(list1);
@@ -84,7 +90,7 @@ public class Schedule extends AppCompatActivity {
 
         datePicker.setMinDate(System.currentTimeMillis() - 1000);
 
-        documentReference1 = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
+        documentReference1 = fStore.collection("users").document(userID);
         CollectionReference documentReference2 = documentReference1.collection("schedule");
         fetchreviewfromfirebase(documentReference2);
 
@@ -111,7 +117,7 @@ public class Schedule extends AppCompatActivity {
                 month = String.valueOf(datePicker.getMonth() + 1);
                 year = String.valueOf(datePicker.getYear());
                 date = day + "/" + month + "/" + year;
-                DocumentReference docRef = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
+                DocumentReference docRef = fStore.collection("users").document(userID);
                 CollectionReference collectionRef = docRef.collection("schedule");
                 Map<String, Object> data = new HashMap<>();
                 data.put("date", date);
@@ -151,7 +157,7 @@ public class Schedule extends AppCompatActivity {
     }
 
     private void deleteScheduleFromFirestore(ScheduleModel schedule) {
-        DocumentReference DocRef = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
+        DocumentReference DocRef = fStore.collection("users").document(userID);
         CollectionReference scheduleRef = DocRef.collection("schedule");
 
         scheduleRef.whereEqualTo("task", schedule.getTask()).get().addOnCompleteListener(task -> {

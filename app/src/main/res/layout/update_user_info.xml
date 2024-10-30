@@ -30,13 +30,13 @@
         android:layout_height="wrap_content"
         android:hint="Address Line 2" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editTextCity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="City" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editTextDistrict"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

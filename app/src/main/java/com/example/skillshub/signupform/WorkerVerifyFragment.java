@@ -128,7 +128,7 @@ public class WorkerVerifyFragment extends Fragment {
                     if (selectedCategory != null) {
                         selectedData.put("categoryName", selectedCategory);
                         selectedData.put("subcategories", selectedSubcategories);
-                        Toast.makeText(requireContext(), "Data saved: " + selectedData.size() + " skills collected", Toast.LENGTH_LONG).show();
+                        Toast.makeText(requireContext(), "Categories collected", Toast.LENGTH_LONG).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)

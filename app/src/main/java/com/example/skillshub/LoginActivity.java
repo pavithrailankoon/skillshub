@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
-                if (validateInput(email, password)) {
+                if (validateInput()) {
                     loginUserAuth(email, password);
                 }
                 // admin loging
@@ -144,15 +144,15 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, clientHome.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        progressDialog.cancel();
                         finish();
+                        progressDialog.cancel();
                     }
                 },
                 new Runnable() {
                     @Override
                     public void run() {
                         // Handle wrong email case
-                        emailEditText.setError("Invalid email address");
+                        Toast.makeText(LoginActivity.this, "Incorrect password or email", Toast.LENGTH_SHORT).show();
                         progressDialog.cancel();
                         loginButton.setEnabled(true);
                     }
@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // Handle wrong password case
-                        passwordEditText.setError("Incorrect password");
+                        Toast.makeText(LoginActivity.this, "Incorrect password or email", Toast.LENGTH_SHORT).show();
                         progressDialog.cancel();
                         loginButton.setEnabled(true);
                     }
@@ -177,25 +177,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    // Validate email and password inputs
-    private boolean validateInput(String email, String password) {
-        boolean isValid = true;
-
-        // Email validation
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.setError(email.isEmpty() ? "Email is required" : "Invalid email address");
-            isValid = false;
-        }
-
-        // Password validation
-        if (password.isEmpty() || password.length() < 6) {
-            passwordEditText.setError(password.isEmpty() ? "Password is required" : "Password must be at least 6 characters");
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
     public boolean validateInput() {
         boolean isValid = true;
 
@@ -208,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        if (strPwd.isEmpty() || strPwd.length()>=6){
+        if (strPwd.isEmpty() || strPwd.length()<6){
             passwordEditText.setError(strPwd.isEmpty() ? "Password is required" : "Short password");
             isValid = false;
         }
