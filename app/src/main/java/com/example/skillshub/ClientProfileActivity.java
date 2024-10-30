@@ -41,7 +41,7 @@ import java.util.Map;
 
 public class ClientProfileActivity extends AppCompatActivity {
 
-    ImageView backBtn, profileImage,contact_developers;
+    ImageView backBtn, profileImage,contact_developers,buttonUploadPhoto;
     Button logOut, editDetails, editPassword;
 
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2;
@@ -179,7 +179,7 @@ public class ClientProfileActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(ClientProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-        */        }
+                }
             }
 
             @Override
