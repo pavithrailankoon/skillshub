@@ -111,7 +111,7 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     private void filterWorkers() {
-        CollectionReference usersRef = db.collection("user");
+        CollectionReference usersRef = db.collection("users");
 
         // Start query based on mainCategory and proceed with other conditions
         Query query = usersRef.whereEqualTo("workerProfiles.mainCategory", selectedMainCategory)

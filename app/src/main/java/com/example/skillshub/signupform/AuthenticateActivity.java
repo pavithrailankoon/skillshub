@@ -374,7 +374,7 @@ public class AuthenticateActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Handle positive button click (e.g., delete item)
-                        authManager.deleteUser(AuthenticateActivity.this);
+                        //authManager.deleteUser(AuthenticateActivity.this);
                         finish();
                     }
                 },

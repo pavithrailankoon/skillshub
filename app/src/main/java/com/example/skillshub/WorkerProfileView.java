@@ -105,10 +105,8 @@ public class WorkerProfileView extends AppCompatActivity {
 //        userID = fAuth.getCurrentUser().getUid();
 
         //DocumentReference documentReference = fStore.collection("user").document(receivedWorkerUid);
-        documentReference1 = fStore.collection("user").document("DwZLfvGonlYDSHDwd95E");
-
-        DocumentReference documentReference = fStore.collection("users").document("DbnaB8GfAsXmo7h1NR3ydo3EJgR2");
-        DocumentReference documentReference1 = fStore.collection("user").document(receivedWorkerUid);
+        documentReference1 = fStore.collection("users").document(userID);
+        DocumentReference documentReference1 = fStore.collection("users").document(receivedWorkerUid);
 
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         fetchreviewfromfirebase(documentReference2);

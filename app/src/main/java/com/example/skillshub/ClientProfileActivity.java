@@ -33,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,10 +43,10 @@ import java.util.Map;
 
 public class ClientProfileActivity extends AppCompatActivity {
 
-    ImageView backBtn, profileImage,contact_developers,buttonUploadPhoto;
-    Button logOut, editDetails, editPassword;
+    ImageView backBtn, profileImage,contact_developers;
+    Button logOut, editDetails, editPassword, buttonUploadPhoto;
 
-    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2;
+    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
     private UpdateData updateData;
     private ReadData readData;
     private CreateData createData;
@@ -53,6 +55,9 @@ public class ClientProfileActivity extends AppCompatActivity {
     private FirebaseUser user;
     private ArrayAdapter<String> districtAdapter;
     private ArrayAdapter<String> cityAdapter;
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     private static final int REQUEST_IMAGE_GALLERY = 1;
     private Uri DEFAULT_IMAGE_URI;
@@ -69,54 +74,55 @@ public class ClientProfileActivity extends AppCompatActivity {
         createData = new CreateData();
         authManager = new AuthManager();
         storageManager = new FirebaseStorageManager();
+        db = FirebaseFirestore.getInstance();
 
         // Find views by ID
         backBtn = findViewById(R.id.backBtn);
         profileImage = findViewById(R.id.client_profile_image);
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
-
         buttonUploadPhoto = findViewById(R.id.button);
-        DEFAULT_IMAGE_URI = Uri.parse("android.resource://" + this.getPackageName() + "/" + R.drawable.avatar);
         contact_developers = findViewById(R.id.contact_developers);
-//        profileImage = findViewById(R.id.client_profile_image);
 
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
         newAddressLine1 = findViewById(R.id.addressLine1);
         newAddressLine2 = findViewById(R.id.addressLine2);
+        city = findViewById(R.id.textView15);
+        district = findViewById(R.id.textView22);
 
         backBtn.setOnClickListener(view -> onBackPressed());
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
+        if (user != null) {
+            String uid = user.getUid();
+            storageReference = FirebaseStorage.getInstance().getReference().child(uid + "/profile-image");
+        } else {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         contact_developers.setOnClickListener(v -> {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com")); // Set hardcoded email address
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
-            emailIntent.putExtra(Intent.EXTRA_TEXT, "Body of the email");
+            emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com"));
             if (emailIntent.resolveActivity(getPackageManager()) != null) {
                 startActivity(emailIntent);
+            } else {
+                Toast.makeText(this, "No email app available", Toast.LENGTH_SHORT).show();
             }
         });
 
         logOut.setOnClickListener(v -> {
             authManager.logOut();
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
-            Toast.makeText(ClientProfileActivity.this, "Logged out", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
         });
 
-        editPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), ChangePassword.class);
-            startActivity(intent);
-        });
-
-        editDetails.setOnClickListener(v -> {
-            showUpdateUserDialog();
-        });
-
+        editDetails.setOnClickListener(v -> showUpdateUserDialog());
         buttonUploadPhoto.setOnClickListener(v -> openGallery());
-
         retrieveUserData();
     }
 
@@ -127,31 +133,66 @@ public class ClientProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_IMAGE_GALLERY && data != null) {
+        if (requestCode == REQUEST_IMAGE_GALLERY && resultCode == RESULT_OK && data != null) {
             imageUri = data.getData();
-            profileImage.setImageURI(imageUri);
-            storageManager.uploadImageFiles(user.getUid(), "profile-image", imageUri, new FirebaseStorageManager.OnImageUploadCompleteListener() {
-                @Override
-                public void onSuccess(String profileUrl) {
-                     //Profile image updating
-
-                }
-
-                @Override
-                public void onFailure(String errorMessage) {
-//                progressDialog.cancel();
-                    Toast.makeText( ClientProfileActivity.this, "Failed to upload profile image: " + errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
+            if (imageUri != null) {
+                storageManager.uploadImageFiles(user.getUid(), "profile-image", imageUri, new FirebaseStorageManager.OnImageUploadCompleteListener() {
+                    @Override
+                    public void onSuccess(String profileUrl) {
+                        updateImageUrl(profileUrl);
+                        loadImageFromFirebase(profileImage);
+                        profileImage.setImageURI(imageUri);
+                    }
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Toast.makeText(ClientProfileActivity.this, "Failed to upload profile image: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
-
-        // If no image is selected, set the default image URI
         if (imageUri == null) {
             imageUri = DEFAULT_IMAGE_URI;
             profileImage.setImageURI(imageUri);
+        }
+    }
+
+    private void loadImageFromFirebase(ImageView imageView) {
+        // Get download URL from Firebase Storage
+        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+            // Use Picasso to load the image into the ImageView
+            Picasso.get()
+                    .load(uri)
+                    .placeholder(R.drawable.avatar)
+                    .error(R.drawable.avatar)
+                    .into(imageView);
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            exception.printStackTrace();
+        });
+    }
+
+    private void updateImageUrl(String imageUrl){
+        if (firebaseAuth.getCurrentUser() != null) {
+            String uid = firebaseAuth.getCurrentUser().getUid();
+            DocumentReference documentReference = db.collection("user").document(uid);
+
+            // Create a map to update just the profileImageURL field
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("profileImageURL", imageUrl);
+
+            // Perform the update
+            documentReference.update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Profile image URL updated successfully", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to update profile image URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("ClientProfileActivity", "Error updating profile image URL", e);
+                    });
+        } else {
+            Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -164,9 +205,9 @@ public class ClientProfileActivity extends AppCompatActivity {
                     newPhoneNumber.setText(userData.getOrDefault("phone", "No phone available").toString());
                     newAddressLine1.setText(userData.getOrDefault("address1", "No address available").toString());
                     newAddressLine2.setText(userData.getOrDefault("address2", "No address available").toString());
-
-                    // Load profile image with a null check
-                    String profileImageURL = userData.getOrDefault("profileImageURL", "").toString();
+                    city.setText(userData.getOrDefault("city", "No city available").toString());
+                    district.setText(userData.getOrDefault("district", "No district available").toString());
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
 
                     if (!profileImageURL.isEmpty()) {
                         Picasso.get()
@@ -217,7 +258,7 @@ public class ClientProfileActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             String uid = auth.getCurrentUser().getUid();
-            DocumentReference documentReference = db.collection("user").document(uid);
+            DocumentReference documentReference = db.collection("users").document(uid);
 
             documentReference.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
@@ -227,6 +268,7 @@ public class ClientProfileActivity extends AppCompatActivity {
                     editTextAddressLine2.setText(documentSnapshot.getString("addressLine2"));
                     editTextCity.setText(documentSnapshot.getString("city"));
                     editTextDistrict.setText(documentSnapshot.getString("district"));
+                    Log.d("Client name", String.valueOf(documentSnapshot.exists()));
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
@@ -244,7 +286,7 @@ public class ClientProfileActivity extends AppCompatActivity {
                         String district = editTextDistrict.getText().toString().trim();
 
                         Map<String, Object> updatedUserData = new HashMap<>();
-                        updatedUserData.put("name", name);
+                        updatedUserData.put("fullName", name);
                         updatedUserData.put("phoneNumber", phoneNumber);
                         updatedUserData.put("addressLine1", addressLine1);
                         updatedUserData.put("addressLine2", addressLine2);

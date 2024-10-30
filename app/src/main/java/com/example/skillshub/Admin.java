@@ -51,7 +51,7 @@ public class Admin extends AppCompatActivity {
         }
 
     private void fetchUserCount() {
-        db.collection("user")
+        db.collection("users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
@@ -68,7 +68,7 @@ public class Admin extends AppCompatActivity {
     }
 
     private void fetchClientCount() {
-        db.collection("user")
+        db.collection("users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {

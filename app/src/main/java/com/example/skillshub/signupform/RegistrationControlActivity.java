@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.skillshub.LoginActivity;
 import com.example.skillshub.R;
+import com.example.skillshub.WorkerProfile;
 import com.example.skillshub.WorkerProfileView;
 import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.CreateData;
@@ -115,7 +116,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else if(registrationType.equals("clienttoworker")){
-                    Intent intent = new Intent(RegistrationControlActivity.this, WorkerProfileView.class);
+                    Intent intent = new Intent(RegistrationControlActivity.this, WorkerProfile.class);
                     startActivity(intent);
                     finish();
                 }
