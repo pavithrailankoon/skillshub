@@ -1,5 +1,6 @@
 package com.example.skillshub;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -43,13 +44,13 @@ import java.util.Map;
 
 public class WorkerProfile extends AppCompatActivity {
 
-    ImageView backBtn, profileImage,contact_developers;
+    ImageView backBtn, profileImage;
     Button logOut, editDetails, editPassword, buttonUploadPhoto;
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
     ReadData readData;
     FirebaseStorageManager storageManager;
     String uid;
-    ImageView refreshbutton, tasks,backBtn;
+    ImageView refreshbutton, tasks;
   
     DocumentReference documentReference1;
     FirebaseAuth fAuth;
@@ -145,7 +146,7 @@ public class WorkerProfile extends AppCompatActivity {
             }
         });
 
-
+        retrieveUserData();
     }
 
     void fetchreviewfromfirebase(CollectionReference collectionRef) {
@@ -334,16 +335,18 @@ public class WorkerProfile extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("MissingInflatedId")
     private void showUpdateUserDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.update_user_info, null);
+        View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
 
-        EditText editTextName = dialogView.findViewById(R.id.editTextName);
-        EditText editTextPhoneNumber = dialogView.findViewById(R.id.editTextPhoneNumber);
-        EditText editTextAddressLine1 = dialogView.findViewById(R.id.editTextAddressLine1);
-        EditText editTextAddressLine2 = dialogView.findViewById(R.id.editTextAddressLine2);
-        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.editTextDistrict);
-        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.editTextCity);
+        EditText editTextName = dialogView.findViewById(R.id.full_name);
+        EditText editTextPhoneNumber = dialogView.findViewById(R.id.phone_number);
+        EditText editTextAddressLine1 = dialogView.findViewById(R.id.address1);
+        EditText editTextAddressLine2 = dialogView.findViewById(R.id.address2);
+        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
+        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
+        EditText editTextDesc = dialogView.findViewById(R.id.description);
 
         districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         editTextDistrict.setAdapter(districtAdapter);
@@ -378,6 +381,16 @@ public class WorkerProfile extends AppCompatActivity {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
             });
 
+            DocumentReference documentReferenceW = db.collection("users").document(uid).collection("workerInformation").document("workerInformation");
+
+            documentReferenceW.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    editTextDesc.setText(documentSnapshot.getString("description"));
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
+            });
+
             new AlertDialog.Builder(this)
                     .setTitle("Update User Information")
                     .setView(dialogView)
@@ -388,6 +401,7 @@ public class WorkerProfile extends AppCompatActivity {
                         String addressLine2 = editTextAddressLine2.getText().toString().trim();
                         String city = editTextCity.getText().toString().trim();
                         String district = editTextDistrict.getText().toString().trim();
+                        String description = editTextDesc.getText().toString();
 
                         Map<String, Object> updatedUserData = new HashMap<>();
                         updatedUserData.put("fullName", name);
@@ -398,6 +412,13 @@ public class WorkerProfile extends AppCompatActivity {
                         updatedUserData.put("district", district);
 
                         documentReference.update(updatedUserData)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show());
+
+                        Map<String, Object> updatedWorkerDesc = new HashMap<>();
+                        updatedWorkerDesc.put("description", description);
+
+                        documentReferenceW.update(updatedWorkerDesc)
                                 .addOnSuccessListener(aVoid -> Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show())
                                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show());
                     })

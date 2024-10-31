@@ -50,7 +50,6 @@ public class clientHome extends AppCompatActivity {
     private ArrayList<String> categoryList;
     private CategoryAdapter categoryAdapter;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +63,6 @@ public class clientHome extends AppCompatActivity {
         refresh  = (ImageView) findViewById(R.id.refresh_category);
         button = (Button) findViewById(R.id.becomeWorkerButton);
 
-
-
-
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
@@ -74,7 +70,6 @@ public class clientHome extends AppCompatActivity {
         if (user != null) {
             uid = user.getUid();
         }
-
 
         // Initialize the ListView and ArrayList
         categoryListView = findViewById(R.id.listView1);

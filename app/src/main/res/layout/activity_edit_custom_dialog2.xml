@@ -16,13 +16,14 @@
         />
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/full_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         />
 
     <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mobile Number"
@@ -30,7 +31,7 @@
         />
 
     <EditText
-        android:id="@+id/phoneNumber"
+        android:id="@+id/phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="90dp"
@@ -47,7 +48,7 @@
         />
 
     <EditText
-        android:id="@+id/addressLine1"
+        android:id="@+id/address1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
@@ -55,7 +56,7 @@
         />
 
     <EditText
-        android:id="@+id/addressLine2"
+        android:id="@+id/address2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="210dp"
@@ -66,7 +67,7 @@
         android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/addressLine2"
+        android:layout_below="@+id/address2"
         android:text="Discrict" />
 
 
@@ -107,7 +108,6 @@
         android:layout_width="377dp"
         android:layout_height="182dp"
         android:layout_below="@+id/textView23"
-
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />

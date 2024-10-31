@@ -267,7 +267,7 @@
       android:layout_width="276dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
-      android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      android:text=""
       android:textColor="@color/white"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="@+id/addressLine2"

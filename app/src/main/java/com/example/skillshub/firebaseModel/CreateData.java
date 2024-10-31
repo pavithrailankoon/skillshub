@@ -50,12 +50,12 @@ public class CreateData {
     }
 
     public void saveWorkerCategory(String uid, String selectedCategory, Object selectedSubcategories) {
-        if (uid == null || selectedCategory == null || selectedSubcategories == null || context == null) {
-            // Log the error and show a Toast if necessary data is missing
-            Log.e("FirestoreError", "One or more parameters are null.");
-            Toast.makeText(context, "Failed to save category: Missing data.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (uid == null || selectedCategory == null || selectedSubcategories == null || context == null) {
+//            // Log the error and show a Toast if necessary data is missing
+//            Log.e("FirestoreError", "One or more parameters are null.");
+//            Toast.makeText(context, "Failed to save category: Missing data.", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
         // Create a map with the selectedSubcategories field
         Map<String, Object> categoryData = new HashMap<>();
