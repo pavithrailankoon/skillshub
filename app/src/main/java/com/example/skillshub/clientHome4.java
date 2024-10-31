@@ -1,11 +1,9 @@
 package com.example.skillshub;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,7 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.skillshub.adapters.WorkerListAdapter;
-import com.example.skillshub.firebaseModel.FirebaseStorageManager; // Corrected class name
+import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.model.Worker;
 import com.example.skillshub.signupform.RegistrationControlActivity;
@@ -29,7 +27,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class clientHome3 extends AppCompatActivity {
+public class clientHome4 extends AppCompatActivity {
 
     private CircleImageView profileImageButton;
     private ImageButton filterButton;
@@ -55,6 +53,14 @@ public class clientHome3 extends AppCompatActivity {
         readData = new ReadData();
         receivedSubSkill = getIntent().getStringExtra("SELECTED_SUB_CATEGORY");
 
+        // Get filter parameters from intent
+        String mainCategory = getIntent().getStringExtra("mainCategory");
+        String subCategory = getIntent().getStringExtra("subCategory");
+        String district = getIntent().getStringExtra("district");
+        String city = getIntent().getStringExtra("city");
+
+        filterWorkers(mainCategory, subCategory, district, city);
+
         // Initialize views
         refresh = findViewById(R.id.refresh_category);
         progressBar = findViewById(R.id.progressbar);
@@ -70,13 +76,12 @@ public class clientHome3 extends AppCompatActivity {
 
         profileImageButton = findViewById(R.id.avatar);
         profileImageButton.setOnClickListener(v -> {
-            Toast.makeText(clientHome3.this, "Client profile", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(clientHome3.this, ClientProfileActivity.class));
+            Toast.makeText(clientHome4.this, "Client profile", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(clientHome4.this, ClientProfileActivity.class));
         });
 
         refresh.setOnClickListener(v -> {
-            Toast.makeText(clientHome3.this, "Refreshing available workers", Toast.LENGTH_SHORT).show();
-            getWorkerList();
+            Toast.makeText(clientHome4.this, "Refreshing available workers", Toast.LENGTH_SHORT).show();
         });
 
         backButton.setOnClickListener(v -> onBackPressed());
@@ -85,59 +90,59 @@ public class clientHome3 extends AppCompatActivity {
 
         filterButton = findViewById(R.id.filter_button);
         filterButton.setOnClickListener(v -> {
-            Toast.makeText(clientHome3.this, "Filter", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(clientHome3.this, FilterActivity.class));
+            Toast.makeText(clientHome4.this, "Filter", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(clientHome4.this, FilterActivity.class));
         });
 
         button = findViewById(R.id.becomeWorkerButton);
         button.setOnClickListener(view -> {
-            Intent intent = new Intent(clientHome3.this, RegistrationControlActivity.class);
+            Intent intent = new Intent(clientHome4.this, RegistrationControlActivity.class);
             intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
             startActivity(intent);
-            Toast.makeText(clientHome3.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
+            Toast.makeText(clientHome4.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
         });
 
-        getWorkerList();
+
 
         // Set the OnItemClickListener for the ListView
         workerListView.setOnItemClickListener((parent, view, position, id) -> {
             Worker selectedWorkerUid = workerList.get(position);
             String workerUid = selectedWorkerUid.getUid();
-            Intent intent = new Intent(clientHome3.this, WorkerProfileView.class);
+            Intent intent = new Intent(clientHome4.this, WorkerProfileView.class);
             intent.putExtra("SELECTED_WORKER", workerUid);
             startActivity(intent);
         });
     }
 
-    private void getWorkerList() {
-        progressBar.setVisibility(View.VISIBLE); // Show loading indicator
-        readData.getWorkersBySubcategory(receivedSubSkill, new ReadData.FirestoreWorkerCallback() {
-            @Override
-            public void onWorkerDataRetrieved(List<Worker> workers) {
-                runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE); // Hide loading indicator
-                    if (workers != null) {
+    private void filterWorkers(String mainCategory, String subCategory, String district, String city) {
+        db.collection("users").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Log.w("ClientHome3Activity", "Listen failed.", e);
+                return;
+            }
 
-                        runOnUiThread(() -> {
-                            try {
-                                workerList.clear();
-                                workerList.addAll(workers);
-                                workerListAdapter.notifyDataSetChanged();
-                            } catch (Exception e) {
-                                // Log the exception for debugging
-                                Log.e("CategoryListActivity", "Error updating list: " + e.getMessage());
-                                Toast.makeText(clientHome3.this, "Can not retrive. Refresh" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        });
+            if (queryDocumentSnapshots != null) {
+                workerList.clear();
+                for (DocumentSnapshot userDoc : queryDocumentSnapshots.getDocuments()) {
+                    String userDistrict = userDoc.getString("district");
+                    String userCity = userDoc.getString("city");
 
-                        if (workers.isEmpty()) {
-                            Toast.makeText(clientHome3.this, "No workers found.", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(clientHome3.this, "Failed to retrieve workers.", Toast.LENGTH_SHORT).show();
+                    // Verify if district and city match
+                    if (district.equals(userDistrict) && city.equals(userCity)) {
+                        userDoc.getReference().collection("workerProfiles")
+                                .whereEqualTo("mainCategory", mainCategory)
+                                .whereArrayContains("subCategories", subCategory)
+                                .get().addOnSuccessListener(profileQuery -> {
+                                    for (DocumentSnapshot profileDoc : profileQuery.getDocuments()) {
+                                        Worker worker = profileDoc.toObject(Worker.class);
+                                        if (worker != null) {
+                                            workerList.add(worker);
+                                        }
+                                    }
+                                    workerListAdapter.notifyDataSetChanged();
+                                });
                     }
-                });
+                }
             }
         });
     }
