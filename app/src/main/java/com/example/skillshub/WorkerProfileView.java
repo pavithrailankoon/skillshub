@@ -1,28 +1,20 @@
 package com.example.skillshub;
 
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,16 +25,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -266,23 +254,25 @@ public class WorkerProfileView extends AppCompatActivity {
     }
 
     private void openWhatsapp() {
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            // You can specify a number (starting with country code) to open a specific chat
-            intent.setData(Uri.parse("tel:" + phoneNumber));
-            String url = "https://wa.me/" + phoneNumber; // WhatsApp API link format
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
+        String countryCode = "+94";
+        if (phoneNumber != null && phoneNumber.length() > 1) {
+            String modifiedNumber = countryCode + phoneNumber.substring(1);
 
-        } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(WorkerProfileView.this, "WhatsApp is not installed on your device", Toast.LENGTH_SHORT).show();
+            PackageManager pm = getPackageManager();
+            try {
+                pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+                String url = "https://wa.me/" + modifiedNumber; // WhatsApp API link format
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                intent.setPackage("com.whatsapp");
+                startActivity(intent);
+
+            } catch (PackageManager.NameNotFoundException e) {
+                Toast.makeText(WorkerProfileView.this, "WhatsApp is not installed on your device", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(WorkerProfileView.this, "Invalid phone number", Toast.LENGTH_SHORT).show();
         }
-
-//    private void setUserAvatar(){
-        //      FirebaseStoarageManager imageManager = new FirebaseStoarageManager();
-        //     imageManager.loadProfileImage(this, p)
-        // }
     }
+
 }
