@@ -34,7 +34,6 @@ public class clientHome3 extends AppCompatActivity {
     private TextView categoryPath;
     private ImageView backButton, refresh;
     private ProgressBar progressBar;
-    private Button button;
     private String receivedSubSkill;
 
     private ReadData readData;
@@ -70,12 +69,20 @@ public class clientHome3 extends AppCompatActivity {
             startActivity(new Intent(clientHome3.this, ClientProfileActivity.class));
         });
 
+        getWorkerList();
+
         refresh.setOnClickListener(v -> {
             Toast.makeText(clientHome3.this, "Refreshing available workers", Toast.LENGTH_SHORT).show();
             getWorkerList();
         });
 
-        backButton.setOnClickListener(v -> onBackPressed());
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(clientHome3.this, clientHome2.class);
+                startActivity(intent);
+            }
+        });
 
         categoryPath.setOnClickListener(v -> onBackPressed());
 
@@ -84,16 +91,6 @@ public class clientHome3 extends AppCompatActivity {
             Toast.makeText(clientHome3.this, "Filter", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(clientHome3.this, FilterActivity.class));
         });
-
-        button = findViewById(R.id.becomeWorkerButton);
-        button.setOnClickListener(view -> {
-            Intent intent = new Intent(clientHome3.this, RegistrationControlActivity.class);
-            intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
-            startActivity(intent);
-            Toast.makeText(clientHome3.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
-        });
-
-        getWorkerList();
 
         // Set the OnItemClickListener for the ListView
         workerListView.setOnItemClickListener((parent, view, position, id) -> {

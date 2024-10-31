@@ -8,9 +8,6 @@
       <SelectionState runConfigName="clientHome">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="LoginActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="WorkerProfile">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>

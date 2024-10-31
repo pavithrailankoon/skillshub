@@ -34,7 +34,6 @@ public class clientHome2 extends AppCompatActivity {
     private ImageView backButton;
     private ProgressBar progressBar;
     private ImageView refresh;
-    private Button button;
     private String recievedMainSkill;
 
     private ReadData readData;
@@ -96,16 +95,7 @@ public class clientHome2 extends AppCompatActivity {
             }
         });
 
-        button = (Button) findViewById(R.id.becomeWorkerButton);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(clientHome2.this, RegistrationControlActivity.class);
-                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
-                startActivity(intent);
-                Toast.makeText(clientHome2.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
 
         filterButton = (ImageButton) findViewById(R.id.filter_button);
