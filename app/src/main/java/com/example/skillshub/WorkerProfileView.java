@@ -134,8 +134,7 @@ public class WorkerProfileView extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WorkerProfileView.this, clientHome2.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
         whatsapp.setOnClickListener(new View.OnClickListener() {

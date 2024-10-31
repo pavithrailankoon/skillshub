@@ -122,7 +122,7 @@ public class Schedule extends AppCompatActivity {
                 Map<String, Object> data = new HashMap<>();
                 data.put("date", date);
                 data.put("task", task.getText().toString());
-                collectionRef.add(data).addOnSuccessListener(documentReference -> {
+
 
                     collectionRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
@@ -138,7 +138,7 @@ public class Schedule extends AppCompatActivity {
                         }
                     });
                     task.setText("");
-                });
+
             }
 
         });
