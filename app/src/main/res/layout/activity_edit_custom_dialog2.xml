@@ -63,59 +63,94 @@
         />
 
     <TextView
+        android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description"
-        android:layout_marginTop="260dp"
+        android:layout_below="@+id/addressLine2"
+        android:text="Discrict" />
+
+
+    <EditText
+        android:id="@+id/district"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView24"
+
+         />
+
+    <TextView
+        android:id="@+id/textView25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/district"
+
+
+        android:text="City" />
+
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView25"
 
         />
 
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/city"
+        android:text="Description" />
+
     <EditText
         android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="280dp"
+        android:layout_width="377dp"
+        android:layout_height="182dp"
+        android:layout_below="@+id/textView23"
+
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
 
     <TextView
+        android:id="@+id/textView27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Business Verification:"
-        android:layout_marginTop="490dp"
+        android:layout_below="@+id/description"
+        android:text="Add Business Verification:" />
 
-        />
     <ImageButton
         android:id="@+id/signup_verify_br_upload"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_below="@+id/textView27"
+        android:layout_centerHorizontal="true"
         android:layout_weight="1"
+        android:background="@color/dark_grey"
         android:gravity="center_vertical"
         android:src="@drawable/baseline_cloud_upload_24"
-        android:background="@color/dark_grey"
-        android:layout_marginTop="520dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:layout_marginTop="10dp"/>
 
     <TextView
+        android:id="@+id/textView28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Course Certificates:"
-        android:layout_marginTop="630dp" />
+        android:layout_below="@+id/signup_verify_br_upload"
+        android:layout_marginTop="10dp"
+        android:text="Add Course Certificates:" />
 
     <ImageButton
         android:id="@+id/certificates"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:src="@drawable/baseline_cloud_upload_24"
-        android:background="@color/dark_grey"
-        android:layout_marginTop="660dp"
-
+        android:layout_below="@+id/textView28"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@color/dark_grey"
+
+        android:gravity="center_vertical"
+        android:src="@drawable/baseline_cloud_upload_24" />
 
 
 

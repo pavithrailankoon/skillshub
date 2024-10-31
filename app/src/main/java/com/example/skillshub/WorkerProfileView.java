@@ -131,8 +131,6 @@ public class WorkerProfileView extends AppCompatActivity {
             }
         });
 
-
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,14 +261,8 @@ public class WorkerProfileView extends AppCompatActivity {
                 super(itemView);
                 ratingBar = itemView.findViewById(R.id.submitratings);
                 reviewItem = itemView.findViewById(R.id.submitreview);
-
             }
-
-
         }
-
-
-
     }
 
     private void openWhatsapp() {
@@ -287,7 +279,6 @@ public class WorkerProfileView extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             Toast.makeText(WorkerProfileView.this, "WhatsApp is not installed on your device", Toast.LENGTH_SHORT).show();
         }
-
 
 //    private void setUserAvatar(){
         //      FirebaseStoarageManager imageManager = new FirebaseStoarageManager();

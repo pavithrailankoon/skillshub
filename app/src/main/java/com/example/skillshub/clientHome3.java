@@ -21,6 +21,8 @@ import com.example.skillshub.firebaseModel.FirebaseStorageManager; // Corrected 
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.model.Worker;
 import com.example.skillshub.signupform.RegistrationControlActivity;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +38,19 @@ public class clientHome3 extends AppCompatActivity {
     private ProgressBar progressBar;
     private String receivedSubSkill;
 
+    private FirebaseFirestore db;
+
     private ReadData readData;
     private ListView workerListView;
     private List<Worker> workerList = new ArrayList<>();
     private WorkerListAdapter workerListAdapter;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_client_home2);
+        setContentView(R.layout.activity_client_home3);
 
+        db = FirebaseFirestore.getInstance();
         readData = new ReadData();
         receivedSubSkill = getIntent().getStringExtra("SELECTED_SUB_CATEGORY");
 

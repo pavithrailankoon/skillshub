@@ -71,7 +71,7 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginStart="24dp"
-      android:text="My Profile"
+      android:text="My Worker Profile"
       android:textColor="@color/yellow"
       android:textSize="20dp"
       android:textStyle="bold"
@@ -124,7 +124,7 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginStart="64dp"
-      android:layout_marginTop="20dp"
+      android:layout_marginTop="32dp"
       android:text="Name:"
       android:textColor="@color/white"
       android:textStyle="bold"
@@ -197,16 +197,84 @@
       app:layout_constraintEnd_toEndOf="@+id/addressLine1"
       app:layout_constraintTop_toBottomOf="@+id/addressLine1" />
 
+  <Button
+      android:id="@+id/editPasswordButton"
+      android:layout_width="match_parent"
+      android:layout_height="30dp"
+      android:background="@drawable/custom_button"
+      android:text="Edit Password"
+      android:textAllCaps="false"
+      android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:textColor="@color/background_green"
+      android:textSize="12dp"
+      app:layout_constraintEnd_toEndOf="@+id/editDetailsBtn"
+      app:layout_constraintStart_toStartOf="@+id/editDetailsBtn"
+      app:layout_constraintTop_toBottomOf="@+id/editDetailsBtn" />
+
+  <TextView
+      android:id="@+id/districtText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:text="District:"
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintStart_toStartOf="@+id/addressText"
+      app:layout_constraintTop_toBottomOf="@+id/addressLine2" />
+
+
+  <TextView
+      android:id="@+id/district"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:text="Matara"
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="@+id/addressLine2"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toEndOf="@+id/districtText"
+      app:layout_constraintTop_toBottomOf="@+id/addressLine2" />
+
+  <TextView
+      android:id="@+id/cityText"
+      android:layout_width="30dp"
+      android:layout_height="22dp"
+      android:layout_marginTop="15dp"
+      android:text="City"
+
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintStart_toStartOf="@+id/districtText"
+      app:layout_constraintTop_toBottomOf="@+id/districtText" />
+
+  <TextView
+      android:id="@+id/city"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="76dp"
+
+      android:layout_marginTop="15dp"
+      android:text="Dewundara"
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="@+id/district"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toEndOf="@+id/cityText"
+      app:layout_constraintTop_toBottomOf="@+id/district" />
+
   <TextView
       android:id="@+id/textView9"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="28dp"
+      android:layout_marginTop="15dp"
       android:text="Description:"
       android:textColor="@color/white"
       android:textStyle="bold"
-      app:layout_constraintStart_toStartOf="@+id/addressText"
-      app:layout_constraintTop_toBottomOf="@+id/addressText">
+      app:layout_constraintStart_toStartOf="@+id/cityText"
+      app:layout_constraintTop_toBottomOf="@+id/cityText">
 
   </TextView>
 
