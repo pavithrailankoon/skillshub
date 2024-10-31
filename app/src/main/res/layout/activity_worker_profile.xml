@@ -214,15 +214,67 @@
       app:layout_constraintTop_toBottomOf="@+id/editDetailsBtn" />
 
   <TextView
-      android:id="@+id/textView9"
+      android:id="@+id/districtText"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="28dp"
-      android:text="Description:"
+      android:layout_marginTop="15dp"
+      android:text="District:"
       android:textColor="@color/white"
       android:textStyle="bold"
       app:layout_constraintStart_toStartOf="@+id/addressText"
-      app:layout_constraintTop_toBottomOf="@+id/addressText">
+      app:layout_constraintTop_toBottomOf="@+id/addressLine2" />
+
+
+  <TextView
+      android:id="@+id/district"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:text="Matara"
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="@+id/addressLine2"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toEndOf="@+id/districtText"
+      app:layout_constraintTop_toBottomOf="@+id/addressLine2" />
+
+  <TextView
+      android:id="@+id/cityText"
+      android:layout_width="30dp"
+      android:layout_height="22dp"
+      android:layout_marginTop="15dp"
+      android:text="City"
+
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintStart_toStartOf="@+id/districtText"
+      app:layout_constraintTop_toBottomOf="@+id/districtText" />
+
+  <TextView
+      android:id="@+id/city"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="76dp"
+
+      android:layout_marginTop="15dp"
+      android:text="Dewundara"
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="@+id/district"
+      app:layout_constraintHorizontal_bias="1.0"
+      app:layout_constraintStart_toEndOf="@+id/cityText"
+      app:layout_constraintTop_toBottomOf="@+id/district" />
+
+  <TextView
+      android:id="@+id/textView9"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:text="Description:"
+      android:textColor="@color/white"
+      android:textStyle="bold"
+      app:layout_constraintStart_toStartOf="@+id/cityText"
+      app:layout_constraintTop_toBottomOf="@+id/cityText">
 
   </TextView>
 
