@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkerProfile extends AppCompatActivity {
-    ImageView refreshbutton, tasks;
+    ImageView refreshbutton, tasks,backBtn;
     DocumentReference documentReference1;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore, db;
@@ -43,6 +43,7 @@ public class WorkerProfile extends AppCompatActivity {
 
         refreshbutton = findViewById(R.id.refreshButton);
         tasks = findViewById(R.id.shedule);
+        backBtn = findViewById(R.id.backBtn);
 
         listView = findViewById(R.id.ListView);
         list = new ArrayList<>();
@@ -60,6 +61,14 @@ public class WorkerProfile extends AppCompatActivity {
 
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         fetchreviewfromfirebase(documentReference2);
+
+        backBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         refreshbutton.setOnClickListener(new View.OnClickListener() {
             @Override

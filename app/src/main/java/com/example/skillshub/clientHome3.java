@@ -80,13 +80,14 @@ public class clientHome3 extends AppCompatActivity {
             getWorkerList();
         });
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(clientHome3.this, clientHome2.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
+
+
 
         categoryPath.setOnClickListener(v -> onBackPressed());
 
