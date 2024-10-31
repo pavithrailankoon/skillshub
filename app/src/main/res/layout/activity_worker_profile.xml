@@ -71,7 +71,7 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginStart="24dp"
-      android:text="My Profile"
+      android:text="My Worker Profile"
       android:textColor="@color/yellow"
       android:textSize="20dp"
       android:textStyle="bold"
@@ -124,7 +124,7 @@
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:layout_marginStart="64dp"
-      android:layout_marginTop="20dp"
+      android:layout_marginTop="32dp"
       android:text="Name:"
       android:textColor="@color/white"
       android:textStyle="bold"
@@ -196,6 +196,22 @@
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="@+id/addressLine1"
       app:layout_constraintTop_toBottomOf="@+id/addressLine1" />
+
+  <Button
+      android:id="@+id/editPasswordButton"
+      android:layout_width="match_parent"
+      android:layout_height="30dp"
+      android:background="@drawable/custom_button"
+      android:text="Edit Password"
+      android:textAllCaps="false"
+      android:layout_marginTop="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginEnd="20dp"
+      android:textColor="@color/background_green"
+      android:textSize="12dp"
+      app:layout_constraintEnd_toEndOf="@+id/editDetailsBtn"
+      app:layout_constraintStart_toStartOf="@+id/editDetailsBtn"
+      app:layout_constraintTop_toBottomOf="@+id/editDetailsBtn" />
 
   <TextView
       android:id="@+id/textView9"

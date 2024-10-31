@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class FilterActivity extends AppCompatActivity {
     Spinner subSkill;
     Spinner district;
     Spinner city;
+    Button filter, back;
     private WorkerListAdapter adapter;
     private List<Worker> filteredWorkerList = new ArrayList<>();
     String selectedMainCategory, selectedSubCategory, selectedDistrict, selectedCity;
@@ -108,6 +110,21 @@ public class FilterActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        filter = findViewById(R.id.filter_button);
+        filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FilterActivity.this, clientHome3.class);
+                intent.putExtra("mainCategory", selectedMainCategory);
+                intent.putExtra("subCategory", selectedSubCategory);
+                intent.putExtra("district", selectedDistrict);
+                intent.putExtra("city", selectedCity);
+                startActivity(intent);
+            }
+        });
+
+        back = findViewById(R.id.filter_back_button);
+        back.setOnClickListener(v -> onBackPressed());
     }
 
     private void filterWorkers() {

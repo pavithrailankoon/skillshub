@@ -45,11 +45,8 @@ public class ClientProfileActivity extends AppCompatActivity {
 
     ImageView backBtn, profileImage,contact_developers;
     Button logOut, editDetails, editPassword, buttonUploadPhoto;
-
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
-    private UpdateData updateData;
     private ReadData readData;
-    private CreateData createData;
     private AuthManager authManager;
     private FirebaseStorageManager storageManager;
     private FirebaseUser user;
@@ -68,16 +65,14 @@ public class ClientProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_profile);
 
-        // Initialize Firebase-related objects
-        updateData = new UpdateData();
         readData = new ReadData();
-        createData = new CreateData();
         authManager = new AuthManager();
         storageManager = new FirebaseStorageManager();
         db = FirebaseFirestore.getInstance();
 
         // Find views by ID
         backBtn = findViewById(R.id.backBtn);
+        editPassword = findViewById(R.id.editPassword);
         profileImage = findViewById(R.id.client_profile_image);
         logOut = findViewById(R.id.logOut);
         editDetails = findViewById(R.id.editDetailsBtn);
@@ -123,6 +118,11 @@ public class ClientProfileActivity extends AppCompatActivity {
 
         editDetails.setOnClickListener(v -> showUpdateUserDialog());
         buttonUploadPhoto.setOnClickListener(v -> openGallery());
+        editPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(ClientProfileActivity.this, ChangePassword.class);
+            startActivity(intent);
+            finish();
+        });
         retrieveUserData();
     }
 
@@ -164,9 +164,12 @@ public class ClientProfileActivity extends AppCompatActivity {
             // Use Picasso to load the image into the ImageView
             Picasso.get()
                     .load(uri)
+                    .resize(200, 200)
+                    .centerCrop()
                     .placeholder(R.drawable.avatar)
                     .error(R.drawable.avatar)
                     .into(imageView);
+
         }).addOnFailureListener(exception -> {
             // Handle any errors
             exception.printStackTrace();
@@ -238,8 +241,8 @@ public class ClientProfileActivity extends AppCompatActivity {
         EditText editTextPhoneNumber = dialogView.findViewById(R.id.editTextPhoneNumber);
         EditText editTextAddressLine1 = dialogView.findViewById(R.id.editTextAddressLine1);
         EditText editTextAddressLine2 = dialogView.findViewById(R.id.editTextAddressLine2);
-        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.editTextCity);
         AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.editTextDistrict);
+        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.editTextCity);
 
         districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         editTextDistrict.setAdapter(districtAdapter);
