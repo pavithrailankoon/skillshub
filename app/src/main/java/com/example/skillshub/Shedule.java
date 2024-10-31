@@ -63,13 +63,13 @@ public class Shedule extends AppCompatActivity {
         CollectionReference documentReference2 = documentReference1.collection("schedule");
         fetchreviewfromfirebase(documentReference2);
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        backBtn.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Shedule.this, WorkerProfileView.class);
-                startActivity(intent);
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
+
         refresh_schedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
