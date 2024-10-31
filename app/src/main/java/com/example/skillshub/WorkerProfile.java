@@ -42,13 +42,15 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkerProfile extends AppCompatActivity {
+
     ImageView backBtn, profileImage,contact_developers;
     Button logOut, editDetails, editPassword, buttonUploadPhoto;
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
     ReadData readData;
     FirebaseStorageManager storageManager;
     String uid;
-    ImageView refreshbutton, tasks;
+    ImageView refreshbutton, tasks,backBtn;
+  
     DocumentReference documentReference1;
     FirebaseAuth fAuth;
     FirebaseUser user;
@@ -73,6 +75,7 @@ public class WorkerProfile extends AppCompatActivity {
 
         refreshbutton = findViewById(R.id.refreshButton);
         tasks = findViewById(R.id.shedule);
+        backBtn = findViewById(R.id.backBtn);
 
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
@@ -117,6 +120,14 @@ public class WorkerProfile extends AppCompatActivity {
 
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         fetchreviewfromfirebase(documentReference2);
+
+        backBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         refreshbutton.setOnClickListener(new View.OnClickListener() {
             @Override

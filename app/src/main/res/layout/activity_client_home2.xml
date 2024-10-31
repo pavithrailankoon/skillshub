@@ -56,27 +56,22 @@
         android:layout_marginTop="93dp"
         android:padding="16dp">
 
+
         <ImageView
             android:id="@+id/client2_back"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
             app:srcCompat="@drawable/back" />
 
-
         <ImageView
             android:id="@+id/refresh_category"
-            android:layout_width="39dp"
-            android:layout_height="54dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="27dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="0dp"
-            android:layout_toStartOf="@+id/becomeWorkerButton"
-            android:layout_toEndOf="@+id/imageView5"
+            android:layout_width="36dp"
+            android:layout_height="44dp"
+            android:layout_alignTop="@+id/client2_back"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="86dp"
+            android:layout_marginTop="-9dp"
             android:src="@drawable/baseline_refresh_24" />
 
         <ImageButton
@@ -93,19 +88,6 @@
             app:srcCompat="@drawable/filter_btn">
 
         </ImageButton>
-
-        <Button
-            android:id="@+id/becomeWorkerButton"
-            android:layout_width="150dp"
-            android:layout_height="25dp"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@+id/filter_button"
-            android:background="@drawable/custom_button"
-            android:text="Become A Worker"
-            android:textAllCaps="false"
-            android:textColor="@color/background_green"
-            android:textSize="12dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

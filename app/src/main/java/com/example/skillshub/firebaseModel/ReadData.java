@@ -183,7 +183,7 @@ public class ReadData {
                     // Access workerProfiles sub-collection for the specific main category
                     db.collection("users").document(uid)
                             .collection("workerProfiles")
-                            .document(mainCategoryName) // Access the document for the specific main category
+                            .document(mainCategoryName)// Access the document for the specific main category
                             .addSnapshotListener((workerSnapshot, e) -> {
                                 if (e != null) {
                                     // Handle error for this user
