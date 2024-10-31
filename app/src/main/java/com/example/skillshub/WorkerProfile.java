@@ -82,8 +82,8 @@ public class WorkerProfile extends AppCompatActivity {
         newPhoneNumber = findViewById(R.id.phoneNumber);
         newAddressLine1 = findViewById(R.id.addressLine1);
         newAddressLine2 = findViewById(R.id.addressLine2);
-        city = findViewById(R.id.cityText);
-        district = findViewById(R.id.districtText);
+        city = findViewById(R.id.city);
+        district = findViewById(R.id.district);
 
         backBtn = findViewById(R.id.backBtn);
         editPassword = findViewById(R.id.editPassword);
