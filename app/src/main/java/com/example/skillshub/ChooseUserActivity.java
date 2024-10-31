@@ -45,6 +45,7 @@ public class ChooseUserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startRegistrationActivity("client");
                 Toast.makeText(ChooseUserActivity.this, "You are registering as a client", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -53,6 +54,7 @@ public class ChooseUserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startRegistrationActivity("worker");
                 Toast.makeText(ChooseUserActivity.this, "You are registering as a worker", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
