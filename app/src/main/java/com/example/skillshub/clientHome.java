@@ -115,6 +115,7 @@ public class clientHome extends AppCompatActivity {
 
         getUniqueMainSkills();
         categoryClickListener();
+        buttonInvisible();
     }
 
 
@@ -138,6 +139,35 @@ public class clientHome extends AppCompatActivity {
                                 intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
                                 Toast.makeText(clientHome.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
                                 startActivity(intent);
+                            }
+                        } else {
+                            Log.e("Firestore Error", "Error checking workerProfiles subcollection", task.getException());
+                            Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            // Handle case if the user is not logged in or uid is null
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            // You could optionally navigate to a login screen here
+        }
+    }
+
+    private void buttonInvisible(){
+        FirebaseUser currentUser = auth.getCurrentUser();
+
+        if (currentUser != null) {
+            String uid = currentUser.getUid();
+
+            // Check if 'workerProfiles' subcollection has any documents
+            db.collection("users").document(uid).collection("workerProfiles")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (!task.getResult().isEmpty()) {
+                                // 'workerProfiles' subcollection exists, navigate to ClientProfileActivity
+                                button.setVisibility(View.GONE);
+                            } else {
+                                button.setVisibility(View.VISIBLE);
                             }
                         } else {
                             Log.e("Firestore Error", "Error checking workerProfiles subcollection", task.getException());
@@ -229,7 +259,6 @@ public class clientHome extends AppCompatActivity {
                         Toast.makeText(clientHome.this, "Can not retrive. Refresh" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                     }
-                    checkWorkerProfileAndNavigate();
                 });
             }
 
