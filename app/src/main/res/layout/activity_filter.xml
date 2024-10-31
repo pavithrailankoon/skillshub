@@ -134,11 +134,11 @@
                     android:textAllCaps="false"/>
 
                 <Button
-                    android:id="@+id/filter_clear_button"
+                    android:id="@+id/filter_back_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTintMode="src_in"
-                    android:text="Clear"
+                    android:text="Back"
                     android:background="@drawable/button_yellow_outline"
                     android:textColor="@color/yellow"
                     android:textAllCaps="false"/>

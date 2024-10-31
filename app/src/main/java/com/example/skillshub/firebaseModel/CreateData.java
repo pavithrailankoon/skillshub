@@ -1,6 +1,7 @@
 package com.example.skillshub.firebaseModel;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,20 +29,34 @@ public class CreateData {
 
     // Method to save user data to Firestore
     public void saveUserDataToFirestore(String uid, Map<String, Object> userData, Runnable onSuccess, Runnable onFailure) {
+        if (uid == null || userData == null) {
+            // Log the error and trigger failure callback if data is missing
+            Log.e("FirestoreError", "UID or userData is null.");
+            onFailure.run();
+            return;
+        }
+
         db.collection("users").document(uid)
                 .set(userData, SetOptions.merge())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Trigger success callback
-                        onSuccess.run();
+                        if (onSuccess != null) onSuccess.run();
                     } else {
                         // Trigger failure callback
-                        onFailure.run();
+                        if (onFailure != null) onFailure.run();
                     }
                 });
     }
 
     public void saveWorkerCategory(String uid, String selectedCategory, Object selectedSubcategories) {
+        if (uid == null || selectedCategory == null || selectedSubcategories == null || context == null) {
+            // Log the error and show a Toast if necessary data is missing
+            Log.e("FirestoreError", "One or more parameters are null.");
+            Toast.makeText(context, "Failed to save category: Missing data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Create a map with the selectedSubcategories field
         Map<String, Object> categoryData = new HashMap<>();
         categoryData.put("subcategories", selectedSubcategories);
@@ -57,6 +72,7 @@ public class CreateData {
                     Toast.makeText(context, "Error saving category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 
 
 }
