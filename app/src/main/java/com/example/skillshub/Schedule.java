@@ -83,7 +83,7 @@ public class Schedule extends AppCompatActivity {
             deleteScheduleFromFirestore(scheduleToDelete);
             list1.remove(position);
             Scheduleadapter.notifyItemRemoved(position);
-            Toast.makeText(Schedule.this, "Booking deleted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Schedule.this, "Schedule deleted", Toast.LENGTH_SHORT).show();
         });
         recyclerView.setAdapter(Scheduleadapter);
 
