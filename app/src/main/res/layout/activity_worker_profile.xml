@@ -197,22 +197,6 @@
       app:layout_constraintEnd_toEndOf="@+id/addressLine1"
       app:layout_constraintTop_toBottomOf="@+id/addressLine1" />
 
-  <Button
-      android:id="@+id/editPasswordButton"
-      android:layout_width="match_parent"
-      android:layout_height="30dp"
-      android:background="@drawable/custom_button"
-      android:text="Edit Password"
-      android:textAllCaps="false"
-      android:layout_marginTop="20dp"
-      android:layout_marginStart="20dp"
-      android:layout_marginEnd="20dp"
-      android:textColor="@color/background_green"
-      android:textSize="12dp"
-      app:layout_constraintEnd_toEndOf="@+id/editDetailsBtn"
-      app:layout_constraintStart_toStartOf="@+id/editDetailsBtn"
-      app:layout_constraintTop_toBottomOf="@+id/editDetailsBtn" />
-
   <TextView
       android:id="@+id/districtText"
       android:layout_width="wrap_content"
@@ -283,7 +267,7 @@
       android:layout_width="276dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
-      android:text="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddddddd"
+      android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       android:textColor="@color/white"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="@+id/addressLine2"
@@ -323,17 +307,17 @@
       android:id="@+id/editPassword"
       android:layout_width="match_parent"
       android:layout_height="30dp"
-      android:layout_marginStart="20dp"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="10dp"
       android:layout_marginEnd="20dp"
+      android:layout_marginStart="20dp"
       android:background="@drawable/custom_button"
       android:text="Edit Password"
       android:textAllCaps="false"
       android:textColor="@color/background_green"
       android:textSize="12dp"
-      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintEnd_toEndOf="@+id/editDetailsBtn"
       app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/editDetailsBtn"
       app:layout_constraintTop_toBottomOf="@+id/editDetailsBtn" />
 
   <Button
@@ -359,35 +343,33 @@
       android:layout_width="match_parent"
       android:layout_height="30dp"
       android:layout_centerHorizontal="true"
-      android:layout_marginStart="20dp"
-      android:layout_marginTop="8dp"
-      android:layout_marginEnd="20dp"
       android:background="@drawable/button_yellow_outline"
       android:text="Delete Account"
       android:textAllCaps="false"
       android:textColor="@color/yellow"
       android:textSize="12dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="parent"
+      android:layout_marginEnd="20dp"
+      android:layout_marginStart="20dp"
+      android:layout_marginTop="10dp"
+      app:layout_constraintEnd_toEndOf="@+id/logOut"
+      app:layout_constraintStart_toStartOf="@+id/logOut"
       app:layout_constraintTop_toBottomOf="@+id/logOut" />
 
   <Button
       android:id="@+id/logOut"
       android:layout_width="match_parent"
       android:layout_height="30dp"
-      android:layout_centerHorizontal="true"
       android:layout_marginStart="20dp"
-      android:layout_marginTop="8dp"
       android:layout_marginEnd="20dp"
+      android:layout_marginTop="10dp"
+      android:layout_centerHorizontal="true"
       android:background="@drawable/custom_button"
       android:text="Log Out"
       android:textAllCaps="false"
       android:textColor="@color/background_green"
       android:textSize="12dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="@+id/editPassword"
+      app:layout_constraintStart_toStartOf="@+id/editPassword"
       app:layout_constraintTop_toBottomOf="@+id/editPassword" />
 
   <TextView
