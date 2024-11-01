@@ -288,7 +288,6 @@ public class ClientProfileActivity extends AppCompatActivity {
                     editTextAddressLine2.setText(documentSnapshot.getString("addressLine2"));
                     editTextCity.setText(documentSnapshot.getString("city"));
                     editTextDistrict.setText(documentSnapshot.getString("district"));
-
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();

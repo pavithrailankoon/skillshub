@@ -104,6 +104,7 @@
         android:layout_width="377dp"
         android:layout_height="182dp"
         android:layout_below="@+id/textView23"
+        android:layout_marginTop="-115dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
@@ -117,7 +118,7 @@
 
     <ImageButton
         android:id="@+id/br_upload"
-        android:layout_width="100dp"
+        android:layout_width="300dp"
         android:layout_height="100dp"
         android:layout_below="@+id/textView27"
         android:layout_centerHorizontal="true"
@@ -133,23 +134,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/br_upload"
         android:layout_marginTop="10dp"
-        android:text="Add NIC Verification" />
+        android:text="Add your certificates" />
 
     <ImageButton
-        android:id="@+id/id_front"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/id_back"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:background="@color/dark_grey"
-        android:gravity="center_vertical"
-        android:src="@drawable/baseline_cloud_upload_24" />
-
-    <ImageButton
-        android:id="@+id/id_back"
-        android:layout_width="100dp"
+        android:id="@+id/certificates"
+        android:layout_width="300dp"
         android:layout_height="100dp"
         android:layout_below="@+id/textView28"
         android:layout_centerHorizontal="true"
