@@ -49,7 +49,7 @@ public class CreateData {
                 });
     }
 
-    public void saveWorkerCategory(String uid, String selectedCategory, Object selectedSubcategories) {
+    public void saveWorkerCategory(Context context, String uid, String selectedCategory, Object selectedSubcategories) {
 //        if (uid == null || selectedCategory == null || selectedSubcategories == null || context == null) {
 //            // Log the error and show a Toast if necessary data is missing
 //            Log.e("FirestoreError", "One or more parameters are null.");
@@ -66,13 +66,14 @@ public class CreateData {
                 .collection("workerProfiles").document(selectedCategory)
                 .set(categoryData)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Category saved successfully!", Toast.LENGTH_SHORT).show();
+                    if (context != null) {
+                        Toast.makeText(context, "Category saved successfully!", Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(context, "Error saving category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (context != null) {
+                        Toast.makeText(context, "Error saving category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
-
-
-
 }

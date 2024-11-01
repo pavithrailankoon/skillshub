@@ -89,8 +89,6 @@ public class clientHome3 extends AppCompatActivity {
             }
         });
 
-
-
         categoryPath.setOnClickListener(v -> onBackPressed());
 
         filterButton = findViewById(R.id.filter_button);
