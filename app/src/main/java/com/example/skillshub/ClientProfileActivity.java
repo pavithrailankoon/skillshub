@@ -32,6 +32,7 @@ import com.example.skillshub.signupform.RegistrationControlActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -44,7 +45,7 @@ import java.util.Map;
 public class ClientProfileActivity extends AppCompatActivity {
 
     ImageView backBtn, profileImage,contact_developers;
-    Button logOut, editDetails, editPassword, buttonUploadPhoto;
+    Button logOut, editDetails, editPassword, buttonUploadPhoto,deletebtn;
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
     private ReadData readData;
     private AuthManager authManager;
@@ -78,6 +79,7 @@ public class ClientProfileActivity extends AppCompatActivity {
         editDetails = findViewById(R.id.editDetailsBtn);
         buttonUploadPhoto = findViewById(R.id.button);
         contact_developers = findViewById(R.id.contact_developers);
+        deletebtn = findViewById(R.id.deleteAccount);
 
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
@@ -99,6 +101,7 @@ public class ClientProfileActivity extends AppCompatActivity {
             return;
         }
 
+
         contact_developers.setOnClickListener(v -> {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
             emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com"));
@@ -108,6 +111,19 @@ public class ClientProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, "No email app available", Toast.LENGTH_SHORT).show();
             }
         });
+
+        deletebtn.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com"));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Delete Request");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "I would like to delete my account.");
+            if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(emailIntent);
+            } else {
+                Toast.makeText(this, "No email app available", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         logOut.setOnClickListener(v -> {
             authManager.logOut();
@@ -125,6 +141,7 @@ public class ClientProfileActivity extends AppCompatActivity {
         });
         retrieveUserData();
     }
+
 
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
