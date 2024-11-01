@@ -12,18 +12,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/avatar"
-            app:civ_border_color="@color/yellow"
-            app:civ_border_width="2dp" />
-
         <ImageView
             android:id="@+id/logo_name"
             android:layout_width="114dp"
@@ -45,6 +33,14 @@
 
             android:layout_centerVertical="true"/>
 
+        <ImageView
+            android:id="@+id/client2_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="24dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/back" />
+
 
     </RelativeLayout>
 
@@ -56,22 +52,14 @@
         android:layout_marginTop="93dp"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/client2_back"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="30dp"
-            app:srcCompat="@drawable/back" />
-
 
         <ImageView
             android:id="@+id/refresh_category"
-            android:layout_width="39dp"
-            android:layout_height="54dp"
+            android:layout_width="46dp"
+            android:layout_height="44dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="87dp"
+            android:layout_marginStart="15dp"
             android:layout_marginLeft="87dp"
             android:src="@drawable/baseline_refresh_24" />
 
@@ -122,6 +110,7 @@
 
 
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="37dp"
@@ -131,28 +120,50 @@
             android:id="@+id/main_category_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Technicians"
-            android:layout_marginStart="30dp"
-             />
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="26dp"
+            android:text="Catagory"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+
         <TextView
             android:id="@+id/sub_category_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CCTV"
-            android:layout_marginStart="180dp"
-            />
+            android:layout_marginStart="110dp"
+            android:text="SubCatagory"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
 
+
+        <TextView
+            android:id="@+id/sub_category_path1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="220dp"
+            android:layout_marginTop="3dp"
+            android:text="Workers"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
 
         <ImageView
             android:id="@+id/imageView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24"
-            android:layout_marginStart="130dp"
-            />
+            android:layout_marginStart="80dp"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="190dp"
+            app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
 
 
     </RelativeLayout>
+
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
