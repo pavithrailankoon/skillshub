@@ -1,5 +1,6 @@
 package com.example.skillshub;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,9 +22,11 @@ import com.example.skillshub.model.Worker;
 import com.example.skillshub.signupform.RegistrationControlActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,14 +39,15 @@ public class clientHome4 extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button button;
     private String receivedSubSkill;
-
     private FirebaseFirestore db;
 
+    String mainCategory, subCategory, district, city;
     private ReadData readData;
     private ListView workerListView;
     private List<Worker> workerList = new ArrayList<>();
     private WorkerListAdapter workerListAdapter;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +58,10 @@ public class clientHome4 extends AppCompatActivity {
         receivedSubSkill = getIntent().getStringExtra("SELECTED_SUB_CATEGORY");
 
         // Get filter parameters from intent
-        String mainCategory = getIntent().getStringExtra("mainCategory");
-        String subCategory = getIntent().getStringExtra("subCategory");
-        String district = getIntent().getStringExtra("district");
-        String city = getIntent().getStringExtra("city");
+        mainCategory = getIntent().getStringExtra("mainCategory");
+        subCategory = getIntent().getStringExtra("subCategory");
+        district = getIntent().getStringExtra("district");
+        city = getIntent().getStringExtra("city");
 
         filterWorkers(mainCategory, subCategory, district, city);
 
@@ -102,8 +106,6 @@ public class clientHome4 extends AppCompatActivity {
             Toast.makeText(clientHome4.this, "Fill the verification information", Toast.LENGTH_SHORT).show();
         });
 
-
-
         // Set the OnItemClickListener for the ListView
         workerListView.setOnItemClickListener((parent, view, position, id) -> {
             Worker selectedWorkerUid = workerList.get(position);
@@ -112,6 +114,8 @@ public class clientHome4 extends AppCompatActivity {
             intent.putExtra("SELECTED_WORKER", workerUid);
             startActivity(intent);
         });
+
+        setProfileImage();
     }
 
     private void filterWorkers(String mainCategory, String subCategory, String district, String city) {
@@ -147,8 +151,31 @@ public class clientHome4 extends AppCompatActivity {
         });
     }
 
-    private void setUserAvatar() {
-        FirebaseStorageManager imageManager = new FirebaseStorageManager();
-        imageManager.loadProfileImage(this, profileImageButton);
+    private void setProfileImage() {
+        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> userData) {
+                if (userData != null) {
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
+
+                    if (!profileImageURL.isEmpty()) {
+                        Picasso.get()
+                                .load(profileImageURL)
+                                .placeholder(R.drawable.avatar)
+                                .error(R.drawable.avatar)
+                                .into(profileImageButton);
+                    } else {
+                        profileImageButton.setImageResource(R.drawable.avatar);
+                    }
+                } else {
+                    Toast.makeText(clientHome4.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(clientHome4.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

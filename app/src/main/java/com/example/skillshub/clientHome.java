@@ -25,9 +25,12 @@ import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.signupform.RegistrationControlActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -103,16 +106,10 @@ public class clientHome extends AppCompatActivity {
 
         });
 
-
-        // client profile button code
-
         profileImageButton = (CircleImageView) findViewById(R.id.avatar);
-
         profileImageButton.setOnClickListener(v -> checkWorkerProfile());
 
-
-        //Become A worker Button Code
-
+        setProfileImage();
         getUniqueMainSkills();
         categoryClickListener();
         buttonInvisible();
@@ -271,10 +268,31 @@ public class clientHome extends AppCompatActivity {
         });
     }
 
-    private void setUserAvatar(){
-        FirebaseStorageManager imageManager = new FirebaseStorageManager();
+    private void setProfileImage() {
+        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> userData) {
+                if (userData != null) {
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
 
-        // Load the profile image once
-        imageManager.loadProfileImage(this, profileImageButton);
+                    if (!profileImageURL.isEmpty()) {
+                        Picasso.get()
+                                .load(profileImageURL)
+                                .placeholder(R.drawable.avatar)
+                                .error(R.drawable.avatar)
+                                .into(profileImageButton);
+                    } else {
+                        profileImageButton.setImageResource(R.drawable.avatar);
+                    }
+                } else {
+                    Toast.makeText(clientHome.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(clientHome.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -21,8 +21,10 @@ import com.example.skillshub.adapters.SubCategoryAdapter;
 import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.example.skillshub.signupform.RegistrationControlActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -95,11 +97,7 @@ public class clientHome2 extends AppCompatActivity {
             }
         });
 
-
-
-
         filterButton = (ImageButton) findViewById(R.id.filter_button);
-
         filterButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -110,6 +108,7 @@ public class clientHome2 extends AppCompatActivity {
         });
 
         getUniqueSubSkills();
+        setProfileImage();
 
         // Set the OnItemClickListener for the ListView
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -164,10 +163,31 @@ public class clientHome2 extends AppCompatActivity {
         });
     }
 
-    private void setUserAvatar(){
-        FirebaseStorageManager imageManager = new FirebaseStorageManager();
+    private void setProfileImage() {
+        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> userData) {
+                if (userData != null) {
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
 
-        // Load the profile image once
-        imageManager.loadProfileImage(this, profileImageButton);
+                    if (!profileImageURL.isEmpty()) {
+                        Picasso.get()
+                                .load(profileImageURL)
+                                .placeholder(R.drawable.avatar)
+                                .error(R.drawable.avatar)
+                                .into(profileImageButton);
+                    } else {
+                        profileImageButton.setImageResource(R.drawable.avatar);
+                    }
+                } else {
+                    Toast.makeText(clientHome2.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(clientHome2.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
