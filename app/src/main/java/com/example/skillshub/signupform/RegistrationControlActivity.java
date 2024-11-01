@@ -351,6 +351,6 @@ public class RegistrationControlActivity extends AppCompatActivity {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Object selectedSubcategories = selectedSkills.get("subcategories");
 
-        createData.saveWorkerCategory(uid, seleselectedCategory, selectedSubcategories);
+        createData.saveWorkerCategory(this, uid, seleselectedCategory, selectedSubcategories);
     }
 }
