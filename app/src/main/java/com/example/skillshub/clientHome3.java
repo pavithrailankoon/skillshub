@@ -33,9 +33,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class clientHome3 extends AppCompatActivity {
 
-    private CircleImageView profileImageButton;
     private ImageButton filterButton;
-    private TextView categoryPath;
     private ImageView backButton, refresh;
     private ProgressBar progressBar;
     private String receivedSubSkill;
@@ -60,20 +58,12 @@ public class clientHome3 extends AppCompatActivity {
         refresh = findViewById(R.id.refresh_category);
         progressBar = findViewById(R.id.progressbar);
         backButton = findViewById(R.id.client2_back);
-        categoryPath = findViewById(R.id.main_category_path);
-        categoryPath.setText(receivedSubSkill);
 
         workerListView = findViewById(R.id.listView2);
 
         // Set up the custom adapter
         workerListAdapter = new WorkerListAdapter(this, workerList);
         workerListView.setAdapter(workerListAdapter);
-
-        profileImageButton = findViewById(R.id.avatar);
-        profileImageButton.setOnClickListener(v -> {
-            Toast.makeText(clientHome3.this, "Client profile", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(clientHome3.this, ClientProfileActivity.class));
-        });
 
         getWorkerList();
 
@@ -82,14 +72,13 @@ public class clientHome3 extends AppCompatActivity {
             getWorkerList();
         });
 
-        backButton.setOnClickListener(new View.OnClickListener(){
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
 
-        categoryPath.setOnClickListener(v -> onBackPressed());
 
         filterButton = findViewById(R.id.filter_button);
         filterButton.setOnClickListener(v -> {
@@ -106,7 +95,6 @@ public class clientHome3 extends AppCompatActivity {
             startActivity(intent);
         });
 
-        setProfileImage();
     }
 
     private void getWorkerList() {
@@ -141,32 +129,5 @@ public class clientHome3 extends AppCompatActivity {
             }
         });
     }
-
-    private void setProfileImage() {
-        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Map<String, Object> userData) {
-                if (userData != null) {
-                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
-
-                    if (!profileImageURL.isEmpty()) {
-                        Picasso.get()
-                                .load(profileImageURL)
-                                .placeholder(R.drawable.avatar)
-                                .error(R.drawable.avatar)
-                                .into(profileImageButton);
-                    } else {
-                        profileImageButton.setImageResource(R.drawable.avatar);
-                    }
-                } else {
-                    Toast.makeText(clientHome3.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(clientHome3.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 }
+
