@@ -47,7 +47,7 @@ import java.util.Map;
 public class WorkerProfile extends AppCompatActivity {
 
     ImageView backBtn, profileImage;
-    Button logOut, editDetails, editPassword, buttonUploadPhoto;
+    Button logOut, editDetails, editPassword, buttonUploadPhoto,deletebtn;
     TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
     ReadData readData;
     FirebaseStorageManager storageManager;
@@ -86,6 +86,7 @@ public class WorkerProfile extends AppCompatActivity {
         newAddressLine2 = findViewById(R.id.addressLine2);
         city = findViewById(R.id.city);
         district = findViewById(R.id.district);
+        deletebtn = findViewById(R.id.deleteAccount);
 
         backBtn = findViewById(R.id.backBtn);
         editPassword = findViewById(R.id.editPassword);
@@ -128,6 +129,16 @@ public class WorkerProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        deletebtn.setOnClickListener(v -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setData(Uri.parse("mailto:skillhubdevelopers@gmail.com"));
+            if (emailIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(emailIntent);
+            } else {
+                Toast.makeText(this, "No email app available", Toast.LENGTH_SHORT).show();
             }
         });
 
