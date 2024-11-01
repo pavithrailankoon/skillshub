@@ -63,7 +63,7 @@ public class clientHome4 extends AppCompatActivity {
         district = getIntent().getStringExtra("district");
         city = getIntent().getStringExtra("city");
 
-        filterWorkers(mainCategory, subCategory, district, city);
+        //filterWorkers(mainCategory, subCategory, district, city);
 
         // Initialize views
         refresh = findViewById(R.id.refresh_category);
@@ -114,11 +114,9 @@ public class clientHome4 extends AppCompatActivity {
             intent.putExtra("SELECTED_WORKER", workerUid);
             startActivity(intent);
         });
-
-        setProfileImage();
     }
 
-    private void filterWorkers(String mainCategory, String subCategory, String district, String city) {
+    /*private void filterWorkers(String mainCategory, String subCategory, String district, String city) {
         db.collection("users").addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (e != null) {
                 Log.w("ClientHome3Activity", "Listen failed.", e);
@@ -141,41 +139,17 @@ public class clientHome4 extends AppCompatActivity {
                                         Worker worker = profileDoc.toObject(Worker.class);
                                         if (worker != null) {
                                             workerList.add(worker);
+                                            Log.d("ClientHome3Activity", "Worker added: " + worker.getName());
                                         }
                                     }
                                     workerListAdapter.notifyDataSetChanged();
-                                });
+                                }.get().addOnFailureListener(e1 -> {
+                                    Log.w("ClientHome3Activity", "Error getting documents: ");
+                                }));
+                    }
+
                     }
                 }
-            }
-        });
+            });
+        }*/
     }
-
-    private void setProfileImage() {
-        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Map<String, Object> userData) {
-                if (userData != null) {
-                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
-
-                    if (!profileImageURL.isEmpty()) {
-                        Picasso.get()
-                                .load(profileImageURL)
-                                .placeholder(R.drawable.avatar)
-                                .error(R.drawable.avatar)
-                                .into(profileImageButton);
-                    } else {
-                        profileImageButton.setImageResource(R.drawable.avatar);
-                    }
-                } else {
-                    Toast.makeText(clientHome4.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(clientHome4.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-}
