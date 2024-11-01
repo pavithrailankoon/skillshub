@@ -84,17 +84,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/district"
-
-
         android:text="City" />
 
     <EditText
         android:id="@+id/city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView25"
-
-        />
+        android:layout_below="@+id/textView25" />
 
     <TextView
         android:id="@+id/textView23"
@@ -120,7 +116,7 @@
         android:text="Add Business Verification:" />
 
     <ImageButton
-        android:id="@+id/signup_verify_br_upload"
+        android:id="@+id/br_upload"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@+id/textView27"
@@ -135,12 +131,24 @@
         android:id="@+id/textView28"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signup_verify_br_upload"
+        android:layout_below="@+id/br_upload"
         android:layout_marginTop="10dp"
-        android:text="Add Course Certificates:" />
+        android:text="Add NIC Verification" />
 
     <ImageButton
-        android:id="@+id/certificates"
+        android:id="@+id/id_front"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/id_back"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@color/dark_grey"
+        android:gravity="center_vertical"
+        android:src="@drawable/baseline_cloud_upload_24" />
+
+    <ImageButton
+        android:id="@+id/id_back"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_below="@+id/textView28"
@@ -148,7 +156,6 @@
         android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:background="@color/dark_grey"
-
         android:gravity="center_vertical"
         android:src="@drawable/baseline_cloud_upload_24" />
 

@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -82,8 +84,8 @@ public class WorkerProfile extends AppCompatActivity {
         newPhoneNumber = findViewById(R.id.phoneNumber);
         newAddressLine1 = findViewById(R.id.addressLine1);
         newAddressLine2 = findViewById(R.id.addressLine2);
-        city = findViewById(R.id.cityText);
-        district = findViewById(R.id.districtText);
+        city = findViewById(R.id.city);
+        district = findViewById(R.id.district);
 
         backBtn = findViewById(R.id.backBtn);
         editPassword = findViewById(R.id.editPassword);
@@ -147,6 +149,8 @@ public class WorkerProfile extends AppCompatActivity {
         });
 
         retrieveUserData();
+        buttonUploadPhoto.setOnClickListener(v -> openGallery());
+        editDetails.setOnClickListener(v -> showUpdateUserDialog());
     }
 
     void fetchreviewfromfirebase(CollectionReference collectionRef) {
@@ -160,8 +164,6 @@ public class WorkerProfile extends AppCompatActivity {
             }
         });
 
-        buttonUploadPhoto.setOnClickListener(v -> openGallery());
-        editDetails.setOnClickListener(v -> showUpdateUserDialog());
     }
 
     public static class ReviewModel {
@@ -335,7 +337,6 @@ public class WorkerProfile extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("MissingInflatedId")
     private void showUpdateUserDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
@@ -347,6 +348,9 @@ public class WorkerProfile extends AppCompatActivity {
         AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
         AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
         EditText editTextDesc = dialogView.findViewById(R.id.description);
+        ImageButton editBrcertificate = dialogView.findViewById(R.id.br_upload);
+        ImageButton editNicFront = dialogView.findViewById(R.id.id_front);
+        ImageButton editNicBack = dialogView.findViewById(R.id.id_back);
 
         districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         editTextDistrict.setAdapter(districtAdapter);
@@ -375,23 +379,50 @@ public class WorkerProfile extends AppCompatActivity {
                     editTextAddressLine2.setText(documentSnapshot.getString("addressLine2"));
                     editTextCity.setText(documentSnapshot.getString("city"));
                     editTextDistrict.setText(documentSnapshot.getString("district"));
-                    Log.d("Client name", String.valueOf(documentSnapshot.exists()));
+
+                    // Assuming `imageButton` is your ImageButton and `storageRef` is the reference to your image in Firebase Storage
+                    StorageReference breRef = FirebaseStorage.getInstance().getReference().child(uid + "/br-image");
+                    breRef.getDownloadUrl().addOnSuccessListener(uri ->
+                            Picasso.get().load(uri.toString()).into(editBrcertificate)
+                    ).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
+                    );
+
+                    StorageReference nicfrontRef = FirebaseStorage.getInstance().getReference().child(uid + "/nic-front-image");
+                    nicfrontRef.getDownloadUrl().addOnSuccessListener(uri ->
+                            Picasso.get().load(uri.toString()).into(editNicFront)
+                    ).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
+                    );
+
+                    StorageReference nicbackRef = FirebaseStorage.getInstance().getReference().child(uid + "/nic-back-image");
+                    nicbackRef.getDownloadUrl().addOnSuccessListener(uri ->
+                            Picasso.get().load(uri.toString()).into(editNicBack)
+                    ).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
+                    );
+
+                    //Log.d("Client name", String.valueOf(documentSnapshot.exists()));
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
             });
 
-            DocumentReference documentReferenceW = db.collection("users").document(uid).collection("workerInformation").document("workerInformation");
+            CollectionReference collectionReference = db.collection("users").document(uid).collection("workerInformation");
 
-            documentReferenceW.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
+            collectionReference.get().addOnSuccessListener(querySnapshot -> {
+                if (!querySnapshot.isEmpty()) {
+                    // Get the first document from the collection
+                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
                     editTextDesc.setText(documentSnapshot.getString("description"));
+                } else {
+                    Toast.makeText(this, "No documents found in workerInformation", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
             });
 
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(WorkerProfile.this)
                     .setTitle("Update User Information")
                     .setView(dialogView)
                     .setPositiveButton("Update", (dialog, which) -> {
@@ -402,7 +433,9 @@ public class WorkerProfile extends AppCompatActivity {
                         String city = editTextCity.getText().toString().trim();
                         String district = editTextDistrict.getText().toString().trim();
                         String description = editTextDesc.getText().toString();
+                       // String description = editTextDesc.getText().toString();
 
+                        // Map for user data update
                         Map<String, Object> updatedUserData = new HashMap<>();
                         updatedUserData.put("fullName", name);
                         updatedUserData.put("phoneNumber", phoneNumber);
@@ -411,20 +444,32 @@ public class WorkerProfile extends AppCompatActivity {
                         updatedUserData.put("city", city);
                         updatedUserData.put("district", district);
 
+                        // Assuming documentReference is a valid DocumentReference to the user's main profile
                         documentReference.update(updatedUserData)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show());
+                                .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "User data updated successfully", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update user data", Toast.LENGTH_SHORT).show());
 
+                        // Map for worker description update
                         Map<String, Object> updatedWorkerDesc = new HashMap<>();
                         updatedWorkerDesc.put("description", description);
 
-                        documentReferenceW.update(updatedWorkerDesc)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show());
+                        // Fetch the auto-ID document within the workerInformation collection
+                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
+                            if (!querySnapshot.isEmpty()) {
+                                // Update the first document found
+                                DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
+                                workerDocRef.update(updatedWorkerDesc)
+                                        .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "Description updated successfully", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update description", Toast.LENGTH_SHORT).show());
+                            } else {
+                                Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create()
                     .show();
+
         } else {
             Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
         }
