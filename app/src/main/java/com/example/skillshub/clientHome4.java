@@ -135,7 +135,7 @@ public class clientHome4 extends AppCompatActivity {
                     if (district.equals(userDistrict) && city.equals(userCity)) {
                         userDoc.getReference().collection("workerProfiles")
                                 .whereEqualTo("mainCategory", mainCategory)
-                                .whereArrayContains("subCategories", subCategory)
+                                .whereArrayContains("subcategories", subCategory)
                                 .get().addOnSuccessListener(profileQuery -> {
                                     for (DocumentSnapshot profileDoc : profileQuery.getDocuments()) {
                                         Worker worker = profileDoc.toObject(Worker.class);

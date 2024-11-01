@@ -368,7 +368,7 @@ public class WorkerProfile extends AppCompatActivity {
                         updatedWorkerDesc.put("description", description);
 
                         // Fetch the auto-ID document within the workerInformation collection
-                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
+            /*            collectionReference.get().addOnSuccessListener(querySnapshot -> {
                             if (!querySnapshot.isEmpty()) {
                                 // Update the first document found
                                 DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
@@ -378,7 +378,7 @@ public class WorkerProfile extends AppCompatActivity {
                             } else {
                                 Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
                             }
-                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
+                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show()); */
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create()
