@@ -43,6 +43,7 @@ public class FilterActivity extends AppCompatActivity {
     private ReadData readData;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,8 @@ public class FilterActivity extends AppCompatActivity {
         selectedSubCategory = subSkill.getSelectedItem().toString();
         selectedDistrict = district.getSelectedItem().toString();
         selectedCity = city.getSelectedItem().toString();
+
+
 
         readData.fetchUniqueCategoryNames(new ReadData.FirestoreCallback() {
             @Override
@@ -83,18 +86,55 @@ public class FilterActivity extends AppCompatActivity {
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FilterActivity.this, clientHome3.class);
-                intent.putExtra("mainCategory", selectedMainCategory);
-                intent.putExtra("subCategory", selectedSubCategory);
-                intent.putExtra("district", selectedDistrict);
-                intent.putExtra("city", selectedCity);
-                startActivity(intent);
+                queryUsersByCityAndSubcategory(selectedCity, selectedSubCategory);
+                Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
             }
 
         });
 
         back = findViewById(R.id.filter_back_button);
         back.setOnClickListener(v -> onBackPressed());
+
+
+
+    }
+
+    private void queryUsersByCityAndSubcategory(String city, String subcategory) {
+        // Step 1: Query main collection for documents where city matches
+        db.collection("users")
+                .whereEqualTo("city", city)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        for (QueryDocumentSnapshot document : querySnapshot) {
+                            String userId = document.getId();
+                            // Step 2: For each user document, query the subcollection
+                            querySubcollectionBySubcategory(userId, subcategory);
+                        }
+                    } else {
+                        Log.d("Firestore", "No users found in the specified city.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("FirestoreError", "Error getting users by city", e));
+    }
+
+    private void querySubcollectionBySubcategory(String userId, String subcategory) {
+        db.collection("users")
+                .document(userId)
+                .collection("workerProfiles") // Replace with actual subcollection name
+                .whereArrayContains("subcategories", subcategory)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        for (QueryDocumentSnapshot document : querySnapshot) {
+                            Log.d("Firestore", "Found document with matching subcategory: " + document.getData());
+                            // Process each document here as needed
+                        }
+                    } else {
+                        Log.d("Firestore", "No matching subcategories found in subcollection for user " + userId);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("FirestoreError", "Error querying subcollection for user " + userId, e));
     }
 
     private void populateSpinner(ArrayList<String> categoryNames) {
