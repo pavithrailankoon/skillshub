@@ -26,6 +26,7 @@ import com.example.skillshub.LoginActivity;
 import com.example.skillshub.R;
 import com.example.skillshub.WorkerProfile;
 import com.example.skillshub.WorkerProfileView;
+import com.example.skillshub.clientHome;
 import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.CreateData;
 import com.example.skillshub.firebaseModel.FirebaseStorageManager;
@@ -113,10 +114,12 @@ public class RegistrationControlActivity extends AppCompatActivity {
                 saveAndLogin();
                 if (registrationType.equals("client") || registrationType.equals("worker")){
                     Intent intent = new Intent(RegistrationControlActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 } else if(registrationType.equals("clienttoworker")){
-                    Intent intent = new Intent(RegistrationControlActivity.this, WorkerProfile.class);
+                    Intent intent = new Intent(RegistrationControlActivity.this, clientHome.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }
@@ -151,9 +154,9 @@ public class RegistrationControlActivity extends AppCompatActivity {
             saveUserDataToFirestore(authManager.getCurrentLoginUser());
         } else if (registrationType.equals("worker")){
             saveUserDataToFirestore(authManager.getCurrentLoginUser());
-            saveWorkerDataToFirestore(authManager.getCurrentLoginUser());
+            saveWorkerDataToFirestore();
         } else if (registrationType.equals("clienttoworker")){
-            saveWorkerDataToFirestore(authManager.getCurrentLoginUser());
+            saveClientToWorker();
         }
     }
 
@@ -281,10 +284,29 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
     }
 
-    private void saveWorkerDataToFirestore(FirebaseUser user) {
+    private void saveWorkerDataToFirestore() {
         Uri nicFrontUri = ((WorkerVerifyFragment) fragments[2]).getNicFront();
         Uri nicBackUri = ((WorkerVerifyFragment) fragments[2]).getNicBack();
         Uri brUri = ((WorkerVerifyFragment) fragments[2]).getBr();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get the user ID
+
+        storageManager.uploadMultipleImages(uid, nicFrontUri, nicBackUri, brUri, new FirebaseStorageManager.OnImagesUploadCompleteListener() {
+            @Override
+            public void onAllUploadsSuccess(String nicFrontUrl, String nicBackUrl, String brUrl) {
+                saveImageUrlsToFirestore(uid, nicFrontUrl, nicBackUrl, brUrl);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Toast.makeText(RegistrationControlActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void saveClientToWorker() {
+        Uri nicFrontUri = ((WorkerVerifyFragment) fragments[0]).getNicFront();
+        Uri nicBackUri = ((WorkerVerifyFragment) fragments[0]).getNicBack();
+        Uri brUri = ((WorkerVerifyFragment) fragments[0]).getBr();
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Get the user ID
 
         storageManager.uploadMultipleImages(uid, nicFrontUri, nicBackUri, brUri, new FirebaseStorageManager.OnImagesUploadCompleteListener() {
@@ -306,7 +328,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
         workerInfo.put("BrImageURL", brUrl);
         workerInfo.put("NicBackImageURL", nicBackUrl);
         workerInfo.put("NicFrontImageURL", nicFrontUrl);
-        workerInfo.put("description", null);
+        workerInfo.put("description", " ");
         workerInfo.put("isBrVerified", false);
         workerInfo.put("isNicVerified", false);
 
