@@ -65,15 +65,19 @@ public class clientHome2 extends AppCompatActivity {
         subCategoryAdapter = new SubCategoryAdapter(this, subCategoryList);
         categoryListView.setAdapter(subCategoryAdapter);
 
-        profileImageButton = (CircleImageView) findViewById(R.id.avatar);
-        profileImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                       Toast.makeText(clientHome2.this, "Client profile", Toast.LENGTH_SHORT).show();
-                       Intent intent = new Intent(clientHome2.this, ClientProfileActivity.class);
-                       startActivity(intent);
-                   }
-               });
+        CircleImageView profileImageButton = findViewById(R.id.avatar);
+        if (profileImageButton != null) {
+            profileImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(clientHome2.this, "Client profile", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(clientHome2.this, ClientProfileActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            Log.e("clientHome2", "CircleImageView not found.");
+        }
 
         refresh.setOnClickListener(new View.OnClickListener(){
             @Override
