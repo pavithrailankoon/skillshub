@@ -79,7 +79,6 @@ public class WorkerProfile extends AppCompatActivity {
         refreshbutton = findViewById(R.id.refreshButton);
         tasks = findViewById(R.id.shedule);
         backBtn = findViewById(R.id.backBtn);
-
         newName = findViewById(R.id.name);
         newPhoneNumber = findViewById(R.id.phoneNumber);
         newAddressLine1 = findViewById(R.id.addressLine1);
@@ -87,8 +86,8 @@ public class WorkerProfile extends AppCompatActivity {
         city = findViewById(R.id.city);
         district = findViewById(R.id.district);
         deletebtn = findViewById(R.id.deleteAccount);
-
         backBtn = findViewById(R.id.backBtn);
+
         editPassword = findViewById(R.id.editPassword);
         profileImage = findViewById(R.id.client_profile_image);
         logOut = findViewById(R.id.logOut);
@@ -115,13 +114,11 @@ public class WorkerProfile extends AppCompatActivity {
         } else {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             finish();
-            return;
+
         }
 
         documentReference1 = fStore.collection("users").document(uid);
-
         DocumentReference documentReference = fStore.collection("users").document(uid);
-
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         fetchreviewfromfirebase(documentReference2);
 
@@ -164,83 +161,6 @@ public class WorkerProfile extends AppCompatActivity {
         editDetails.setOnClickListener(v -> showUpdateUserDialog());
     }
 
-    void fetchreviewfromfirebase(CollectionReference collectionRef) {
-        collectionRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                    ReviewModel reviewModel = documentSnapshot.toObject(ReviewModel.class);
-                    list.add(reviewModel);
-                }
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-    }
-
-    public static class ReviewModel {
-        private String rating;
-        private String review;
-
-        public ReviewModel() {
-        }
-
-        public String getRating() {
-            return rating;
-        }
-
-        public String getReview() {
-            return review;
-        }
-
-        public ReviewModel(String rating, String review) {
-            this.rating = rating;
-            this.review = review;
-        }
-    }
-
-    public static class Reviewadapter extends RecyclerView.Adapter<Reviewadapter.ReviewadapterViewHolder>
-
-    {
-        private java.util.List<ReviewModel> List;
-        private Reviewadapter.OnItemClickListener listener;
-
-        public interface OnItemClickListener {
-
-        }
-
-        public Reviewadapter(List < ReviewModel > List, Reviewadapter.OnItemClickListener listener)
-        {
-            this.List = List;
-            this.listener = listener;
-        }
-        public Reviewadapter(List < ReviewModel > List) {
-        this.List = List;
-    }
-        public Reviewadapter.ReviewadapterViewHolder onCreateViewHolder (ViewGroup parent,
-        int viewType){
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_list_item_layout3, parent, false);
-        return new Reviewadapter.ReviewadapterViewHolder(view);
-    }
-        public void onBindViewHolder(Reviewadapter.ReviewadapterViewHolder holder,int position){
-        ReviewModel reviewModel = List.get(position);
-        holder.ratingBar.setRating(Float.parseFloat(reviewModel.getRating()));
-        holder.ratingBar.setIsIndicator(true);
-
-        holder.reviewItem.setText(reviewModel.getReview());
-    }
-        public int getItemCount () {return List.size();}
-        public class ReviewadapterViewHolder extends RecyclerView.ViewHolder {
-            TextView reviewItem;
-            RatingBar ratingBar;
-
-            public ReviewadapterViewHolder(View itemView) {
-                super(itemView);
-                ratingBar = itemView.findViewById(R.id.submitratings);
-                reviewItem = itemView.findViewById(R.id.submitreview);
-
-            }
-        }
-    }
     private void openGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
@@ -360,8 +280,6 @@ public class WorkerProfile extends AppCompatActivity {
         AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
         EditText editTextDesc = dialogView.findViewById(R.id.description);
         ImageButton editBrcertificate = dialogView.findViewById(R.id.br_upload);
-        ImageButton editNicFront = dialogView.findViewById(R.id.id_front);
-        ImageButton editNicBack = dialogView.findViewById(R.id.id_back);
 
         districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         editTextDistrict.setAdapter(districtAdapter);
@@ -392,49 +310,34 @@ public class WorkerProfile extends AppCompatActivity {
                     editTextDistrict.setText(documentSnapshot.getString("district"));
 
                     // Assuming `imageButton` is your ImageButton and `storageRef` is the reference to your image in Firebase Storage
-                    StorageReference breRef = FirebaseStorage.getInstance().getReference().child(uid + "/br-image");
-                    breRef.getDownloadUrl().addOnSuccessListener(uri ->
-                            Picasso.get().load(uri.toString()).into(editBrcertificate)
-                    ).addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
-                    );
+//                    StorageReference breRef = FirebaseStorage.getInstance().getReference().child(uid + "/br-image");
+//                    breRef.getDownloadUrl().addOnSuccessListener(uri ->
+//                            Picasso.get().load(uri.toString()).into(editBrcertificate)
+//                    ).addOnFailureListener(e ->
+//                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
+//                    );
 
-                    StorageReference nicfrontRef = FirebaseStorage.getInstance().getReference().child(uid + "/nic-front-image");
-                    nicfrontRef.getDownloadUrl().addOnSuccessListener(uri ->
-                            Picasso.get().load(uri.toString()).into(editNicFront)
-                    ).addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
-                    );
-
-                    StorageReference nicbackRef = FirebaseStorage.getInstance().getReference().child(uid + "/nic-back-image");
-                    nicbackRef.getDownloadUrl().addOnSuccessListener(uri ->
-                            Picasso.get().load(uri.toString()).into(editNicBack)
-                    ).addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
-                    );
-
-                    //Log.d("Client name", String.valueOf(documentSnapshot.exists()));
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
             });
 
-            CollectionReference collectionReference = db.collection("users").document(uid).collection("workerInformation");
-
-            collectionReference.get().addOnSuccessListener(querySnapshot -> {
-                if (!querySnapshot.isEmpty()) {
-                    // Get the first document from the collection
-                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                    editTextDesc.setText(documentSnapshot.getString("description"));
-                } else {
-                    Toast.makeText(this, "No documents found in workerInformation", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
-            });
+//            CollectionReference collectionReference = db.collection("users").document(uid).collection("workerInformation");
+//
+//            collectionReference.get().addOnSuccessListener(querySnapshot -> {
+//                if (!querySnapshot.isEmpty()) {
+//                    // Get the first document from the collection
+//                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+//                    editTextDesc.setText(documentSnapshot.getString("description"));
+//                } else {
+//                    Toast.makeText(this, "No documents found in workerInformation", Toast.LENGTH_SHORT).show();
+//                }
+//            }).addOnFailureListener(e -> {
+//                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
+//            });
 
             new AlertDialog.Builder(WorkerProfile.this)
-                    .setTitle("Update User Information")
+                    .setTitle("Update worker Information")
                     .setView(dialogView)
                     .setPositiveButton("Update", (dialog, which) -> {
                         String name = editTextName.getText().toString().trim();
@@ -444,7 +347,7 @@ public class WorkerProfile extends AppCompatActivity {
                         String city = editTextCity.getText().toString().trim();
                         String district = editTextDistrict.getText().toString().trim();
                         String description = editTextDesc.getText().toString();
-                       // String description = editTextDesc.getText().toString();
+                        // String description = editTextDesc.getText().toString();
 
                         // Map for user data update
                         Map<String, Object> updatedUserData = new HashMap<>();
@@ -516,5 +419,88 @@ public class WorkerProfile extends AppCompatActivity {
             cityAdapter.addAll(cities);
             cityAdapter.notifyDataSetChanged();
         }, e -> Log.e("MainActivity", "Failed to load cities", e));
+    }
+
+    private void fetchreviewfromfirebase(CollectionReference collectionRef) {
+        collectionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                    ReviewModel reviewModel = documentSnapshot.toObject(ReviewModel.class);
+                    list.add(reviewModel);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
+    public static class ReviewModel {
+        private String rating;
+        private String review;
+
+        public ReviewModel() {
+        }
+
+        public String getRating() {
+            return rating;
+        }
+
+        public String getReview() {
+            return review;
+        }
+
+        public ReviewModel(String rating, String review) {
+            this.rating = rating;
+            this.review = review;
+        }
+    }
+
+    public static class Reviewadapter extends RecyclerView.Adapter<Reviewadapter.ReviewadapterViewHolder>
+
+    {
+        private java.util.List<ReviewModel> List;
+        private Reviewadapter.OnItemClickListener listener;
+
+        public interface OnItemClickListener {
+
+        }
+
+        public Reviewadapter(List < ReviewModel > List, Reviewadapter.OnItemClickListener listener) {
+            this.List = List;
+            this.listener = listener;
+        }
+
+        public Reviewadapter(List < ReviewModel > List) {
+            this.List = List;
+        }
+
+        public Reviewadapter.ReviewadapterViewHolder onCreateViewHolder (ViewGroup parent, int viewType){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_list_item_layout3, parent, false);
+            return new Reviewadapter.ReviewadapterViewHolder(view);
+        }
+
+        public void onBindViewHolder(Reviewadapter.ReviewadapterViewHolder holder,int position){
+            ReviewModel reviewModel = List.get(position);
+            holder.ratingBar.setRating(Float.parseFloat(reviewModel.getRating()));
+            holder.ratingBar.setIsIndicator(true);
+
+            holder.reviewItem.setText(reviewModel.getReview());
+        }
+
+        public int getItemCount () {
+            return List.size();
+        }
+
+        public class ReviewadapterViewHolder extends RecyclerView.ViewHolder {
+            TextView reviewItem;
+            RatingBar ratingBar;
+
+            public ReviewadapterViewHolder(View itemView) {
+                super(itemView);
+                ratingBar = itemView.findViewById(R.id.submitratings);
+                reviewItem = itemView.findViewById(R.id.submitreview);
+
+            }
+        }
     }
 }

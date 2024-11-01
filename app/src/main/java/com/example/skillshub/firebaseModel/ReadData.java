@@ -328,17 +328,18 @@ public class ReadData {
         db.collection("users").document(uid).collection("reviewsAsAWorker")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    double totalRating = 0;
+                    float totalRating = 0;
                     int reviewCount = queryDocumentSnapshots.size();
 
                     for (DocumentSnapshot review : queryDocumentSnapshots) {
-                        Double rating = review.getDouble("reviewRate");
-                        if (rating != null) {
-                            totalRating += rating;
+                        String rating = review.getString("rating");
+                        Float newRate = Float.parseFloat(rating);
+                        if (newRate != null) {
+                            totalRating += newRate;
                         }
                     }
 
-                    double averageRating = (reviewCount > 0) ? (totalRating / reviewCount) : 0;
+                    float averageRating = (reviewCount > 0) ? (totalRating / reviewCount) : 0;
                     worker.setAverageRating(averageRating);
                     workers.add(worker);
 
