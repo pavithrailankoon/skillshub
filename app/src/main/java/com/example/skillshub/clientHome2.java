@@ -65,6 +65,7 @@ public class clientHome2 extends AppCompatActivity {
         categoryListView.setAdapter(subCategoryAdapter);
 
 
+
         refresh.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

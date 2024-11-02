@@ -34,7 +34,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class clientHome3 extends AppCompatActivity {
 
     private ImageButton filterButton;
-    private TextView categoryPath;
     private ImageView backButton, refresh;
     private ProgressBar progressBar;
     private String receivedSubSkill;
@@ -59,8 +58,6 @@ public class clientHome3 extends AppCompatActivity {
         refresh = findViewById(R.id.refresh_category);
         progressBar = findViewById(R.id.progressbar);
         backButton = findViewById(R.id.client2_back);
-        categoryPath = findViewById(R.id.main_category_path);
-        categoryPath.setText(receivedSubSkill);
 
         workerListView = findViewById(R.id.listView2);
 
@@ -75,14 +72,13 @@ public class clientHome3 extends AppCompatActivity {
             getWorkerList();
         });
 
-        backButton.setOnClickListener(new View.OnClickListener(){
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
 
-        categoryPath.setOnClickListener(v -> onBackPressed());
 
         filterButton = findViewById(R.id.filter_button);
         filterButton.setOnClickListener(v -> {
@@ -133,5 +129,5 @@ public class clientHome3 extends AppCompatActivity {
             }
         });
     }
-
 }
+
