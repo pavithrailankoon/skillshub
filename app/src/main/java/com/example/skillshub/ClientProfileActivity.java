@@ -26,7 +26,6 @@ import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.CreateData;
 import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
-import com.example.skillshub.firebaseModel.UpdateData;
 import com.example.skillshub.model.CustomDialog;
 import com.example.skillshub.signupform.RegistrationControlActivity;
 import com.google.firebase.auth.FirebaseAuth;
