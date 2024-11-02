@@ -71,7 +71,7 @@
         android:text="Discrict" />
 
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/district"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
         android:layout_below="@+id/district"
         android:text="City" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/city"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,14 +97,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/city"
+        android:layout_marginTop="8dp"
         android:text="Description" />
 
     <EditText
-        android:id="@+id/description"
+        android:id="@+id/descriptionxs"
         android:layout_width="377dp"
-        android:layout_height="182dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/textView23"
-        android:layout_marginTop="-115dp"
+        android:layout_marginTop="6dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
@@ -113,7 +114,7 @@
         android:id="@+id/textView27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/description"
+        android:layout_below="@+id/descriptionxs"
         android:text="Add Business Verification:" />
 
     <ImageButton
@@ -121,28 +122,7 @@
         android:layout_width="300dp"
         android:layout_height="100dp"
         android:layout_below="@+id/textView27"
-        android:layout_centerHorizontal="true"
-        android:layout_weight="1"
-        android:background="@color/dark_grey"
-        android:gravity="center_vertical"
-        android:src="@drawable/baseline_cloud_upload_24"
-        android:layout_marginTop="10dp"/>
-
-    <TextView
-        android:id="@+id/textView28"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/br_upload"
-        android:layout_marginTop="10dp"
-        android:text="Add your certificates" />
-
-    <ImageButton
-        android:id="@+id/certificates"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/textView28"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:layout_weight="1"
         android:background="@color/dark_grey"
         android:gravity="center_vertical"

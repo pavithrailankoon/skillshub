@@ -65,7 +65,7 @@
         </TextView>
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/descriptionxs"
             android:layout_width="314dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView6"

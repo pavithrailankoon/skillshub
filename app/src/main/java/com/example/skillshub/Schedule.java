@@ -14,19 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -248,7 +243,7 @@ public class Schedule extends AppCompatActivity {
             public ScheduleadapterViewHolder(View itemView) {
                 super(itemView);
                 date = itemView.findViewById(R.id.date);
-                task = itemView.findViewById(R.id.description);
+                task = itemView.findViewById(R.id.descriptionxs);
                 delete_btn = itemView.findViewById(R.id.delete_btn);
 
             }
