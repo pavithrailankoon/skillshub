@@ -17,7 +17,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +52,6 @@ public class WorkerProfileView extends AppCompatActivity {
     RatingBar ratingBar;
     EditText reviewComment;
     Button submit_review;
-    DocumentReference documentReference1;
     Reviewadapter adapter;
     ArrayList<ReviewModel> list;
     RecyclerView listView;
@@ -86,7 +84,7 @@ public class WorkerProfileView extends AppCompatActivity {
         call = findViewById(R.id.call);
         whatsapp = findViewById(R.id.whatsapp);
         schedule = findViewById(R.id.schedule);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.textView21);
         back = findViewById(R.id.back);
         workerImage = findViewById(R.id.workerImage);
         ratingBar = findViewById(R.id.ratingBar);
@@ -113,10 +111,7 @@ public class WorkerProfileView extends AppCompatActivity {
         setProfileImage();
         checkVerifications();
 
-        //DocumentReference documentReference = fStore.collection("user").document(receivedWorkerUid);
-        documentReference1 = fStore.collection("users").document(userID);
         DocumentReference documentReference1 = fStore.collection("users").document(receivedWorkerUid);
-
         CollectionReference documentReference2 = documentReference1.collection("reviewsAsAWorker");
         fetchreviewfromfirebase(documentReference2);
         documentReference1.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {

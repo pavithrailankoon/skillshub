@@ -129,8 +129,8 @@
             android:text="Business Verification :"
             android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/description"
-            app:layout_constraintTop_toBottomOf="@+id/description" />
+            app:layout_constraintStart_toStartOf="@+id/descriptionxs"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionxs" />
 
         <TextView
             android:id="@+id/verified"
@@ -138,22 +138,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
             android:text="Pending"
-            app:layout_constraintBottom_toBottomOf="@+id/textView25"
             app:layout_constraintStart_toEndOf="@+id/textView25"
-            app:layout_constraintTop_toTopOf="@+id/textView25"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/textView25" />
+
 
         <TextView
-            android:id="@+id/description"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:id="@+id/descriptionxs"
+            android:layout_width="290dp"
+            android:layout_height="29dp"
+            android:layout_marginTop="12dp"
+            android:hint="Description"
             app:layout_constraintStart_toStartOf="@+id/textView21"
-            app:layout_constraintTop_toBottomOf="@+id/textView21"
-            tools:ignore="DuplicateIds" />
+            app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
         <ImageView
             android:id="@+id/imageView10"

@@ -63,7 +63,7 @@
         </TextView>
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/descriptionxs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView12"
@@ -80,8 +80,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_below="@+id/description"
-            android:layout_alignEnd="@+id/description"
+            android:layout_below="@+id/descriptionxs"
+            android:layout_alignEnd="@+id/descriptionxs"
             android:layout_marginStart="250dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="0dp"

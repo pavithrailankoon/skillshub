@@ -1,6 +1,5 @@
 package com.example.skillshub;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.skillshub.firebaseModel.AuthManager;
 import com.example.skillshub.firebaseModel.FirebaseStorageManager;
 import com.example.skillshub.firebaseModel.ReadData;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,11 +48,12 @@ public class WorkerProfile extends AppCompatActivity {
 
     ImageView backBtn, profileImage;
     Button logOut, editDetails, editPassword, buttonUploadPhoto,deletebtn;
-    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district, verifyBr;
+    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district, verifyBr,destription;
     ReadData readData;
     FirebaseStorageManager storageManager;
     String uid;
     ImageView refreshbutton, tasks;
+    AuthManager authManager;
 
     DocumentReference documentReference1;
     FirebaseAuth fAuth;
@@ -85,6 +86,7 @@ public class WorkerProfile extends AppCompatActivity {
         newAddressLine2 = findViewById(R.id.addressLine2);
         city = findViewById(R.id.city);
         district = findViewById(R.id.district);
+        destription = findViewById(R.id.textView11);
         deletebtn = findViewById(R.id.deleteAccount);
         backBtn = findViewById(R.id.backBtn);
         verifyBr = findViewById(R.id.verificationState);
@@ -135,6 +137,12 @@ public class WorkerProfile extends AppCompatActivity {
                 Toast.makeText(this, "No email app available", Toast.LENGTH_SHORT).show();
             }
         });
+        logOut.setOnClickListener(v -> {
+            authManager.logOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+        });
 
 
         refreshbutton.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +160,7 @@ public class WorkerProfile extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        editDetails.setOnClickListener(v -> showUpdateUserDialog2());
 
         retrieveUserData();
         checkVerifications();
@@ -268,6 +277,7 @@ public class WorkerProfile extends AppCompatActivity {
                     newAddressLine2.setText(userData.getOrDefault("address2", "No address available").toString());
                     city.setText(userData.getOrDefault("city", "No city available").toString());
                     district.setText(userData.getOrDefault("district", "No district available").toString());
+                    destription.setText(userData.getOrDefault("description", "No description available").toString());
                     String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
 
                     if (!profileImageURL.isEmpty()) {
@@ -290,46 +300,112 @@ public class WorkerProfile extends AppCompatActivity {
             }
         });
     }
+    private void loadDistricts() {
+        readData.getDistricts(districts -> {
+            districtAdapter.clear();
+            districtAdapter.addAll(districts);
+            districtAdapter.notifyDataSetChanged();
+        }, e -> Log.e("Activity", "Failed to load districts", e));
+    }
+    private void setupDistrictSelectionListener(AutoCompleteTextView district, AutoCompleteTextView city) {
+        district.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedDistrict = (String) parent.getItemAtPosition(position);
+            loadCities(selectedDistrict);
+            city.setEnabled(true);
+        });
+    }
+    private void setupCityClickListener(AutoCompleteTextView city) {
+        city.setOnClickListener(v -> {
+            if (!city.isEnabled()) {
+                Toast.makeText(this, "Please, select district first", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void loadCities(String district) {
+        readData.getCities(district, cities -> {
+            cityAdapter.clear();
+            cityAdapter.addAll(cities);
+            cityAdapter.notifyDataSetChanged();
+        }, e -> Log.e("MainActivity", "Failed to load cities", e));
+    }
+    private void showUpdateUserDialog2() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
 
-//    @SuppressLint("MissingInflatedId")
-//    public void showUpdateUserDialog() {
-//        // Inflate the custom form layout
-//        LayoutInflater inflater = LayoutInflater.from(this);
-//        View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
-//
-//        // Initialize the form elements
-//        EditText editTextName = dialogView.findViewById(R.id.full_name);
-//        EditText editTextPhoneNumber = dialogView.findViewById(R.id.phone_number);
-//        EditText editTextAddressLine1 = dialogView.findViewById(R.id.address1);
-//        EditText editTextAddressLine2 = dialogView.findViewById(R.id.address2);
-//        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
-//        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
-//        EditText editTextDesc = dialogView.findViewById(R.id.description);
-//        ImageView editBrImage = dialogView.findViewById(R.id.br_upload);
-//        ImageView editCertificateImage = dialogView.findViewById(R.id.certificates);
-//
-//        // Create and configure the AlertDialog
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setView(dialogView)
-//                .setTitle("Edit Information")
-//                .setPositiveButton("Save", (dialog, which) -> {
-//                    // Handle save action here, e.g., retrieve values from EditTexts
-//                    String name = editTextName.getText().toString();
-//                    String phoneNumber = editTextPhoneNumber.getText().toString();
-//                    String addressLine1 = editTextAddressLine1.getText().toString();
-//                    String addressLine2 = editTextAddressLine2.getText().toString();
-//                    String district = editTextDistrict.getText().toString();
-//                    String city = editTextCity.getText().toString();
-//                    String description = editTextDesc.getText().toString();
-//
-//                    // Perform additional actions such as saving data
-//                })
-//                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-//
-//        // Show the AlertDialog
-//        AlertDialog alertDialog = builder.create();
-//        alertDialog.show();
-//    }
+        EditText editTextName = dialogView.findViewById(R.id.full_name);
+        EditText editTextPhoneNumber = dialogView.findViewById(R.id.phone_number);
+        EditText editTextAddressLine1 = dialogView.findViewById(R.id.address1);
+        EditText editTextAddressLine2 = dialogView.findViewById(R.id.address2);
+        EditText editTextDescription = dialogView.findViewById(R.id.descriptionxs);
+        ImageButton brUpload = dialogView.findViewById(R.id.br_upload);
+        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
+        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
+
+        districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
+        editTextDistrict.setAdapter(districtAdapter);
+
+        cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
+        editTextCity.setAdapter(cityAdapter);
+
+        editTextCity.setEnabled(false);
+
+        loadDistricts();
+
+        setupDistrictSelectionListener(editTextDistrict, editTextCity);
+        setupCityClickListener(editTextCity);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            String uid = auth.getCurrentUser().getUid();
+            DocumentReference documentReference = db.collection("users").document(uid);
+
+            documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    editTextName.setText(documentSnapshot.getString("fullName"));
+                    editTextPhoneNumber.setText(documentSnapshot.getString("phone"));
+                    editTextAddressLine1.setText(documentSnapshot.getString("addressLine1"));
+                    editTextAddressLine2.setText(documentSnapshot.getString("addressLine2"));
+                    editTextCity.setText(documentSnapshot.getString("city"));
+                    editTextDistrict.setText(documentSnapshot.getString("district"));
+                    editTextDescription.setText(documentSnapshot.getString("description"));
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
+            });
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Update User Information")
+                    .setView(dialogView)
+                    .setPositiveButton("Update", (dialog, which) -> {
+                        String name = editTextName.getText().toString().trim();
+                        String phoneNumber = editTextPhoneNumber.getText().toString().trim();
+                        String addressLine1 = editTextAddressLine1.getText().toString().trim();
+                        String addressLine2 = editTextAddressLine2.getText().toString().trim();
+                        String city = editTextCity.getText().toString().trim();
+                        String district = editTextDistrict.getText().toString().trim();
+                        String description = editTextDescription.getText().toString().trim();
+
+                        Map<String, Object> updatedUserData = new HashMap<>();
+                        updatedUserData.put("fullName", name);
+                        updatedUserData.put("phoneNumber", phoneNumber);
+                        updatedUserData.put("addressLine1", addressLine1);
+                        updatedUserData.put("addressLine2", addressLine2);
+                        updatedUserData.put("city", city);
+                        updatedUserData.put("district", district);
+                        updatedUserData.put("description", description);
+
+                        documentReference.update(updatedUserData)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update data", Toast.LENGTH_SHORT).show());
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                    .create()
+                    .show();
+        } else {
+            Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private void fetchreviewfromfirebase(CollectionReference collectionRef) {

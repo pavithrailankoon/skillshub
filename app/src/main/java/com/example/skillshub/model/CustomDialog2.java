@@ -30,11 +30,11 @@ public class CustomDialog2 extends DialogFragment {
         View view = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
 
         // Initialize dialog fields
-        name = view.findViewById(R.id.name);
-        phoneNumber = view.findViewById(R.id.phoneNumber);
-        addressLine1 = view.findViewById(R.id.addressLine1);
-        addressLine2 = view.findViewById(R.id.addressLine2);
-        description = view.findViewById(R.id.description);
+        name = view.findViewById(R.id.full_name);
+        phoneNumber = view.findViewById(R.id.phone_number);
+        addressLine1 = view.findViewById(R.id.address1);
+        addressLine2 = view.findViewById(R.id.address2);
+        description = view.findViewById(R.id.descriptionxs);
 
         // Set initial values to the fields
         name.setText(initialName);
