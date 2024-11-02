@@ -26,8 +26,7 @@ public class Admin extends AppCompatActivity {
 
     Button logoutBtn;
     FirebaseFirestore db;
-    TextView users, client, workers;
-    private int totalWorkerCount = 0;
+    TextView users, client, workers, Category, nic,business;
 
 
     @Override
@@ -40,11 +39,16 @@ public class Admin extends AppCompatActivity {
         users = findViewById(R.id.users);
         client = findViewById(R.id.client);
         workers = findViewById(R.id.workers);
+        nic = findViewById(R.id.nic);
+        Category = findViewById(R.id.category);
+        business = findViewById(R.id.business);
 
 
         fetchUserCount();
         fetchClientCount();
         fetchWorkerCount();
+        fetchUnverifiedNicWorkerCount();
+        fetchUnverifiedBusinessRegistrationsWorkerCount();
 
         logoutBtn = findViewById(R.id.logoutBtn);
 
@@ -94,29 +98,75 @@ public class Admin extends AppCompatActivity {
 
     private void fetchWorkerCount() {
         db.collection("users")
+                .whereEqualTo("role", "worker") // Filter by role field with value "worker"
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Loop through each user document
-                        for (DocumentSnapshot userDocument : task.getResult()) {
-                            CollectionReference workerProfilesRef = userDocument.getReference().collection("workerProfiles");
-
-                            // Get workerProfiles subcollection for each user
-                            workerProfilesRef.get().addOnCompleteListener(workerTask -> {
-                                if (workerTask.isSuccessful()) {
-                                    // Count documents in the subcollection
-                                    int workerCount = workerTask.getResult().size();
-                                    totalWorkerCount += workerCount;
-
-                                    // Optionally, update UI here if you want live count updates
-                                    workers.setText(String.valueOf(workerCount));
-                                } else {
-                                    Toast.makeText(this, "Failed to count workers", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                        QuerySnapshot snapshot = task.getResult();
+                        if (snapshot != null) {
+                            int clientCount = snapshot.size();
+                            workers.setText(String.valueOf(clientCount));
                         }
                     } else {
-                        Toast.makeText(this, "Failed to get users", Toast.LENGTH_SHORT).show();
+                        Log.e("Firestore", "Error getting documents: ", task.getException());
+
+                    }
+                });
+    }
+
+    private void fetchUnverifiedNicWorkerCount() {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        final int[] count = {0};
+                        for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                            userDoc.getReference()
+                                    .collection("workerInformation")
+                                    .whereEqualTo("isNicVerified", false)
+                                    .get()
+                                    .addOnCompleteListener(subTask -> {
+                                        if (subTask.isSuccessful()) {
+                                            QuerySnapshot workerInfoSnapshot = subTask.getResult();
+                                            if (workerInfoSnapshot != null && !workerInfoSnapshot.isEmpty()) {
+                                                count[0] += workerInfoSnapshot.size();
+                                                nic.setText(String.valueOf(count[0]));
+                                            }
+                                        } else {
+                                            Log.w("FirestoreError", "Error accessing workerInformation", subTask.getException());
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.w("FirestoreError", "Error accessing users collection", task.getException());
+                    }
+                });
+    }
+    private void fetchUnverifiedBusinessRegistrationsWorkerCount() {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        final int[] count = {0};
+                        for (QueryDocumentSnapshot userDoc : task.getResult()) {
+                            userDoc.getReference()
+                                    .collection("workerInformation")
+                                    .whereEqualTo("isBrVerified", false)
+                                    .get()
+                                    .addOnCompleteListener(subTask -> {
+                                        if (subTask.isSuccessful()) {
+                                            QuerySnapshot workerInfoSnapshot = subTask.getResult();
+                                            if (workerInfoSnapshot != null && !workerInfoSnapshot.isEmpty()) {
+                                                count[0] += workerInfoSnapshot.size();
+                                                business.setText(String.valueOf(count[0]));
+                                            }
+                                        } else {
+                                            Log.w("FirestoreError", "Error accessing workerInformation", subTask.getException());
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.w("FirestoreError", "Error accessing users collection", task.getException());
                     }
                 });
     }
