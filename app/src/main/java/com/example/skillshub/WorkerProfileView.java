@@ -60,12 +60,11 @@ public class WorkerProfileView extends AppCompatActivity {
     String receivedWorkerUid;
     ReadData readData;
 
+    String uid;
+
     int color = Color.BLUE;
 
-    // Initialize FirebaseAuth
     FirebaseAuth auth = FirebaseAuth.getInstance();
-
-    // Get the current user
     FirebaseUser user = auth.getCurrentUser();
 
     @Override
@@ -74,6 +73,10 @@ public class WorkerProfileView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
        // EdgeToEdge.enable(this);
         setContentView(R.layout.activity_worker_profile_view);
+
+        if (user != null) {
+            uid = user.getUid();
+        }
 
         readData = new ReadData();
         category = findViewById(R.id.category);
@@ -169,36 +172,40 @@ public class WorkerProfileView extends AppCompatActivity {
 
         submit_review.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View view) {
-                String s = String.valueOf(ratingBar.getRating());
-                String t = reviewComment.getText().toString();
-                CollectionReference collectionRef = documentReference1.collection("reviewsAsAWorker");
-                Map<String, Object> data = new HashMap<>();
-                data.put("rating", s);
-                data.put("review", t);
-                collectionRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(WorkerProfileView.this, "Review submitted", Toast.LENGTH_SHORT).show();
-                        Log.d("msg", "uploaded successfully" + documentReference.getId());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(WorkerProfileView.this, "Review not submitted", Toast.LENGTH_SHORT).show();
-                        Log.d("msg", "not uploaded" + e.getMessage());
-                    }
-                });
-                reviewComment.setText("");
-                ratingBar.setRating(0);
+                if (receivedWorkerUid != null && user.getUid() != null && !receivedWorkerUid.equalsIgnoreCase(user.getUid())) {
+                    String s = String.valueOf(ratingBar.getRating());
+                    String t = reviewComment.getText().toString();
+                    CollectionReference collectionRef = documentReference1.collection("reviewsAsAWorker");
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("rating", s);
+                    data.put("review", t);
+                    collectionRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(WorkerProfileView.this, "Review submitted", Toast.LENGTH_SHORT).show();
+                            Log.d("msg", "uploaded successfully" + documentReference.getId());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(WorkerProfileView.this, "Review not submitted", Toast.LENGTH_SHORT).show();
+                            Log.d("msg", "not uploaded" + e.getMessage());
+                        }
+                    });
+                    reviewComment.setText("");
+                    ratingBar.setRating(0);
+                } else {
+                    // Your code when the UIDs are not equal or one of them is null
+                    Toast.makeText(WorkerProfileView.this, "You can not review on your own worker profile", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
     }
 
-
-    void fetchreviewfromfirebase(CollectionReference collectionRef) {
+    private void fetchreviewfromfirebase(CollectionReference collectionRef) {
         collectionRef.get().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
                 for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
@@ -332,6 +339,7 @@ public class WorkerProfileView extends AppCompatActivity {
 
                 Boolean isNicVerified = workerDoc.getBoolean("isNicVerified");
                 Boolean isBrVerified = workerDoc.getBoolean("isBrVerified");
+                String desc = workerDoc.getString("description");
 
                 if (isBrVerified == null) {
                     verified.setText("Pending");
@@ -340,6 +348,10 @@ public class WorkerProfileView extends AppCompatActivity {
                     verifiedIcon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
                 } else {
                     verified.setText("Not Verified");
+                }
+
+                if (desc != null ){
+                    description.setText(desc);
                 }
             }
         }).addOnFailureListener(e ->
