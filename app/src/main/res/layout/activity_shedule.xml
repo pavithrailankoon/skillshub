@@ -76,7 +76,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
 
-            android:text="Shedule"
+            android:text="Schedule"
             android:textColor="@color/yellow"
             android:textSize="24dp"
             android:textStyle="bold" />
@@ -90,7 +90,7 @@
         android:layout_marginTop="180dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerView22"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp"

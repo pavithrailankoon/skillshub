@@ -191,8 +191,8 @@ public class Schedule extends AppCompatActivity {
     }
 
     public static class Scheduleadapter extends RecyclerView.Adapter<Scheduleadapter.ScheduleadapterViewHolder> {
-        private java.util.List<ScheduleModel> List;
-        private Scheduleadapter.OnItemClickListener listener;
+        private List<ScheduleModel> List;
+        private OnItemClickListener listener;
 
         public interface OnItemClickListener {
             void onDeleteClick(int position);
