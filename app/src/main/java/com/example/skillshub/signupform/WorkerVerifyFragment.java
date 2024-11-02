@@ -43,7 +43,7 @@ public class WorkerVerifyFragment extends Fragment {
 
     View view;
     private ImageButton frontNic, backNic, brImage;
-    private TextView addSkill;
+    private TextView addSkill, showCategories;
     private ProgressBar progressBar;
     private ImageView clearNicFront, clearNicBack, clearBr;
     private Uri nicFrontUri, nicBackUri, brUri;
@@ -130,10 +130,21 @@ public class WorkerVerifyFragment extends Fragment {
                         selectedData.put("subcategories", selectedSubcategories);
                         Toast.makeText(requireContext(), "Categories collected", Toast.LENGTH_LONG).show();
                     }
+                    displayMapInTextView(selectedData, showCategories);
                 })
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
+    }
+
+    public void displayMapInTextView(Map<String, Object> map, TextView textView) {
+        StringBuilder mapAsString = new StringBuilder();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            mapAsString.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+
+        textView.setText(mapAsString.toString());
     }
 
     private void initializeViews(View view) {
@@ -144,6 +155,7 @@ public class WorkerVerifyFragment extends Fragment {
         clearNicFront = view.findViewById(R.id.signup_clear_nicfront_upload);
         clearNicBack = view.findViewById(R.id.signup_clear_nicback_upload);
         clearBr = view.findViewById(R.id.signup_clear_br_upload);
+        showCategories = view.findViewById(R.id.signup_show_category);
 
         selectedData = new HashMap<>();
     }

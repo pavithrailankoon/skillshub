@@ -229,6 +229,15 @@
                 android:text="Please select one main skill and up to three related sub-skills that best match your expertise."
                 android:textColor="@color/white"
                 android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/signup_show_category"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text=""
+                android:textColor="@color/white"
+                android:gravity="center"/>
+
             <TextView
                 android:id="@+id/signup_add_newcategory"
                 android:layout_width="match_parent"
