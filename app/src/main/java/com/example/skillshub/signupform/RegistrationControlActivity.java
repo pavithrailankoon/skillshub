@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +36,7 @@ import com.example.skillshub.model.User;
 import com.example.skillshub.utils.LocalDataManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -149,16 +152,30 @@ public class RegistrationControlActivity extends AppCompatActivity {
         });
     }
 
-    private void saveAndLogin(){
-        if (registrationType.equals("client")){
-            saveUserDataToFirestore(authManager.getCurrentLoginUser());
-        } else if (registrationType.equals("worker")){
-            saveUserDataToFirestore(authManager.getCurrentLoginUser());
-            saveWorkerDataToFirestore();
-        } else if (registrationType.equals("clienttoworker")){
-            saveClientToWorker();
+    private void saveAndLogin() {
+        AlertDialog loadingDialog = new AlertDialog.Builder(this)
+                .setMessage("Loading...")
+                .setCancelable(false)
+                .create();
+        loadingDialog.show();
+
+        if (registrationType.equals("client")) {
+            saveUserDataToFirestore(user, () -> {
+                loadingDialog.dismiss();
+            });
+        } else if (registrationType.equals("worker")) {
+            saveUserDataToFirestore(user, () -> {
+                saveWorkerDataToFirestore(() -> {
+                    loadingDialog.dismiss();
+                });
+            });
+        } else if (registrationType.equals("clienttoworker")) {
+            saveClientToWorker(() -> {
+                loadingDialog.dismiss();
+            });
         }
     }
+
 
     private void showExitConfirmationDialog() {
         new AlertDialog.Builder(this)
@@ -239,12 +256,9 @@ public class RegistrationControlActivity extends AppCompatActivity {
             signupNextButton.setText("NEXT");
         }
     }
+    private void saveUserDataToFirestore(FirebaseUser user, OnTaskCompleteListener listener) {
+        if (listener != null) listener.onComplete();
 
-    private void saveUserDataToFirestore(FirebaseUser user) {
-//        progressDialog.setTitle("Please Wait..");
-//        progressDialog.setMessage("Saving user data...");
-//        progressDialog.show();
-        // Collect data from fragments
         String fullName = ((Part1Fragment) fragments[0]).getFullName();
         String phone = ((Part1Fragment) fragments[0]).getPhoneNumber();
         Uri profileUri = ((Part1Fragment) fragments[0]).getImageUri();
@@ -277,14 +291,14 @@ public class RegistrationControlActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-//                progressDialog.cancel();
                 Toast.makeText(RegistrationControlActivity.this, "Failed to upload profile image: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
 
     }
+    private void saveWorkerDataToFirestore(OnTaskCompleteListener listener) {
+        if (listener != null) listener.onComplete();
 
-    private void saveWorkerDataToFirestore() {
         Uri nicFrontUri = ((WorkerVerifyFragment) fragments[2]).getNicFront();
         Uri nicBackUri = ((WorkerVerifyFragment) fragments[2]).getNicBack();
         Uri brUri = ((WorkerVerifyFragment) fragments[2]).getBr();
@@ -294,6 +308,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
             @Override
             public void onAllUploadsSuccess(String nicFrontUrl, String nicBackUrl, String brUrl) {
                 saveImageUrlsToFirestore(uid, nicFrontUrl, nicBackUrl, brUrl);
+                saveClientWorkerCategory(2);
             }
 
             @Override
@@ -303,7 +318,9 @@ public class RegistrationControlActivity extends AppCompatActivity {
         });
     }
 
-    private void saveClientToWorker() {
+    private void saveClientToWorker(OnTaskCompleteListener listener) {
+        if (listener != null) listener.onComplete();
+
         Uri nicFrontUri = ((WorkerVerifyFragment) fragments[0]).getNicFront();
         Uri nicBackUri = ((WorkerVerifyFragment) fragments[0]).getNicBack();
         Uri brUri = ((WorkerVerifyFragment) fragments[0]).getBr();
@@ -313,6 +330,7 @@ public class RegistrationControlActivity extends AppCompatActivity {
             @Override
             public void onAllUploadsSuccess(String nicFrontUrl, String nicBackUrl, String brUrl) {
                 saveImageUrlsToFirestore(uid, nicFrontUrl, nicBackUrl, brUrl);
+                saveClientWorkerCategory(0);
             }
 
             @Override
@@ -336,7 +354,6 @@ public class RegistrationControlActivity extends AppCompatActivity {
         db.collection("users").document(uid)
                 .collection("workerInformation").add(workerInfo)
                 .addOnSuccessListener(documentReference -> {
-                    saveworkerCategory();
                     Toast.makeText(RegistrationControlActivity.this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
@@ -344,13 +361,45 @@ public class RegistrationControlActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveworkerCategory() {
-        Map<String, Object> selectedSkills = ((WorkerVerifyFragment) fragments[2]).getCategories();
-        String seleselectedCategory = ((WorkerVerifyFragment) fragments[2]).getMainCategory();
+    private void saveClientWorkerCategory(int index) {
+        Map<String, Object> selectedSkills = ((WorkerVerifyFragment) fragments[index]).getCategories();
+        String selectedCategory = ((WorkerVerifyFragment) fragments[index]).getMainCategory();
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Object selectedSubcategories = selectedSkills.get("subcategories");
 
-        createData.saveWorkerCategory(this, uid, seleselectedCategory, selectedSubcategories);
+        Map<String, Object> categoryData = new HashMap<>();
+        categoryData.put("subcategories", selectedSubcategories);
+
+        if(!selectedSkills.isEmpty()){
+            // Navigate to the path: users > uid > workerProfiles > selectedCategory
+            db.collection("users").document(uid)
+                    .collection("workerProfiles").document(selectedCategory)
+                    .set(categoryData)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(RegistrationControlActivity.this, "Category saved successfully!", Toast.LENGTH_SHORT).show();
+                        changeUserRoleToWorker();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(RegistrationControlActivity.this, "Error saving category: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
+
+    }
+
+    private void changeUserRoleToWorker(){
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference userDocRef = db.collection("users").document(uid);
+        userDocRef.update("role", "worker")
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(RegistrationControlActivity.this, "Successfully registered as a worker", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(RegistrationControlActivity.this, "Worker registration failed", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    public interface OnTaskCompleteListener {
+        void onComplete();
     }
 }

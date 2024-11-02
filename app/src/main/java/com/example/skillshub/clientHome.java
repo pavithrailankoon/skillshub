@@ -82,8 +82,20 @@ public class clientHome extends AppCompatActivity {
         categoryAdapter = new CategoryAdapter(this, categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-        //setUserAvatar();
         button.setOnClickListener(v -> checkWorkerProfileAndNavigate());
+
+        button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                checkWorkerProfileAndNavigate();
+                Intent intent = new Intent(clientHome.this, RegistrationControlActivity.class);
+                intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
+                startActivity(intent);
+                Toast.makeText(clientHome.this, "Fill your professional information here.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         refresh.setOnClickListener(new View.OnClickListener(){
 
