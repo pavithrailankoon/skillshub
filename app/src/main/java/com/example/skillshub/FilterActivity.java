@@ -41,6 +41,7 @@ public class FilterActivity extends AppCompatActivity {
     private List<Worker> filteredWorkerList = new ArrayList<>();
     String selectedMainCategory, selectedSubCategory, selectedDistrict, selectedCity;
     private ReadData readData;
+    ArrayList<String> documentIds;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -57,6 +58,7 @@ public class FilterActivity extends AppCompatActivity {
         subSkill = findViewById(R.id.spinner_sub_category);
         district = findViewById(R.id.spinner_district);
         city = findViewById(R.id.spinner_city);
+        documentIds = new ArrayList<>();
 
         selectedMainCategory = mainSkill.getSelectedItem().toString();
         selectedSubCategory = subSkill.getSelectedItem().toString();
@@ -100,7 +102,6 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     private void queryUsersByCityAndSubcategory(String city, String subcategory) {
-        // Step 1: Query main collection for documents where city matches
         db.collection("users")
                 .whereEqualTo("city", city)
                 .get()
@@ -108,7 +109,6 @@ public class FilterActivity extends AppCompatActivity {
                     if (!querySnapshot.isEmpty()) {
                         for (QueryDocumentSnapshot document : querySnapshot) {
                             String userId = document.getId();
-                            // Step 2: For each user document, query the subcollection
                             querySubcollectionBySubcategory(userId, subcategory);
                         }
                     } else {
@@ -121,14 +121,15 @@ public class FilterActivity extends AppCompatActivity {
     private void querySubcollectionBySubcategory(String userId, String subcategory) {
         db.collection("users")
                 .document(userId)
-                .collection("workerProfiles") // Replace with actual subcollection name
+                .collection("workerProfiles")
                 .whereArrayContains("subcategories", subcategory)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
                         for (QueryDocumentSnapshot document : querySnapshot) {
                             Log.d("Firestore", "Found document with matching subcategory: " + document.getData());
-                            // Process each document here as needed
+                            String documentId = document.getId();
+                            documentIds.add(documentId);
                         }
                     } else {
                         Log.d("Firestore", "No matching subcategories found in subcollection for user " + userId);
