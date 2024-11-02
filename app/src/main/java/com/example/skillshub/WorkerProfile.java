@@ -53,7 +53,7 @@ public class WorkerProfile extends AppCompatActivity {
     FirebaseStorageManager storageManager;
     String uid;
     ImageView refreshbutton, tasks;
-  
+
     DocumentReference documentReference1;
     FirebaseAuth fAuth;
     FirebaseUser user;
@@ -112,10 +112,6 @@ public class WorkerProfile extends AppCompatActivity {
         if (user != null) {
             uid = user.getUid();
             storageReference = FirebaseStorage.getInstance().getReference().child(uid + "/profile-image");
-        } else {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            finish();
-
         }
 
         documentReference1 = fStore.collection("users").document(uid);
@@ -161,7 +157,7 @@ public class WorkerProfile extends AppCompatActivity {
         checkVerifications();
         retrieveReviews();
         buttonUploadPhoto.setOnClickListener(v -> openGallery());
-        editDetails.setOnClickListener(v -> showUpdateUserDialog());
+        //editDetails.setOnClickListener(v -> showUpdateUserDialog());
     }
 
     private void openGallery() {
@@ -295,176 +291,46 @@ public class WorkerProfile extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("MissingInflatedId")
-    private void showUpdateUserDialog() {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
+//    @SuppressLint("MissingInflatedId")
+//    public void showUpdateUserDialog() {
+//        // Inflate the custom form layout
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
+//
+//        // Initialize the form elements
+//        EditText editTextName = dialogView.findViewById(R.id.full_name);
+//        EditText editTextPhoneNumber = dialogView.findViewById(R.id.phone_number);
+//        EditText editTextAddressLine1 = dialogView.findViewById(R.id.address1);
+//        EditText editTextAddressLine2 = dialogView.findViewById(R.id.address2);
+//        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
+//        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
+//        EditText editTextDesc = dialogView.findViewById(R.id.description);
+//        ImageView editBrImage = dialogView.findViewById(R.id.br_upload);
+//        ImageView editCertificateImage = dialogView.findViewById(R.id.certificates);
+//
+//        // Create and configure the AlertDialog
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setView(dialogView)
+//                .setTitle("Edit Information")
+//                .setPositiveButton("Save", (dialog, which) -> {
+//                    // Handle save action here, e.g., retrieve values from EditTexts
+//                    String name = editTextName.getText().toString();
+//                    String phoneNumber = editTextPhoneNumber.getText().toString();
+//                    String addressLine1 = editTextAddressLine1.getText().toString();
+//                    String addressLine2 = editTextAddressLine2.getText().toString();
+//                    String district = editTextDistrict.getText().toString();
+//                    String city = editTextCity.getText().toString();
+//                    String description = editTextDesc.getText().toString();
+//
+//                    // Perform additional actions such as saving data
+//                })
+//                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+//
+//        // Show the AlertDialog
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.show();
+//    }
 
-        EditText editTextName = dialogView.findViewById(R.id.full_name);
-        EditText editTextPhoneNumber = dialogView.findViewById(R.id.phone_number);
-        EditText editTextAddressLine1 = dialogView.findViewById(R.id.address1);
-        EditText editTextAddressLine2 = dialogView.findViewById(R.id.address2);
-        AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
-        AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
-        EditText editTextDesc = dialogView.findViewById(R.id.description);
-        ImageView editBrImage = dialogView.findViewById(R.id.br_upload);
-        ImageView editCertificateImage = dialogView.findViewById(R.id.certificates);
-
-        districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
-        editTextDistrict.setAdapter(districtAdapter);
-
-        cityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
-        editTextCity.setAdapter(cityAdapter);
-
-        editTextCity.setEnabled(false);
-        loadDistricts();
-        setupDistrictSelectionListener(editTextDistrict, editTextCity);
-        setupCityClickListener(editTextCity);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        if (auth.getCurrentUser() != null) {
-            String uid = auth.getCurrentUser().getUid();
-            DocumentReference documentReference = db.collection("users").document(uid);
-
-            documentReference.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    editTextName.setText(documentSnapshot.getString("fullName"));
-                    editTextPhoneNumber.setText(documentSnapshot.getString("phone"));
-                    editTextAddressLine1.setText(documentSnapshot.getString("addressLine1"));
-                    editTextAddressLine2.setText(documentSnapshot.getString("addressLine2"));
-                    editTextCity.setText(documentSnapshot.getString("city"));
-                    editTextDistrict.setText(documentSnapshot.getString("district"));
-
-                    // Load images from Firebase Storage
-                    StorageReference breRef = FirebaseStorage.getInstance().getReference().child(uid + "/br-image");
-                    StorageReference certRef = FirebaseStorage.getInstance().getReference().child(uid + "/certificates-image");
-
-                    // Using Picasso to load images
-                    breRef.getDownloadUrl().addOnSuccessListener(uri ->
-                            Picasso.get().load(uri.toString()).into(editBrImage)
-                    ).addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to load BR image", Toast.LENGTH_SHORT).show()
-                    );
-
-                    certRef.getDownloadUrl().addOnSuccessListener(uri ->
-                            Picasso.get().load(uri.toString()).into(editCertificateImage)
-                    ).addOnFailureListener(e ->
-                            Toast.makeText(this, "Failed to load Certificate image", Toast.LENGTH_SHORT).show()
-                    );
-
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
-            });
-
-            CollectionReference collectionReference = db.collection("users").document(uid).collection("workerInformation");
-
-            collectionReference.get().addOnSuccessListener(querySnapshot -> {
-                if (!querySnapshot.isEmpty()) {
-                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                    editTextDesc.setText(documentSnapshot.getString("description"));
-                } else {
-                    Toast.makeText(this, "No documents found in workerInformation", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
-            });
-
-            new AlertDialog.Builder(WorkerProfile.this)
-                    .setTitle("Update worker Information")
-                    .setView(dialogView)
-                    .setPositiveButton("Update", (dialog, which) -> {
-                        String name = editTextName.getText().toString().trim();
-                        String phoneNumber = editTextPhoneNumber.getText().toString().trim();
-                        String addressLine1 = editTextAddressLine1.getText().toString().trim();
-                        String addressLine2 = editTextAddressLine2.getText().toString().trim();
-                        String city = editTextCity.getText().toString().trim();
-                        String district = editTextDistrict.getText().toString().trim();
-                        String description = editTextDesc.getText().toString();
-
-                        Map<String, Object> updatedUserData = new HashMap<>();
-                        updatedUserData.put("fullName", name);
-                        updatedUserData.put("phoneNumber", phoneNumber);
-                        updatedUserData.put("addressLine1", addressLine1);
-                        updatedUserData.put("addressLine2", addressLine2);
-                        updatedUserData.put("city", city);
-                        updatedUserData.put("district", district);
-
-                        documentReference.update(updatedUserData)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "User data updated successfully", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update user data", Toast.LENGTH_SHORT).show());
-
-                        Map<String, Object> updatedWorkerDesc = new HashMap<>();
-                        updatedWorkerDesc.put("description", description);
-
-
-                        // Fetch the auto-ID document within the workerInformation collection
-//                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
-//                            if (!querySnapshot.isEmpty()) {
-//                                // Update the first document found
-//                                DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
-//                                workerDocRef.update(updatedWorkerDesc)
-//                                        .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "Description updated successfully", Toast.LENGTH_SHORT).show())
-//                                        .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update description", Toast.LENGTH_SHORT).show());
-//                            } else {
-//                                Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
-
-                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
-                            if (!querySnapshot.isEmpty()) {
-                                DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
-                                workerDocRef.update(updatedWorkerDesc)
-                                        .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "Description updated successfully", Toast.LENGTH_SHORT).show())
-                                        .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update description", Toast.LENGTH_SHORT).show());
-                            } else {
-                                Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
-
-                    })
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                    .create()
-                    .show();
-        } else {
-            Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private void loadDistricts() {
-        readData.getDistricts(districts -> {
-            districtAdapter.clear();
-            districtAdapter.addAll(districts);
-            districtAdapter.notifyDataSetChanged();
-        }, e -> Log.e("Activity", "Failed to load districts", e));
-    }
-
-    private void setupDistrictSelectionListener(AutoCompleteTextView district, AutoCompleteTextView city) {
-        district.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedDistrict = (String) parent.getItemAtPosition(position);
-            loadCities(selectedDistrict);
-            city.setEnabled(true);
-        });
-    }
-
-    private void setupCityClickListener(AutoCompleteTextView city) {
-        city.setOnClickListener(v -> {
-            if (!city.isEnabled()) {
-                Toast.makeText(this, "Please, select district first", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void loadCities(String district) {
-        readData.getCities(district, cities -> {
-            cityAdapter.clear();
-            cityAdapter.addAll(cities);
-            cityAdapter.notifyDataSetChanged();
-        }, e -> Log.e("MainActivity", "Failed to load cities", e));
-    }
 
     private void fetchreviewfromfirebase(CollectionReference collectionRef) {
         collectionRef.get().addOnCompleteListener(task -> {
