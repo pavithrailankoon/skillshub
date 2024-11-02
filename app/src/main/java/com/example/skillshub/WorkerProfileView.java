@@ -2,6 +2,8 @@ package com.example.skillshub;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,15 +17,18 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.skillshub.firebaseModel.ReadData;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,6 +36,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +45,7 @@ import java.util.Map;
 
 public class WorkerProfileView extends AppCompatActivity {
     TextView category, name, verified, mail,description;
-    ImageView call, whatsapp, schedule;
+    ImageView call, whatsapp, schedule, verifiedIcon;
     FirebaseAuth fAuth;
     ImageView back, workerImage,refresh;
     FirebaseFirestore fStore,db;
@@ -52,6 +58,15 @@ public class WorkerProfileView extends AppCompatActivity {
     ArrayList<ReviewModel> list;
     RecyclerView listView;
     String receivedWorkerUid;
+    ReadData readData;
+
+    int color = Color.BLUE;
+
+    // Initialize FirebaseAuth
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    // Get the current user
+    FirebaseUser user = auth.getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +75,7 @@ public class WorkerProfileView extends AppCompatActivity {
        // EdgeToEdge.enable(this);
         setContentView(R.layout.activity_worker_profile_view);
 
+        readData = new ReadData();
         category = findViewById(R.id.category);
         name = findViewById(R.id.name);
         verified = findViewById(R.id.verified);
@@ -74,6 +90,8 @@ public class WorkerProfileView extends AppCompatActivity {
         reviewComment = findViewById(R.id.reviewComment);
         submit_review = findViewById(R.id.submit_review);
         refresh = findViewById(R.id.refresh_btn);
+        verifiedIcon = findViewById(R.id.imageView10);
+
 
         receivedWorkerUid = getIntent().getStringExtra("SELECTED_WORKER");
 
@@ -89,8 +107,8 @@ public class WorkerProfileView extends AppCompatActivity {
 
         userID = fAuth.getCurrentUser().getUid();
 
-
-//        userID = fAuth.getCurrentUser().getUid();
+        setProfileImage();
+        checkVerifications();
 
         //DocumentReference documentReference = fStore.collection("user").document(receivedWorkerUid);
         documentReference1 = fStore.collection("users").document(userID);
@@ -176,6 +194,7 @@ public class WorkerProfileView extends AppCompatActivity {
                 ratingBar.setRating(0);
             }
         });
+
     }
 
 
@@ -275,4 +294,56 @@ public class WorkerProfileView extends AppCompatActivity {
         }
     }
 
+    private void setProfileImage() {
+        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
+            @Override
+            public void onSuccess(Map<String, Object> userData) {
+                if (userData != null) {
+                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
+
+                    if (!profileImageURL.isEmpty()) {
+                        Picasso.get()
+                                .load(profileImageURL)
+                                .placeholder(R.drawable.avatar)
+                                .error(R.drawable.avatar)
+                                .into(workerImage);
+                    } else {
+                        workerImage.setImageResource(R.drawable.avatar);
+                    }
+                } else {
+                    Toast.makeText(WorkerProfileView.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(WorkerProfileView.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void checkVerifications(){
+        DocumentReference userDocRef = db.collection("users").document(receivedWorkerUid);
+        CollectionReference workerInfoRef = userDocRef.collection("workerInformation");
+
+        workerInfoRef.get().addOnSuccessListener(querySnapshot -> {
+            if (!querySnapshot.isEmpty()) {
+                DocumentSnapshot workerDoc = querySnapshot.getDocuments().get(0);
+
+                Boolean isNicVerified = workerDoc.getBoolean("isNicVerified");
+                Boolean isBrVerified = workerDoc.getBoolean("isBrVerified");
+
+                if (isBrVerified == null) {
+                    verified.setText("Pending");
+                } else if (isBrVerified) {
+                    verified.setText("Verified");
+                    verifiedIcon.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                } else {
+                    verified.setText("Not Verified");
+                }
+            }
+        }).addOnFailureListener(e ->
+                Toast.makeText(this, "Failed to load worker information", Toast.LENGTH_SHORT).show()
+        );
+    }
 }
