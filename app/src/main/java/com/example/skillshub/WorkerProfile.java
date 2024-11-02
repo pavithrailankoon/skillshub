@@ -399,6 +399,20 @@ public class WorkerProfile extends AppCompatActivity {
                         Map<String, Object> updatedWorkerDesc = new HashMap<>();
                         updatedWorkerDesc.put("description", description);
 
+
+                        // Fetch the auto-ID document within the workerInformation collection
+//                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
+//                            if (!querySnapshot.isEmpty()) {
+//                                // Update the first document found
+//                                DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
+//                                workerDocRef.update(updatedWorkerDesc)
+//                                        .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "Description updated successfully", Toast.LENGTH_SHORT).show())
+//                                        .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update description", Toast.LENGTH_SHORT).show());
+//                            } else {
+//                                Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
+
                         collectionReference.get().addOnSuccessListener(querySnapshot -> {
                             if (!querySnapshot.isEmpty()) {
                                 DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
@@ -409,6 +423,7 @@ public class WorkerProfile extends AppCompatActivity {
                                 Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
+
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create()
