@@ -189,8 +189,8 @@ public class LoginActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        if (strPwd.isEmpty() || strPwd.length()<6){
-            passwordEditText.setError(strPwd.isEmpty() ? "Password is required" : "Short password");
+        if (strPwd.isEmpty()){
+            passwordEditText.setError(strPwd.isEmpty() ? "Password is required" : "Enter your password");
             isValid = false;
         }
 
