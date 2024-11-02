@@ -86,7 +86,7 @@ public class WorkerProfile extends AppCompatActivity {
         newAddressLine2 = findViewById(R.id.addressLine2);
         city = findViewById(R.id.city);
         district = findViewById(R.id.district);
-        destription = findViewById(R.id.textView11);
+        destription = findViewById(R.id.editTextText3);
         deletebtn = findViewById(R.id.deleteAccount);
         backBtn = findViewById(R.id.backBtn);
         verifyBr = findViewById(R.id.verificationState);
