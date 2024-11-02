@@ -5,7 +5,7 @@
       <SelectionState runConfigName="FilterActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="clientHome">
+      <SelectionState runConfigName="WorkerProfile">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="app">

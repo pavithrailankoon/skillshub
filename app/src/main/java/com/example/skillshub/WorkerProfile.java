@@ -48,7 +48,7 @@ public class WorkerProfile extends AppCompatActivity {
 
     ImageView backBtn, profileImage;
     Button logOut, editDetails, editPassword, buttonUploadPhoto,deletebtn;
-    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district;
+    TextView newName, newPhoneNumber, newAddressLine1, newAddressLine2, city, district, verifyBr;
     ReadData readData;
     FirebaseStorageManager storageManager;
     String uid;
@@ -87,6 +87,7 @@ public class WorkerProfile extends AppCompatActivity {
         district = findViewById(R.id.district);
         deletebtn = findViewById(R.id.deleteAccount);
         backBtn = findViewById(R.id.backBtn);
+        verifyBr = findViewById(R.id.verificationState);
 
         editPassword = findViewById(R.id.editPassword);
         profileImage = findViewById(R.id.client_profile_image);
@@ -157,6 +158,8 @@ public class WorkerProfile extends AppCompatActivity {
         });
 
         retrieveUserData();
+        checkVerifications();
+        retrieveReviews();
         buttonUploadPhoto.setOnClickListener(v -> openGallery());
         editDetails.setOnClickListener(v -> showUpdateUserDialog());
     }
@@ -234,6 +237,30 @@ public class WorkerProfile extends AppCompatActivity {
         }
     }
 
+    private void checkVerifications(){
+        DocumentReference userDocRef = db.collection("users").document(uid);
+        CollectionReference workerInfoRef = userDocRef.collection("workerInformation");
+
+        workerInfoRef.get().addOnSuccessListener(querySnapshot -> {
+            if (!querySnapshot.isEmpty()) {
+                DocumentSnapshot workerDoc = querySnapshot.getDocuments().get(0);
+
+                Boolean isNicVerified = workerDoc.getBoolean("isNicVerified");
+                Boolean isBrVerified = workerDoc.getBoolean("isBrVerified");
+
+                if (isBrVerified == null) {
+                    verifyBr.setText("Pending");
+                } else if (isBrVerified) {
+                    verifyBr.setText("Verified");
+                } else {
+                    verifyBr.setText("Not Verified");
+                }
+            }
+        }).addOnFailureListener(e ->
+                Toast.makeText(this, "Failed to load worker information", Toast.LENGTH_SHORT).show()
+        );
+    }
+
     private void retrieveUserData() {
         readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
             @Override
@@ -268,6 +295,7 @@ public class WorkerProfile extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("MissingInflatedId")
     private void showUpdateUserDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.activity_edit_custom_dialog2, null);
@@ -279,7 +307,8 @@ public class WorkerProfile extends AppCompatActivity {
         AutoCompleteTextView editTextDistrict = dialogView.findViewById(R.id.district);
         AutoCompleteTextView editTextCity = dialogView.findViewById(R.id.city);
         EditText editTextDesc = dialogView.findViewById(R.id.description);
-        ImageButton editBrcertificate = dialogView.findViewById(R.id.br_upload);
+        ImageView editBrImage = dialogView.findViewById(R.id.br_upload);
+        ImageView editCertificateImage = dialogView.findViewById(R.id.certificates);
 
         districtAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
         editTextDistrict.setAdapter(districtAdapter);
@@ -288,14 +317,13 @@ public class WorkerProfile extends AppCompatActivity {
         editTextCity.setAdapter(cityAdapter);
 
         editTextCity.setEnabled(false);
-
         loadDistricts();
-
         setupDistrictSelectionListener(editTextDistrict, editTextCity);
         setupCityClickListener(editTextCity);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
+
         if (auth.getCurrentUser() != null) {
             String uid = auth.getCurrentUser().getUid();
             DocumentReference documentReference = db.collection("users").document(uid);
@@ -309,32 +337,40 @@ public class WorkerProfile extends AppCompatActivity {
                     editTextCity.setText(documentSnapshot.getString("city"));
                     editTextDistrict.setText(documentSnapshot.getString("district"));
 
-                    // Assuming `imageButton` is your ImageButton and `storageRef` is the reference to your image in Firebase Storage
-//                    StorageReference breRef = FirebaseStorage.getInstance().getReference().child(uid + "/br-image");
-//                    breRef.getDownloadUrl().addOnSuccessListener(uri ->
-//                            Picasso.get().load(uri.toString()).into(editBrcertificate)
-//                    ).addOnFailureListener(e ->
-//                            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show()
-//                    );
+                    // Load images from Firebase Storage
+                    StorageReference breRef = FirebaseStorage.getInstance().getReference().child(uid + "/br-image");
+                    StorageReference certRef = FirebaseStorage.getInstance().getReference().child(uid + "/certificates-image");
+
+                    // Using Picasso to load images
+                    breRef.getDownloadUrl().addOnSuccessListener(uri ->
+                            Picasso.get().load(uri.toString()).into(editBrImage)
+                    ).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to load BR image", Toast.LENGTH_SHORT).show()
+                    );
+
+                    certRef.getDownloadUrl().addOnSuccessListener(uri ->
+                            Picasso.get().load(uri.toString()).into(editCertificateImage)
+                    ).addOnFailureListener(e ->
+                            Toast.makeText(this, "Failed to load Certificate image", Toast.LENGTH_SHORT).show()
+                    );
 
                 }
             }).addOnFailureListener(e -> {
                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
             });
 
-//            CollectionReference collectionReference = db.collection("users").document(uid).collection("workerInformation");
-//
-//            collectionReference.get().addOnSuccessListener(querySnapshot -> {
-//                if (!querySnapshot.isEmpty()) {
-//                    // Get the first document from the collection
-//                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-//                    editTextDesc.setText(documentSnapshot.getString("description"));
-//                } else {
-//                    Toast.makeText(this, "No documents found in workerInformation", Toast.LENGTH_SHORT).show();
-//                }
-//            }).addOnFailureListener(e -> {
-//                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
-//            });
+            CollectionReference collectionReference = db.collection("users").document(uid).collection("workerInformation");
+
+            collectionReference.get().addOnSuccessListener(querySnapshot -> {
+                if (!querySnapshot.isEmpty()) {
+                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                    editTextDesc.setText(documentSnapshot.getString("description"));
+                } else {
+                    Toast.makeText(this, "No documents found in workerInformation", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
+            });
 
             new AlertDialog.Builder(WorkerProfile.this)
                     .setTitle("Update worker Information")
@@ -347,9 +383,7 @@ public class WorkerProfile extends AppCompatActivity {
                         String city = editTextCity.getText().toString().trim();
                         String district = editTextDistrict.getText().toString().trim();
                         String description = editTextDesc.getText().toString();
-                        // String description = editTextDesc.getText().toString();
 
-                        // Map for user data update
                         Map<String, Object> updatedUserData = new HashMap<>();
                         updatedUserData.put("fullName", name);
                         updatedUserData.put("phoneNumber", phoneNumber);
@@ -358,19 +392,29 @@ public class WorkerProfile extends AppCompatActivity {
                         updatedUserData.put("city", city);
                         updatedUserData.put("district", district);
 
-                        // Assuming documentReference is a valid DocumentReference to the user's main profile
                         documentReference.update(updatedUserData)
                                 .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "User data updated successfully", Toast.LENGTH_SHORT).show())
                                 .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update user data", Toast.LENGTH_SHORT).show());
 
-                        // Map for worker description update
                         Map<String, Object> updatedWorkerDesc = new HashMap<>();
                         updatedWorkerDesc.put("description", description);
 
+
                         // Fetch the auto-ID document within the workerInformation collection
-            /*            collectionReference.get().addOnSuccessListener(querySnapshot -> {
+//                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
+//                            if (!querySnapshot.isEmpty()) {
+//                                // Update the first document found
+//                                DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
+//                                workerDocRef.update(updatedWorkerDesc)
+//                                        .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "Description updated successfully", Toast.LENGTH_SHORT).show())
+//                                        .addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to update description", Toast.LENGTH_SHORT).show());
+//                            } else {
+//                                Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
+
+                        collectionReference.get().addOnSuccessListener(querySnapshot -> {
                             if (!querySnapshot.isEmpty()) {
-                                // Update the first document found
                                 DocumentReference workerDocRef = querySnapshot.getDocuments().get(0).getReference();
                                 workerDocRef.update(updatedWorkerDesc)
                                         .addOnSuccessListener(aVoid -> Toast.makeText(WorkerProfile.this, "Description updated successfully", Toast.LENGTH_SHORT).show())
@@ -378,16 +422,17 @@ public class WorkerProfile extends AppCompatActivity {
                             } else {
                                 Toast.makeText(WorkerProfile.this, "No worker document found to update", Toast.LENGTH_SHORT).show();
                             }
-                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show()); */
+                        }).addOnFailureListener(e -> Toast.makeText(WorkerProfile.this, "Failed to fetch worker document", Toast.LENGTH_SHORT).show());
+
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create()
                     .show();
-
         } else {
             Toast.makeText(this, "No user is signed in", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void loadDistricts() {
         readData.getDistricts(districts -> {
@@ -433,6 +478,41 @@ public class WorkerProfile extends AppCompatActivity {
         });
 
     }
+
+    private void retrieveReviews(){
+        CollectionReference collectionRef = documentReference1.collection("reviewsAsAWorker");
+
+        List<ReviewModel> reviewList = new ArrayList<>();
+
+        collectionRef.get().addOnSuccessListener(querySnapshot -> {
+            if (!querySnapshot.isEmpty()) {
+                // Loop through each document in the collection
+                for (DocumentSnapshot document : querySnapshot) {
+                    String rating = document.getString("rating");
+                    String review = document.getString("review");
+
+                    // Create a ReviewModel object and add it to the list
+                    ReviewModel reviewModel = new ReviewModel(rating, review);
+                    reviewList.add(reviewModel);
+                }
+
+                // Initialize the adapter with the list of reviews
+                Reviewadapter reviewAdapter = new Reviewadapter(reviewList);
+
+                // Find RecyclerView and set the adapter
+                RecyclerView recyclerView = findViewById(R.id.recyclerView); // Ensure this ID matches your XML layout
+                recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
+                recyclerView.setAdapter(reviewAdapter); // Set the adapter
+
+            } else {
+                Toast.makeText(this, "No reviews available", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to load reviews", Toast.LENGTH_SHORT).show();
+            Log.d("msg", "Error loading reviews: " + e.getMessage());
+        });
+    }
+
 
     public static class ReviewModel {
         private String rating;
