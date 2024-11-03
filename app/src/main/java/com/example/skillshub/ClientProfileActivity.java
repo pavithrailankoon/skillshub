@@ -216,6 +216,7 @@ public class ClientProfileActivity extends AppCompatActivity {
     }
 
     private void retrieveUserData() {
+        String uid = firebaseAuth.getCurrentUser().getUid();
         readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
             @Override
             public void onSuccess(Map<String, Object> userData) {
@@ -228,15 +229,18 @@ public class ClientProfileActivity extends AppCompatActivity {
                     district.setText(userData.getOrDefault("district", "No district available").toString());
                     String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
 
-                    if (!profileImageURL.isEmpty()) {
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                            .child(uid + "/profile-image");
+
+                    storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         Picasso.get()
-                                .load(profileImageURL)
+                                .load(uri)
                                 .placeholder(R.drawable.avatar)
                                 .error(R.drawable.avatar)
                                 .into(profileImage);
-                    } else {
-                        profileImage.setImageResource(R.drawable.avatar);
-                    }
+                    }).addOnFailureListener(exception -> {
+                        Log.e("FirebaseStorage", "Error retrieving image", exception);
+                    });
                 } else {
                     Toast.makeText(ClientProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
                 }
