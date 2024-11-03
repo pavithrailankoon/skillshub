@@ -443,7 +443,7 @@ public class WorkerProfile extends AppCompatActivity {
 
                 // Find RecyclerView and set the adapter
                 RecyclerView recyclerView = findViewById(R.id.recyclerView); // Ensure this ID matches your XML layout
-                recyclerView.setLayoutManager(new LinearLayoutManager(this)); // Set layout manager
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));// Set layout manager
                 recyclerView.setAdapter(reviewAdapter); // Set the adapter
 
             } else {
