@@ -35,6 +35,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -298,30 +300,17 @@ public class WorkerProfileView extends AppCompatActivity {
     }
 
     private void setProfileImage() {
-        readData.getUserFields(new ReadData.FirestoreUserDataCallback() {
-            @Override
-            public void onSuccess(Map<String, Object> userData) {
-                if (userData != null) {
-                    String profileImageURL = userData.getOrDefault("profileImageURL", "No profile image available").toString();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                .child(receivedWorkerUid + "/profile-image");
 
-                    if (!profileImageURL.isEmpty()) {
-                        Picasso.get()
-                                .load(profileImageURL)
-                                .placeholder(R.drawable.avatar)
-                                .error(R.drawable.avatar)
-                                .into(workerImage);
-                    } else {
-                        workerImage.setImageResource(R.drawable.avatar);
-                    }
-                } else {
-                    Toast.makeText(WorkerProfileView.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(WorkerProfileView.this, "Error retrieving user data: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Picasso.get()
+                    .load(uri)
+                    .placeholder(R.drawable.avatar)
+                    .error(R.drawable.avatar)
+                    .into(workerImage);
+        }).addOnFailureListener(exception -> {
+            Log.e("FirebaseStorage", "Error retrieving image", exception);
         });
     }
 

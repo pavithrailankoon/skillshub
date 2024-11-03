@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,7 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     private AuthManager authManager;
     FirebaseAuth auth;
     ProgressDialog progressDialog;
-
+    private FirebaseUser user;
+    private FirebaseAuth firebaseAuth;
 
     //admin login user name and password
     String adminEmail = "admin@gmail.com";
@@ -56,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordTextView = findViewById(R.id.forgot_password);
         signUpTextView = findViewById(R.id.text3);
         authManager = new AuthManager();
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
 
         emailEditText.addTextChangedListener(new LoginActivity.GenericTextWatcher(emailEditText));
         passwordEditText.addTextChangedListener(new LoginActivity.GenericTextWatcher(passwordEditText));
@@ -140,7 +147,8 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        // Success: Navigate to the main activity or client view
+
+                        String uid = firebaseAuth.getCurrentUser().getUid();
                         Intent intent = new Intent(LoginActivity.this, clientHome.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -175,6 +183,37 @@ public class LoginActivity extends AppCompatActivity {
                         loginButton.setEnabled(true);
                     }
                 });
+    }
+
+    private void redirectRightUser(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String uid = firebaseAuth.getCurrentUser().getUid();
+        DocumentReference userRef = db.collection("users").document(uid);
+
+        // Retrieve and check the "role" field
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                if (documentSnapshot.contains("role")) {
+                    String role = documentSnapshot.getString("role");
+                    if (role != null) {
+                        if (role.equals("worker")) {
+                            Intent intent = new Intent(LoginActivity.this, WorkerHome.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Log.d("Firestore", "Role is different: " + role);
+                        }
+                    }
+                } else {
+                    Log.d("Firestore", "'role' field does not exist in document");
+                }
+            } else {
+                Log.d("Firestore", "Document does not exist");
+            }
+        }).addOnFailureListener(e -> {
+            Log.e("Firestore", "Error retrieving document", e);
+        });
     }
 
     public boolean validateInput() {
