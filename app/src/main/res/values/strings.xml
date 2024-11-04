@@ -19,20 +19,20 @@
     <string name="filter_category">Category</string>
     <string name="filter_subcategory">Sub Category</string>
     <string name="filter_location">Location</string>
-    <string-array name="spinner_category">
-        <item>Please wait until loading</item>
-    </string-array>
-    <string-array name="spinner_sub_category">
-        <item>Please wait until loading</item>
+<!--    <string-array name="spinner_category">-->
+<!--        <item>Please wait until loading</item>-->
+<!--    </string-array>-->
+<!--    <string-array name="spinner_sub_category">-->
+<!--        <item>Please wait until loading</item>-->
 
-    </string-array>
-    <string-array name="spinner_district">
-        <item>Please wait until loading</item>
+<!--    </string-array>-->
+<!--    <string-array name="spinner_district">-->
+<!--        <item>Please wait until loading</item>-->
 
-    </string-array>
-    <string-array name="spinner_city">
-        <item>Please wait until loading</item>
-    </string-array>
+<!--    </string-array>-->
+<!--    <string-array name="spinner_city">-->
+<!--        <item>Please wait until loading</item>-->
+<!--    </string-array>-->
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

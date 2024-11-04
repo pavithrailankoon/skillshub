@@ -60,10 +60,6 @@ public class FilterActivity extends AppCompatActivity {
         city = findViewById(R.id.spinner_city);
         documentIds = new ArrayList<>();
 
-        selectedMainCategory = mainSkill.getSelectedItem().toString();
-        selectedSubCategory = subSkill.getSelectedItem().toString();
-        selectedDistrict = district.getSelectedItem().toString();
-        selectedCity = city.getSelectedItem().toString();
 
 
 
@@ -88,55 +84,56 @@ public class FilterActivity extends AppCompatActivity {
         filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queryUsersByCityAndSubcategory(selectedCity, selectedSubCategory);
-                Toast.makeText(getApplicationContext(), "clicked", Toast.LENGTH_SHORT).show();
-            }
+                selectedSubCategory = subSkill.getSelectedItem().toString();
+                selectedCity = city.getSelectedItem().toString();
 
+                Intent intent = new Intent(FilterActivity.this, clientHome4.class);
+                intent.putExtra("FILTERED_SUB_CATEGORY", selectedSubCategory);
+                intent.putExtra("FILTERED_CITY", selectedCity);
+                startActivity(intent);
+            }
         });
 
         back = findViewById(R.id.filter_back_button);
         back.setOnClickListener(v -> onBackPressed());
-
-
-
     }
 
-    private void queryUsersByCityAndSubcategory(String city, String subcategory) {
-        db.collection("users")
-                .whereEqualTo("city", city)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    if (!querySnapshot.isEmpty()) {
-                        for (QueryDocumentSnapshot document : querySnapshot) {
-                            String userId = document.getId();
-                            querySubcollectionBySubcategory(userId, subcategory);
-                        }
-                    } else {
-                        Log.d("Firestore", "No users found in the specified city.");
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("FirestoreError", "Error getting users by city", e));
-    }
-
-    private void querySubcollectionBySubcategory(String userId, String subcategory) {
-        db.collection("users")
-                .document(userId)
-                .collection("workerProfiles")
-                .whereArrayContains("subcategories", subcategory)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    if (!querySnapshot.isEmpty()) {
-                        for (QueryDocumentSnapshot document : querySnapshot) {
-                            Log.d("Firestore", "Found document with matching subcategory: " + document.getData());
-                            String documentId = document.getId();
-                            documentIds.add(documentId);
-                        }
-                    } else {
-                        Log.d("Firestore", "No matching subcategories found in subcollection for user " + userId);
-                    }
-                })
-                .addOnFailureListener(e -> Log.e("FirestoreError", "Error querying subcollection for user " + userId, e));
-    }
+//    private void queryUsersByCityAndSubcategory(String city, String subcategory) {
+//        db.collection("users")
+//                .whereEqualTo("city", city)
+//                .get()
+//                .addOnSuccessListener(querySnapshot -> {
+//                    if (!querySnapshot.isEmpty()) {
+//                        for (QueryDocumentSnapshot document : querySnapshot) {
+//                            String userId = document.getId();
+//                            querySubcollectionBySubcategory(userId, subcategory);
+//                        }
+//                    } else {
+//                        Log.d("Firestore", "No users found in the specified city.");
+//                    }
+//                })
+//                .addOnFailureListener(e -> Log.e("FirestoreError", "Error getting users by city", e));
+//    }
+//
+//    private void querySubcollectionBySubcategory(String userId, String subcategory) {
+//        db.collection("users")
+//                .document(userId)
+//                .collection("workerProfiles")
+//                .whereArrayContains("subcategories", subcategory)
+//                .get()
+//                .addOnSuccessListener(querySnapshot -> {
+//                    if (!querySnapshot.isEmpty()) {
+//                        for (QueryDocumentSnapshot document : querySnapshot) {
+//                            Log.d("Firestore", "Found document with matching subcategory: " + document.getData());
+//                            String documentId = document.getId();
+//                            documentIds.add(documentId);
+//                        }
+//                    } else {
+//                        Log.d("Firestore", "No matching subcategories found in subcollection for user " + userId);
+//                    }
+//                })
+//                .addOnFailureListener(e -> Log.e("FirestoreError", "Error querying subcollection for user " + userId, e));
+//    }
 
     private void populateSpinner(ArrayList<String> categoryNames) {
         // Create an ArrayAdapter using the category names list
