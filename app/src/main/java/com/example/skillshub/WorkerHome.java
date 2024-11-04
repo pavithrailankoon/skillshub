@@ -51,7 +51,7 @@ public class WorkerHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_client_home);
+        setContentView(R.layout.activity_worker_home);
 
         progressDialog = new ProgressDialog(this);
         readData = new ReadData();
@@ -97,7 +97,15 @@ public class WorkerHome extends AppCompatActivity {
         });
 
         profileImageButton = (CircleImageView) findViewById(R.id.avatar);
-        //profileImageButton.setOnClickListener(v -> checkWorkerProfile());
+        profileImageButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WorkerHome.this, WorkerProfile.class);
+                startActivity(intent);
+            }
+
+        });
 
         setProfileImage();
         getUniqueMainSkills();

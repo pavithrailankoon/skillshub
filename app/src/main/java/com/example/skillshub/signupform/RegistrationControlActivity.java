@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.skillshub.LoginActivity;
 import com.example.skillshub.R;
+import com.example.skillshub.WorkerHome;
 import com.example.skillshub.WorkerProfile;
 import com.example.skillshub.WorkerProfileView;
 import com.example.skillshub.clientHome;
@@ -114,10 +115,11 @@ public class RegistrationControlActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else if(registrationType.equals("clienttoworker")){
-                        Intent intent = new Intent(RegistrationControlActivity.this, clientHome.class);
+                        Intent intent = new Intent(RegistrationControlActivity.this, WorkerHome.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
+                        Toast.makeText(RegistrationControlActivity.this, "You are now in worker profile", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -149,10 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
 
                         String uid = firebaseAuth.getCurrentUser().getUid();
-                        Intent intent = new Intent(LoginActivity.this, clientHome.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        redirectRightUser();
                         progressDialog.cancel();
                     }
                 },
@@ -190,20 +187,24 @@ public class LoginActivity extends AppCompatActivity {
         String uid = firebaseAuth.getCurrentUser().getUid();
         DocumentReference userRef = db.collection("users").document(uid);
 
-        // Retrieve and check the "role" field
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 if (documentSnapshot.contains("role")) {
                     String role = documentSnapshot.getString("role");
-                    if (role != null) {
-                        if (role.equals("worker")) {
-                            Intent intent = new Intent(LoginActivity.this, WorkerHome.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Log.d("Firestore", "Role is different: " + role);
-                        }
+                    if ("worker".equals(role)) {
+                        Log.d("worker_role : ", role);
+                        Intent intent = new Intent(LoginActivity.this, WorkerHome.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else if ("client".equals(role)) {
+                        Log.d("client_role : ", role);
+                        Intent intent = new Intent(LoginActivity.this, clientHome.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Log.d("Firestore", "Unexpected role: " + role);
                     }
                 } else {
                     Log.d("Firestore", "'role' field does not exist in document");

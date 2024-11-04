@@ -61,6 +61,9 @@
             android:name=".Admin"
             android:exported="true" />
         <activity
+            android:name=".WorkerHome"
+            android:exported="true" />
+        <activity
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
         <activity

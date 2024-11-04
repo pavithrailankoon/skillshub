@@ -119,12 +119,19 @@ public class clientHome extends AppCompatActivity {
         });
 
         profileImageButton = (CircleImageView) findViewById(R.id.avatar);
-        profileImageButton.setOnClickListener(v -> checkWorkerProfile());
+        profileImageButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(clientHome.this, ClientProfileActivity.class);
+                startActivity(intent);
+            }
+
+        });
 
         setProfileImage();
         getUniqueMainSkills();
         categoryClickListener();
-        buttonInvisible();
     }
 
 
@@ -160,70 +167,6 @@ public class clientHome extends AppCompatActivity {
             // You could optionally navigate to a login screen here
         }
     }
-
-    private void buttonInvisible(){
-        FirebaseUser currentUser = auth.getCurrentUser();
-
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-
-            // Check if 'workerProfiles' subcollection has any documents
-            db.collection("users").document(uid).collection("workerProfiles")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (!task.getResult().isEmpty()) {
-                                // 'workerProfiles' subcollection exists, navigate to ClientProfileActivity
-                                button.setVisibility(View.GONE);
-                            } else {
-                                button.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            Log.e("Firestore Error", "Error checking workerProfiles subcollection", task.getException());
-                            Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            // Handle case if the user is not logged in or uid is null
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            // You could optionally navigate to a login screen here
-        }
-    }
-
-    private void checkWorkerProfile() {
-        FirebaseUser currentUser = auth.getCurrentUser();
-
-        if (currentUser != null) {
-            String uid = currentUser.getUid();
-
-            // Check if 'workerProfiles' subcollection has any documents
-            db.collection("users").document(uid).collection("workerProfiles")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (!task.getResult().isEmpty()) {
-                                // 'workerProfiles' subcollection exists, navigate to ClientProfileActivity
-                                Intent intent = new Intent(this, WorkerProfile.class);
-                                Toast.makeText(clientHome.this, "Loading worker Profile", Toast.LENGTH_SHORT).show();
-                                startActivity(intent);
-                            } else {
-                                // 'workerProfiles' subcollection does not exist, navigate to RegisterProfileActivity
-                                Intent intent = new Intent(this, ClientProfileActivity.class);
-                                Toast.makeText(clientHome.this, "Loading Client Profile", Toast.LENGTH_SHORT).show();
-                                startActivity(intent);
-                            }
-                        } else {
-                            Log.e("Firestore Error", "Error checking workerProfiles subcollection", task.getException());
-                            Toast.makeText(this, "Error loading data", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } else {
-            // Handle case if the user is not logged in or uid is null
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            // You could optionally navigate to a login screen here
-        }
-    }
-
 
     private void categoryClickListener() {
         progressBar.setVisibility(View.VISIBLE);
