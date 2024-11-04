@@ -110,6 +110,7 @@ public class WorkerProfile extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
         db = FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
+        storageManager = new FirebaseStorageManager();
 
         if (user != null) {
             uid = user.getUid();
@@ -222,7 +223,7 @@ public class WorkerProfile extends AppCompatActivity {
     private void updateImageUrl(String imageUrl){
         if (fAuth.getCurrentUser() != null) {
             String uid = fAuth.getCurrentUser().getUid();
-            DocumentReference documentReference = db.collection("user").document(uid);
+            DocumentReference documentReference = db.collection("users").document(uid);
 
             // Create a map to update just the profileImageURL field
             Map<String, Object> updates = new HashMap<>();

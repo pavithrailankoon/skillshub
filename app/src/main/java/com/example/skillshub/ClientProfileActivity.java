@@ -195,7 +195,7 @@ public class ClientProfileActivity extends AppCompatActivity {
     private void updateImageUrl(String imageUrl){
         if (firebaseAuth.getCurrentUser() != null) {
             String uid = firebaseAuth.getCurrentUser().getUid();
-            DocumentReference documentReference = db.collection("user").document(uid);
+            DocumentReference documentReference = db.collection("users").document(uid);
 
             // Create a map to update just the profileImageURL field
             Map<String, Object> updates = new HashMap<>();
