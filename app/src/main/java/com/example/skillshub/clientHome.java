@@ -82,13 +82,11 @@ public class clientHome extends AppCompatActivity {
         categoryAdapter = new CategoryAdapter(this, categoryList);
         categoryListView.setAdapter(categoryAdapter);
 
-        button.setOnClickListener(v -> checkWorkerProfileAndNavigate());
 
         button.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                checkWorkerProfileAndNavigate();
                 Intent intent = new Intent(clientHome.this, RegistrationControlActivity.class);
                 intent.putExtra("REGISTRATION_TYPE", "clienttoworker");
                 startActivity(intent);
@@ -135,7 +133,7 @@ public class clientHome extends AppCompatActivity {
     }
 
 
-    private void checkWorkerProfileAndNavigate() {
+ /*   private void checkWorkerProfileAndNavigate() {
         FirebaseUser currentUser = auth.getCurrentUser();
 
         if (currentUser != null) {
@@ -166,7 +164,7 @@ public class clientHome extends AppCompatActivity {
             Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             // You could optionally navigate to a login screen here
         }
-    }
+    }*/
 
     private void categoryClickListener() {
         progressBar.setVisibility(View.VISIBLE);
