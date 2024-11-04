@@ -62,9 +62,30 @@ public class WorkerVerifyFragment extends Fragment {
 
         readData = new ReadData();
 
-        clearNicFront.setOnClickListener(v -> nicFrontUri = null);
-        clearNicBack.setOnClickListener(v -> nicBackUri = null);
-        clearBr.setOnClickListener(v -> brUri = null);
+        clearNicFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nicFrontUri = null;
+                frontNic.setBackgroundColor(nicFrontUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+
+            }
+        });
+
+        clearNicBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nicBackUri = null;
+                backNic.setBackgroundColor(nicBackUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+            }
+        });
+
+        clearBr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                brUri = null;
+                brImage.setBackgroundColor(brUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+            }
+        });
 
         addSkill.setOnClickListener(new View.OnClickListener() {
             @Override

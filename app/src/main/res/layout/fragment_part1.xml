@@ -70,7 +70,7 @@
                 android:textColor="@color/white"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/white"
-                android:hint="First Name"
+                android:hint="Full Name"
                 android:backgroundTint="@color/white"/>
 
             <EditText
