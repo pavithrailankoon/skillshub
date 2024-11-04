@@ -86,7 +86,7 @@ public class WorkerProfileView extends AppCompatActivity {
         call = findViewById(R.id.call);
         whatsapp = findViewById(R.id.whatsapp);
         schedule = findViewById(R.id.schedule);
-        description = findViewById(R.id.textView21);
+        description = findViewById(R.id.descriptionxs);
         back = findViewById(R.id.back);
         workerImage = findViewById(R.id.workerImage);
         ratingBar = findViewById(R.id.ratingBar);

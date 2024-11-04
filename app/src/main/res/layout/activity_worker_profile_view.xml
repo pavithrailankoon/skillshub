@@ -175,7 +175,10 @@
             android:layout_height="48dp"
             android:layout_marginStart="96dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/_n"
+            android:padding="4dp"
+            android:scaleType="fitXY"
+            android:tint="@color/yellow"
+            android:src="@drawable/baseline_phone_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/workerImage" />
 
@@ -183,8 +186,10 @@
             android:id="@+id/schedule"
             android:layout_width="47dp"
             android:layout_height="48dp"
-            android:src="@drawable/cale"
+            android:padding="4dp"
+            android:src="@drawable/baseline_calendar_month_24"
             android:layout_marginStart="36dp"
+            android:tint="@color/yellow"
             app:layout_constraintStart_toEndOf="@+id/whatsapp"
             app:layout_constraintTop_toTopOf="@+id/whatsapp" />
 
@@ -197,6 +202,7 @@
             android:scaleX="1"
             android:scaleY="0.9"
             android:stepSize="0.5"
+            app:layout_constraintEnd_toEndOf="@+id/textView5"
             app:layout_constraintStart_toStartOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -207,7 +213,8 @@
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="@+id/ratingBar"
+            app:layout_constraintStart_toStartOf="@+id/ratingBar"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
         <Button
@@ -231,7 +238,8 @@
             android:textColor="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/textView25"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -251,7 +259,7 @@
             android:id="@+id/refresh_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
+            android:layout_marginStart="58dp"
             app:layout_constraintStart_toEndOf="@+id/textView8"
             app:layout_constraintTop_toTopOf="@+id/textView8"
             app:srcCompat="@drawable/baseline_refresh_24" />
@@ -265,7 +273,7 @@
             android:textColor="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/reviewComment"
+            app:layout_constraintStart_toStartOf="@+id/submit_review"
             app:layout_constraintTop_toBottomOf="@+id/submit_review" />
 
 
