@@ -97,7 +97,15 @@ public class WorkerHome extends AppCompatActivity {
         });
 
         profileImageButton = (CircleImageView) findViewById(R.id.avatar);
-        //profileImageButton.setOnClickListener(v -> checkWorkerProfile());
+        profileImageButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WorkerHome.this, WorkerProfile.class);
+                startActivity(intent);
+            }
+
+        });
 
         setProfileImage();
         getUniqueMainSkills();
