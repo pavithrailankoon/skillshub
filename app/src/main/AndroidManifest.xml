@@ -73,6 +73,9 @@
             android:name=".clientHome3"
             android:exported="false" />
         <activity
+            android:name=".clientHome4"
+            android:exported="false" />
+        <activity
             android:name=".ChangePassword"
             android:exported="false" />
         <activity
