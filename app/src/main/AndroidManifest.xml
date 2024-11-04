@@ -2,16 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
+    <uses-feature android:name="android.hardware.camera" android:required="false" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
@@ -24,17 +19,16 @@
         android:theme="@style/Theme.Skillshub"
         tools:targetApi="31">
         <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="false" />      
-        <activity
-            android:name=".welcomeScreen"
-            android:exported="true">
-       </activity>
-          <activity
-            android:name=".clientHome"
+            android:name=".Schedule"
             android:exported="true" />
         <activity
-            android:name=".ChooseUserActivity"
+            android:name=".Shedule"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".welcomeScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,27 +37,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ClientProfileActivity"
+            android:name=".Introduction"
             android:exported="false" />
+        <activity android:name=".WorkerProfile"
+            android:exported="true" />
+
         <activity
-            android:name=".Home"
-            android:exported="false" />
+            android:name=".clientHome"
+            android:exported="true" />
+        <activity
+            android:name=".ChooseUserActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ClientProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".signupform.AuthenticateActivity"
+            android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
+        <activity
+            android:name=".Admin"
+            android:exported="true" />
+        <activity
+            android:name=".WorkerHome"
+            android:exported="true" />
         <activity
             android:name=".signupform.RegistrationControlActivity"
             android:exported="false" />
         <activity
-            android:name=".clientHome"
-            android:exported="true"
-            tools:ignore="DuplicateActivity">
-        </activity>
-
-        <activity
             android:name=".clientHome2"
             android:exported="false" />
-
+        <activity
+            android:name=".clientHome3"
+            android:exported="false" />
+        <activity
+            android:name=".ChangePassword"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerProfileView"
+            android:exported="true" />
+        <activity
+            android:name=".FilterActivity"
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -74,7 +91,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

@@ -33,11 +33,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fillViewport="true">
 
                     <FrameLayout
                         android:id="@+id/fragment_container"
@@ -56,22 +58,6 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/signup_back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/black"
-                    android:layout_weight="1"
-                    android:background="@drawable/yellow_button_background"
-                    android:text="BACK" />
-
-                <View
-                    android:layout_width="100dp"
-                    android:layout_height="50dp" />
-
-                <Button
                     android:id="@+id/signup_next_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,6 +72,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/signup_login_redirect_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

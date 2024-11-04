@@ -1,63 +1,55 @@
 package com.example.skillshub.signupform;
 
-
-import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.skillshub.ChooseUserActivity;
 import com.example.skillshub.R;
 import com.example.skillshub.firebaseModel.ReadData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WorkerVerifyFragment extends Fragment {
 
     View view;
-    private ImageButton frontNic;
-    private ImageButton backNic;
-    private ImageButton brImage;
-    private TextView mainSkillCategory;
-    private TextView subSkillCategory;
-    private TextView addSkill;
-    private ImageView clearNicFront;
-    private ImageView clearNicBack;
-    private ImageView clearBr;
-    private TableLayout skilltable;
-    private TableRow skillrow;
-
-    private ArrayAdapter<String> mainSkillAdapter;
-    private ArrayAdapter<String> subSkillAdapter;
-
-    private static final int REQUEST_IMAGE_GALLERY_FRONT = 1;
-    private static final int REQUEST_IMAGE_GALLERY_BACK = 2;
-    private static final int REQUEST_IMAGE_GALLERY_BR = 3;
+    private ImageButton frontNic, backNic, brImage;
+    private TextView addSkill, showCategories;
+    private ProgressBar progressBar;
+    private ImageView clearNicFront, clearNicBack, clearBr;
     private Uri nicFrontUri, nicBackUri, brUri;
-//    private Map<String, List<String>> skillMap;
-//    private List<String> subSkillsList;
-//    private boolean[] selectedSubSkills;
-//    private List<String> currentSubSkills = new ArrayList<>();
-//    private ArrayList<Integer> subSkillIndices = new ArrayList<>();
-//    private FirestoreDataRetriver firestoreDataRetriver;
+    private Map<String, Object> selectedData;
+    private ReadData readData;
+    private String selectedCategory;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,135 +60,193 @@ public class WorkerVerifyFragment extends Fragment {
         backNic.setOnClickListener(v -> addBackNic());
         brImage.setOnClickListener(v -> addBr());
 
-//        frontNic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openCamera();
-//            }
-//        });
-//
-//        backNic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openCamera();
-//            }
-//        });
-//
-//        brImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openCamera();
-//            }
-//        });
+        readData = new ReadData();
 
-        clearNicFront.setOnClickListener(v -> {
-            nicFrontUri = null;
-            frontNic.setBackgroundColor(getResources().getColor(R.color.dark_grey));
-        });
-        clearNicBack.setOnClickListener(v -> {
-            nicBackUri = null;
-            backNic.setBackgroundColor(getResources().getColor(R.color.dark_grey));
-        });
-        clearBr.setOnClickListener(v -> {
-            brUri = null;
-            brImage.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+        clearNicFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nicFrontUri = null;
+                frontNic.setBackgroundColor(nicFrontUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+
+            }
         });
 
-        addSkill.setOnClickListener(v -> addNewRow());
+        clearNicBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nicBackUri = null;
+                backNic.setBackgroundColor(nicBackUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+            }
+        });
+
+        clearBr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                brUri = null;
+                brImage.setBackgroundColor(brUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+            }
+        });
+
+        addSkill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomAlertDialog();
+            }
+        });
 
         return view;
+    }
+
+    @SuppressLint("MissingInflatedId")
+    public void showCustomAlertDialog() {
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View view = inflater.inflate(R.layout.custom_list_item_category, null);
+
+        Spinner spinnerMainCategory = view.findViewById(R.id.spinner_main_category);
+        LinearLayout checkboxContainer = view.findViewById(R.id.checkbox_container);
+        progressBar = view.findViewById(R.id.progressbarCategory);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        readData.getMainCategories(requireContext(), mainCategories -> {
+            progressBar.setVisibility(View.GONE);
+
+            if (mainCategories != null && !mainCategories.isEmpty()) {
+                ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, mainCategories);
+                spinnerMainCategory.setAdapter(categoryAdapter);
+
+                spinnerMainCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        String selectedCategory = mainCategories.get(position);
+                        readData.loadSubcategories(selectedCategory, checkboxContainer, requireContext());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        checkboxContainer.removeAllViews();
+                    }
+                });
+            } else {
+                Toast.makeText(requireContext(), "No main categories found", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(view)
+                .setTitle("Select Categories and Subcategories")
+                .setPositiveButton("Save", (dialog, which) -> {
+                    selectedCategory = (String) spinnerMainCategory.getSelectedItem();
+                    ArrayList<String> selectedSubcategories = new ArrayList<>();
+
+                    for (int i = 0; i < checkboxContainer.getChildCount(); i++) {
+                        CheckBox checkBox = (CheckBox) checkboxContainer.getChildAt(i);
+                        if (checkBox.isChecked()) {
+                            selectedSubcategories.add(checkBox.getText().toString());
+                        }
+                    }
+
+                    if (selectedCategory != null) {
+                        selectedData.put("categoryName", selectedCategory);
+                        selectedData.put("subcategories", selectedSubcategories);
+                        Toast.makeText(requireContext(), "Categories collected", Toast.LENGTH_LONG).show();
+                    }
+                    displayMapInTextView(selectedData, showCategories);
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+    public void displayMapInTextView(Map<String, Object> map, TextView textView) {
+        StringBuilder mapAsString = new StringBuilder();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            mapAsString.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+
+        textView.setText(mapAsString.toString());
     }
 
     private void initializeViews(View view) {
         frontNic = view.findViewById(R.id.signup_verify_nicfront_upload);
         backNic = view.findViewById(R.id.signup_verify_nicback_upload);
         brImage = view.findViewById(R.id.signup_verify_br_upload);
-        mainSkillCategory = view.findViewById(R.id.signup_main_category);
-        subSkillCategory = view.findViewById(R.id.signup_sub_category);
         addSkill = view.findViewById(R.id.signup_add_newcategory);
         clearNicFront = view.findViewById(R.id.signup_clear_nicfront_upload);
         clearNicBack = view.findViewById(R.id.signup_clear_nicback_upload);
         clearBr = view.findViewById(R.id.signup_clear_br_upload);
-        skilltable = view.findViewById(R.id.skilltable);
-        skillrow = view.findViewById(R.id.signup_category_row);
-    }
+        showCategories = view.findViewById(R.id.signup_show_category);
 
-    private void addNewRow() {
-        TableRow newRow = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.skill_table_row, skilltable, false);
-
-        ImageView clearSkillButton = newRow.findViewById(R.id.signup_clear_category);
-
-        // Set an OnClickListener for the clearSkill button to remove this specific row
-        clearSkillButton.setOnClickListener(v -> skilltable.removeView(newRow));
-
-        // Add the newly created row to the TableLayout
-        skilltable.addView(newRow);
+        selectedData = new HashMap<>();
     }
 
     //Method to open gallery using a button
     private void addFrontNic() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY_FRONT);
+        startActivityForResult(galleryIntent, 1);
     }
     private void addBackNic() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY_BACK);
+        startActivityForResult(galleryIntent, 2);
     }
     private void addBr() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, REQUEST_IMAGE_GALLERY_BR);
+        startActivityForResult(galleryIntent, 3);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_IMAGE_GALLERY_FRONT && data != null) {
-            nicFrontUri = data.getData();
-            frontNic.setBackgroundColor(getResources().getColor(R.color.yellow));
-        }
-
-        if (requestCode == REQUEST_IMAGE_GALLERY_BACK && data != null) {
-            nicBackUri = data.getData();
-            backNic.setBackgroundColor(getResources().getColor(R.color.yellow));
-        }
-
-        if (requestCode == REQUEST_IMAGE_GALLERY_BR && data != null) {
-            brUri = data.getData();
-            brImage.setBackgroundColor(getResources().getColor(R.color.yellow));
+        if (resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedUri = data.getData();
+            if (requestCode == 1) {
+                nicFrontUri = selectedUri;
+                frontNic.setBackgroundColor(nicFrontUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+                Toast.makeText(requireContext(), "Front NIC image added", Toast.LENGTH_LONG).show();
+            } else if (requestCode == 2) {
+                nicBackUri = selectedUri;
+                backNic.setBackgroundColor(nicBackUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+                Toast.makeText(requireContext(), "Back NIC image added", Toast.LENGTH_LONG).show();
+            } else if (requestCode == 3) {
+                brUri = selectedUri;
+                brImage.setBackgroundColor(brUri != null ? Color.parseColor("#0000FF") : Color.parseColor("#818589"));
+                Toast.makeText(requireContext(), "Business Certificate image added", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-//    private void validateDistrictCity(){
-//        // Initialize adapters
-//        mainSkillAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
-//        mainSkillCategory.setAdapter(mainSkillAdapter);
-//
-//        subSkillAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, new ArrayList<>());
-//        subSkillCategory.setAdapter(subSkillAdapter);
-//
-//        subSkillCategory.setEnabled(false);
-//
-//        loadSubSkills();
-//
-//        setupDistrictSelectionListener();
-//        setupCityClickListener();
-//    }
+    public boolean validateInput() {
+        // Check if the front NIC is uploaded
+        if (nicFrontUri == null) {
+            Toast.makeText(requireContext(), "Please upload the front side of your NIC.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
-//    private void loadSubSkills() {
-//        readData.getDistricts(districts -> {
-//            mainSkillAdapter.clear();
-//            mainSkillAdapter.addAll(districts);
-//            mainSkillAdapter.notifyDataSetChanged();
-//        }, e -> Log.e("MainActivity", "Failed to load districts", e));
-//    }
+        // Check if the back NIC is uploaded
+        if (nicBackUri == null) {
+            Toast.makeText(requireContext(), "Please upload the back side of your NIC.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Check if at least one skill category and subcategory is selected
+        if (selectedData == null || selectedData.isEmpty() ||
+                !selectedData.containsKey("subcategories") ||
+                ((List<String>) selectedData.get("subcategories")).isEmpty()) {
+            Toast.makeText(requireContext(), "Please select at least one skill category and subcategory.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // All required fields are valid
+        return true;
+    }
 
 
-    //Add getters to send data to RegistrationControl Activity
+
     public Uri getNicFront() {
         return nicFrontUri;
     }
@@ -209,5 +259,12 @@ public class WorkerVerifyFragment extends Fragment {
         return brUri;
     }
 
+    public String getMainCategory(){
+        return selectedCategory;
+    }
+
+    public Map<String, Object> getCategories(){
+        return selectedData;
+    }
 
 }

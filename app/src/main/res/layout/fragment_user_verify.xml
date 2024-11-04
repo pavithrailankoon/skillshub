@@ -21,9 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center_horizontal"
-            android:text="@string/signup_topic"
+            android:text="Complete Your Professional Profile"
             android:textColor="@color/yellow"
-            android:textSize="25dp"
+            android:textSize="24dp"
             android:textStyle="bold" />
         <TextView
             android:id="@+id/signup_nic"
@@ -195,65 +195,64 @@
                 android:layout_marginTop="20dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="@string/signup_select_category" />
+                android:text="Choose your skill" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/white" />
 
-        <TableLayout
-            android:id="@+id/skilltable"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TableRow
-                android:id="@+id/signup_category_row"
+            <!-- Container where list views will be dynamically added -->
+            <LinearLayout
+                android:id="@+id/layout_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:visibility="gone">
-                <TextView
-                    android:id="@+id/signup_main_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="Select main category"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/spinner_border"
-                    android:drawableRight="@drawable/baseline_arrow_drop_down_24"
-                    android:gravity="center_vertical" />
+                android:orientation="vertical" />
 
-                <TextView
-                    android:id="@+id/signup_sub_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:hint="Select sub categories"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/spinner_border"
-                    android:drawableRight="@drawable/baseline_arrow_drop_down_24"
-                    android:gravity="center_vertical" />
+            <!-- Button to add new list view -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Note !"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Please select one main skill and up to three related sub-skills that best match your expertise."
+                android:textColor="@color/white"
+                android:gravity="center"/>
 
-                <ImageView
-                    android:id="@+id/signup_clear_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:src="@drawable/baseline_cancel_24"/>
-            </TableRow>
-        </TableLayout>
-        <TextView
-            android:id="@+id/signup_add_newcategory"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Add New Category"
-            android:textColor="@color/yellow"
-            android:gravity="center"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/signup_show_category"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text=""
+                android:textColor="@color/white"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/signup_add_newcategory"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Add Your Category"
+                android:background="@drawable/button_yellow_outline"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="showSkillDialog"
+                android:textColor="@color/yellow"
+                android:gravity="center"
+                android:textStyle="bold"/>
         </LinearLayout>
 
+
+        </LinearLayout>
 
 </RelativeLayout>

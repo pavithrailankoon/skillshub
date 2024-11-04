@@ -80,6 +80,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         Toast.makeText(ForgotPasswordActivity.this, "Reset password link has been sent to your registered email", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
                         finish();
+                        progressDialog.cancel();
                 }
                 })
                 .addOnFailureListener(new OnFailureListener() {

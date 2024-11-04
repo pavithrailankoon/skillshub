@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -13,10 +12,7 @@
         android:id="@+id/appbar_include"
         layout="@layout/appbar_home"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="wrap_content" />
 
     <!-- NestedScrollView for content -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,66 +47,66 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:layout_marginTop="50dp">
+                android:padding="16dp">
 
                 <Spinner
                     android:id="@+id/spinner_category"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:minWidth="150dp"
-                    android:layout_marginBottom="8dp"
-                    android:entries="@array/spinner_category"
-                    android:background="@drawable/spinner_border"
-                    android:padding="12dp"
-                    android:textColor="@color/white"
-                    android:spinnerMode="dropdown"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/spinner_border"
+                    android:entries="@array/spinner_category"
+                    android:minWidth="150dp"
+                    android:padding="12dp"
+                    android:spinnerMode="dropdown"
+                    android:text="Choose Main Category"
+                    android:textColor="@color/white" />
 
                 <Spinner
                     android:id="@+id/spinner_sub_category"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:minWidth="150dp"
-                    android:layout_marginBottom="8dp"
-                    android:entries="@array/spinner_sub_category"
-                    android:background="@drawable/spinner_border"
-                    android:padding="12dp"
-                    android:textColor="@color/white"
-                    android:spinnerMode="dropdown"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/spinner_border"
+                    android:entries="@array/spinner_sub_category"
+                    android:minWidth="150dp"
+                    android:padding="12dp"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/white" />
 
                 <Spinner
                     android:id="@+id/spinner_district"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:minWidth="150dp"
-                    android:layout_marginBottom="8dp"
-                    android:entries="@array/spinner_district"
-                    android:background="@drawable/spinner_border"
-                    android:padding="12dp"
-
-                    android:textColor="@color/background_green"
-                    android:spinnerMode="dropdown"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/spinner_border"
+                    android:entries="@array/spinner_district"
+                    android:minWidth="150dp"
+                    android:padding="12dp"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/background_green" />
 
                 <Spinner
                     android:id="@+id/spinner_city"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:minWidth="150dp"
-                    android:entries="@array/spinner_city"
-                    android:background="@drawable/spinner_border"
-                    android:padding="12dp"
-
-                    android:textColor="@color/background_green"
-                    android:spinnerMode="dropdown"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"/>
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/spinner_border"
+                    android:entries="@array/spinner_city"
+
+                    android:minWidth="150dp"
+                    android:padding="12dp"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/background_green" />
 
 
             </LinearLayout>
@@ -118,30 +114,30 @@
             <LinearLayout
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
                 android:layout_margin="32dp"
-                android:layout_gravity="center">
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/filter_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:text="Filter"
                     android:background="@drawable/custom_button"
-                    android:textColor="@color/background_green"
-                    android:textAllCaps="false"/>
+                    android:text="Filter"
+                    android:textAllCaps="false"
+                    android:textColor="@color/background_green" />
 
                 <Button
-                    android:id="@+id/filter_clear_button"
+                    android:id="@+id/filter_back_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/button_yellow_outline"
                     android:backgroundTintMode="src_in"
-                    android:text="Clear"
-                    android:background="@drawable/custom_button"
-                    android:textColor="@color/background_green"
-                    android:textAllCaps="false"/>
+                    android:text="Back"
+                    android:textAllCaps="false"
+                    android:textColor="@color/yellow" />
             </LinearLayout>
 
         </LinearLayout>

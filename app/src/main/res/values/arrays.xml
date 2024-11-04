@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="firstName" />
+    <string-array name="lastnName" />
+    <string-array name="review" />
+</resources>

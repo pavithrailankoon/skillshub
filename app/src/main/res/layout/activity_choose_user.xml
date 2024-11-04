@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0C4F4F"
+    android:background="@color/background_green"
+    android:orientation="vertical"
     tools:context=".ChooseUserActivity">
 
 
@@ -21,54 +22,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="100dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register As"
-            android:textColor="@color/yellow"
-            android:textSize="35sp"
-            android:layout_marginBottom="25dp"
             android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:text="Choose Your Role"
+            android:textColor="@color/yellow"
+            android:textSize="20dp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/signup_as_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button"
-            android:text="Client"
             android:layout_gravity="center"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OR"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/button_yellow_outline"
+            android:padding="15dp"
+            android:text="I want to be Client 🤝"
             android:textColor="@color/yellow"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="450dp" />
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/signup_as_worker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button"
-            android:text="Worker"
             android:layout_gravity="center"
-            android:textColor="@android:color/black"
+            android:background="@drawable/button_yellow_outline"
+            android:padding="15dp"
+            android:text="I want to be Worker 💼"
+            android:textColor="@color/yellow"
             android:textStyle="bold" />
     </LinearLayout>
-
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
