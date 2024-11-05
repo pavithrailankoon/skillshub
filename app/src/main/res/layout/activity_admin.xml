@@ -212,6 +212,16 @@
                     android:textStyle="bold"
                     />
 
+
+                <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="32dp"
+                android:text="(Check Uploaded Nic image in the database and verify) "
+                android:textColor="@color/background_green"
+                android:textSize="14dp" />
+
                 <TextView
                     android:id="@+id/nic"
                     android:layout_width="wrap_content"
@@ -248,6 +258,14 @@
                     android:textSize="18dp"
                     android:textStyle="bold"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="55dp"
+                    android:text="(Check Uploaded BR image in the database and verify) "
+                    android:textColor="@color/background_green"
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/business"

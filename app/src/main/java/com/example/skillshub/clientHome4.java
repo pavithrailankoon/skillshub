@@ -106,7 +106,7 @@ public class clientHome4 extends AppCompatActivity {
                         }
                     } else {
                         Log.d("Firestore", "No users found in the specified city.");
-                        Toast.makeText(clientHome4.this, "No users found in the specified city", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(clientHome4.this, "No users found in the specified city", Toast.LENGTH_LONG).show();
                         //progressBar.setVisibility(View.GONE);
                     }
                 })
