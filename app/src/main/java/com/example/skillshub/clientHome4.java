@@ -106,11 +106,13 @@ public class clientHome4 extends AppCompatActivity {
                         }
                     } else {
                         Log.d("Firestore", "No users found in the specified city.");
+                        Toast.makeText(clientHome4.this, "No users found in the specified city", Toast.LENGTH_SHORT).show();
                         //progressBar.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FirestoreError", "Error getting users by city", e);
+                    Toast.makeText(clientHome4.this, "Error getting users by city", Toast.LENGTH_SHORT).show();
                     //progressBar.setVisibility(View.GONE);
                 });
     }
@@ -133,7 +135,6 @@ public class clientHome4 extends AppCompatActivity {
                             documentReference.get().addOnSuccessListener(documentSnapshot -> {
                                 if (documentSnapshot.exists()) {
                                     String name = documentSnapshot.getString("fullName");
-                                    Log.d("full name",name);
                                     String city = documentSnapshot.getString("city");
                                     String district = documentSnapshot.getString("district");
                                     String profileUrl = documentSnapshot.getString("profileImageURL");
