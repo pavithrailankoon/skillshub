@@ -40,7 +40,6 @@ public class Admin extends AppCompatActivity {
         client = findViewById(R.id.client);
         workers = findViewById(R.id.workers);
         nic = findViewById(R.id.nic);
-        Category = findViewById(R.id.category);
         business = findViewById(R.id.business);
 
 
@@ -81,6 +80,7 @@ public class Admin extends AppCompatActivity {
 
     private void fetchClientCount() {
         db.collection("users")
+                .whereEqualTo("role", "client")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
