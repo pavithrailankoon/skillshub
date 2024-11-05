@@ -133,12 +133,14 @@ public class clientHome4 extends AppCompatActivity {
                             documentReference.get().addOnSuccessListener(documentSnapshot -> {
                                 if (documentSnapshot.exists()) {
                                     String name = documentSnapshot.getString("fullName");
+                                    Log.d("full name",name);
                                     String city = documentSnapshot.getString("city");
                                     String district = documentSnapshot.getString("district");
                                     String profileUrl = documentSnapshot.getString("profileImageURL");
 
-                                    Worker worker = new Worker(userId, name, city, district, profileUrl);
+                                    Worker worker = new Worker(userId, name, district, city, profileUrl);
                                     workerList.add(worker);
+                                    workerListAdapter.notifyDataSetChanged();
                                 }
                             }).addOnFailureListener(e -> {
                                 Toast.makeText(this, "Failed to load data", Toast.LENGTH_SHORT).show();
@@ -146,7 +148,7 @@ public class clientHome4 extends AppCompatActivity {
                         }
 
                         //runOnUiThread(() -> {
-                        workerListAdapter.notifyDataSetChanged();
+
                         //});
 
                     } else {
